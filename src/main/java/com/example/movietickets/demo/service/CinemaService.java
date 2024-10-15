@@ -1,8 +1,6 @@
 package com.example.movietickets.demo.service;
 
-import com.example.movietickets.demo.model.Category;
 import com.example.movietickets.demo.model.Cinema;
-import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.repository.CinemaRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
