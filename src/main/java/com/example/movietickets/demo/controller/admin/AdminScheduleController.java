@@ -1,5 +1,6 @@
 package com.example.movietickets.demo.controller.admin;
 
+import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.service.CinemaService;
 import com.example.movietickets.demo.service.FilmService;
@@ -39,7 +40,7 @@ public class AdminScheduleController {
         return "/admin/schedule/schedule-list";
     }
 
-    @GetMapping("/schedules/add/{id}")
+    @GetMapping("/schedules/add")
     public String showAddForm(@PathVariable("id") Long id, Model model) {
         Schedule schedule = new Schedule();
         schedule.setFilm(filmService.getFilmById(id).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + id)));
@@ -76,12 +77,15 @@ public class AdminScheduleController {
     }
 
     @PostMapping("/schedules/edit/{id}")
-    public String updateSchedule(@PathVariable("id") Long id, @Valid Schedule schedule, BindingResult result, Model model) {
+    public String updateSchedule(@PathVariable("id") Long id, @Valid Schedule schedule,
+                                 @RequestParam("film_id") Long filmId, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("films", filmService.getAllFilms());
             model.addAttribute("rooms", roomService.getAllRooms());
-            return "/admin/schedule/schedule-add";
+            return "/admin/schedule/schedule-edit";
         }
+        Film film = filmService.getFilmById(filmId).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + filmId));
+        schedule.setFilm(film);
         scheduleService.updateSchedule(schedule);
         return "redirect:/admin/schedules";
     }

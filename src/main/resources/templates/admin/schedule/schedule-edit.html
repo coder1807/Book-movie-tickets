@@ -1,46 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Chỉnh sửa lịch chiếu</title>
+    <title>Title</title>
 </head>
 <body>
-<section layout:fragment="content" class="container mt-5">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-5" style="max-width: 900px;">
-            <h3 class="display-3 mb-4 fw-bolder">Chỉnh sửa lịch chiếu</h3>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                <li class="breadcrumb-item active">Chỉnh sửa lịch chiếu</li>
-            </ol>
+<section layout:fragment="content">
+    <main class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- main title -->
+                <div class="col-12">
+                    <div class="main__title">
+                        <h2 th:text="${title}"></h2>
+                    </div>
+                </div>
+                <!-- end main title -->
+
+                <!-- form -->
+                <div class="col-12">
+                    <div class="row">
+                        <form th:action="@{/admin/schedules/edit/{id}(id=${schedule.id})}" th:object="${schedule}"
+                              method="POST"
+                              class="profile__form">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4 class="profile__title">Thông tin</h4>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-12 col-xl-6">
+                                    <div class="profile__group">
+                                        <label class="profile__label" for="film_id">Tên phim</label>
+                                        <input type="hidden" name="film_id" th:value="${schedule.film.id}"/>
+                                        <input id="film_id" type="text" class="profile__input"
+                                               th:value="${schedule.film.name}"
+                                               disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-12 col-xl-6">
+                                    <div class="profile__group">
+                                        <label class="profile__label" for="cinema">Rạp</label>
+                                        <select class="js-example-basic-single" id="cinema"
+                                                name="cinema_id">
+                                            <option th:each="item: ${rooms}" th:value="${item.cinema.id}"
+                                                    th:text="${item.cinema.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-12 col-xl-6">
+                                    <div class="profile__group">
+                                        <label class="profile__label" for="room">Phòng</label>
+                                        <select class="js-example-basic-single" id="room" th:field="*{room.id}"
+                                                name="room_id">
+                                            <option th:each="item: ${rooms}" th:value="${item.id}"
+                                                    th:text="${item.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-12 col-xl-3">
+                                    <div class="profile__group">
+                                        <label class="profile__label" for="date">Ngày và giờ bắt đầu</label>
+                                        <input id="date" type="datetime-local" name="date" class="profile__input"
+                                               th:field="*{startTime}"/>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="profile__btn" type="submit">Thực hiện</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- end form -->
+            </div>
         </div>
-    </div>
-    <form th:action="@{/admin/schedules/edit/{id}(id=${schedule.id})}" th:object="${schedule}" method="post">
-        <div class="mb-3">
-            <label for="film" class="form-label">Phim:</label>
-            <select id="film" th:field="*{film}" class="form-control">
-                <option value="">Chọn phim</option>
-                <option th:each="item : ${films}" th:value="${item.id}" th:text="${item.name}"></option>
-            </select>
-            <div class="text-danger" th:if="${#fields.hasErrors('film')}" th:errors="*{film}"></div>
-        </div>
-        <div class="mb-3">
-            <label for="room" class="form-label">Phòng:</label>
-            <select id="room" th:field="*{room}" class="form-control">
-                <option value="">Chọn phòng</option>
-                <option th:each="item : ${rooms}" th:value="${item.id}" th:text="${item.name}"></option>
-            </select>
-            <div class="text-danger" th:if="${#fields.hasErrors('room')}" th:errors="*{room}"></div>
-        </div>
-        <div class="mb-3">
-            <label for="startTime" class="form-label">Suất chiếu:</label>
-            <input type="datetime-local" id="startTime" th:field="*{startTime}" class="form-control"/>
-            <div class="text-danger" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></div>
-        </div>
-        <button type="submit" class="btn btn-primary">Cập nhật</button>
-        <a th:href="@{/admin/schedules}" class="btn btn-outline-danger">Hủy</a>
-    </form>
+    </main>
 </section>
 </body>
 </html>
