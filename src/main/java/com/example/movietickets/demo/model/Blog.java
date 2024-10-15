@@ -20,7 +20,7 @@ public class Blog {
     @Column(name = "BLOG_TITLE", nullable = false)
     private String title;
 
-    @Column(name = "BLOG_CONTENT", nullable = false)
+    @Column(name = "BLOG_CONTENT", nullable = false, length = 2000)
     private String content;
 
     @Column(name = "BLOG_DAYCREATE", nullable = false)

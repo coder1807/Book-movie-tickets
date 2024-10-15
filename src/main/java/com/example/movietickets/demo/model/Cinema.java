@@ -27,11 +27,7 @@ public class Cinema {
     @Column(name = "MAP", nullable = true)
     private String map;
 
-
-    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cinema")
     private List<Room> rooms;
-
-//    @OneToMany(mappedBy = "room")
-//    private List<Seat> seats;
 
 }

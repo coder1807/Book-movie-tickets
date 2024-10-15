@@ -72,7 +72,7 @@ public class AdminScheduleController {
         model.addAttribute("schedule", schedule);
         model.addAttribute("films", filmService.getAllFilms());
         model.addAttribute("rooms", roomService.getAllRooms());
-        return "/admin/schedule/schedule-add";
+        return "/admin/schedule/schedule-edit";
     }
 
     @PostMapping("/schedules/edit/{id}")
