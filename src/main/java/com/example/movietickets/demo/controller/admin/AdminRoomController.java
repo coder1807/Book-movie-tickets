@@ -39,6 +39,7 @@ public class AdminRoomController {
     //gửi response ra view add
     @GetMapping("/rooms/add")
     public String showAddForm(Model model) {
+        model.addAttribute("title", "Thêm mới phòng");
         model.addAttribute("room", new Room());
         model.addAttribute("cinemas", cinemaService.getAllCinemas());
         return "/admin/room/room-add";
@@ -56,6 +57,7 @@ public class AdminRoomController {
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Room room = roomService.getRoomById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + id));
+        model.addAttribute("title", "Chỉnh sửa phòng #" + room.getId());
         model.addAttribute("room", room);
         model.addAttribute("cinemas", cinemaService.getAllCinemas());
         return "/admin/room/room-edit";
