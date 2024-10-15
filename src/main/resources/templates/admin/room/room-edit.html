@@ -1,52 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}"
->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Sửa quốc gia</title>
+    <title>Title</title>
 </head>
 <body>
-<section layout:fragment="content" class="container mt-5">
-    <!-- BREADCRUMB -->
-    <!-- Header Start -->
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-5" style="max-width: 900px;">
-            <h3 class="display-3 mb-4 fw-bolder">
-                Sửa danh mục
-            </h3>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Trang chủ >></a></li>
-                <li class="breadcrumb-item active ">Sửa danh mục </li>
-            </ol>
-        </div>
-    </div>
-    <!-- Header End -->
-    <!-- /BREADCRUMB -->
-    <!--    <h1 class="mb-4">Update Category</h1>-->
-    <form th:action="@{/admin/rooms/edit/{id}(id=${room.id})}" th:object="${room}" method="post" class="needs-validation" novalidate>
-        <div class="mb-3">
-            <label for="name" class="form-label">Phòng chiếu:</label>
-            <input type="text" th:field="*{name}" class="form-control" id="name" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Valid name is required.</div>
-        </div>
-        <div class="mb-3">
-            <label for="cinema" class="form-label">Rạp:</label>
-            <select id="cinema" th:field="*{cinema}" class="form-control">
-                <option value="">Chọn rạp</option>
-                <option th:each="item : ${cinemas}" th:value="${item.id}" th:text="${item.name}" th:selected="${item.id} == ${room.cinema.id}"></option>
-            </select>
-            <div class="text-danger" th:if="${#fields.hasErrors('cinema')}" th:errors="*{cinema}"></div>
-        </div>
+<section layout:fragment="content">
+    <main class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- main title -->
+                <div class="col-12">
+                    <div class="main__title">
+                        <h2 th:text="${title}"></h2>
+                    </div>
+                </div>
+                <!-- end main title -->
 
-        <div class="mb-3">
-            <label for="description" class="form-label">Mô tả:</label>
-            <textarea type="text" id="description" th:field="*{description}" class="form-control" placeholder="Mô tả"></textarea>
-            <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                <!-- form -->
+                <div class="col-12">
+                    <form th:action="@{/admin/rooms/edit/{id}(id=${room.id})}" th:object="${room}" method="POST"
+                          class="form">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="hidden" th:field="*{id}" name="id"/>
+                                        <input type="text" class="form__input" placeholder="Tên phòng chiếu"
+                                               th:field="*{name}"
+                                               name="name" required/>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="js-example-basic-single" id="cinema"
+                                                name="cinema_id" th:field="*{cinema}">
+                                            <option value="">Chọn rạp</option>
+                                            <option th:each="item: ${cinemas}" th:value="${item.id}"
+                                                    th:text="${item.name}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="text" class="form__input" placeholder="Mô tả"
+                                               th:field="*{description}" name="map" required/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit" class="form__btn">thực hiện</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- end form -->
+            </div>
         </div>
-        <button type="submit" class="custom-button">Update</button>
-        <a th:href="@{/admin/rooms}" class="btn btn-outline-danger w-100">Cancel</a>
-    </form>
+    </main>
 </section>
 </body>
 </html>
