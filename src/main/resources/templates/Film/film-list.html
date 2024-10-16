@@ -151,7 +151,7 @@
         </div>
     </section>
 
-    <section class="movie-section padding-top padding-bottom">
+    <section class="movie-section padding-top padding-bottom" th:object="${film}">
         <div class="container">
             <div class="row flex-wrap-reverse justify-content-center">
                 <div class="col-sm-10 col-md-8 col-lg-3">
@@ -208,37 +208,8 @@
                         <div class="widget-1-body">
                             <h6 class="subtitle"> Đa dạng thể loại </h6>
                             <div class="check-area">
-                                <div class="form-group">
-                                    <label>Kinh
-                                        dị</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Khoa
-                                        học viễn tưởng </label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Chính
-                                        kịch</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Tình
-                                        cảm, lãng mạn</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hành
-                                        động</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hài
-                                        hước</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phiêu
-                                        lưu</label>
-                                </div>
-                                <div class="form-group">
-                                    <label
-                                    >Hoạt hình</label>
+                                <div th:each="categories : ${categories}" class="form-group">
+                                    <a th:href="@{/films/by-category/{id}(id=${categories.id})}" th:value="${categories.id}" th:text="${categories.name}"></a>
                                 </div>
                             </div>
                             <div class="add-check-area">
