@@ -115,5 +115,21 @@ public class FilmController {
         return "film/films-by-category";  // Tên template view để hiển thị danh sách phim theo category
     }
 
+    @GetMapping("films/search")
+    public String getFilmsByName(Model model, @RequestParam("keyword") String keyword){
+        List<Film> films = filmService.getAllFilms();
+        if (keyword!=null &&!keyword.isEmpty()){
+           films  = filmService.searchFilmsByName(keyword);
+        }
+        List<Country> countries = countryService.getAllCountries();
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("films", films);
+        model.addAttribute("countries", countries);
+        return "film/film-search";
+
+
+    }
+
 }
 

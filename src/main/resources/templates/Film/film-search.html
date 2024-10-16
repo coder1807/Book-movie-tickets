@@ -345,8 +345,9 @@
                                             </p>
 
                                             <div class="movie-tags">
-                                                <a href="#0" th:text="${film.category.name}"></a>
+                                                <a href="#0" th:text="${film.category != null ? film.category.name : 'Thể loại không xác định'}"></a>
                                             </div>
+
                                             <div class="release">
                                                 <span>Ngày khởi chiếu : </span>
                                                 <a href="#0" th:text="@{${film.openingday != null ? #dates.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
