@@ -30,6 +30,8 @@ import java.util.*;
 @RequestMapping("/purchase")
 public class PurchaseController {
     @Autowired
+    private UserService userService;
+    @Autowired
     private PurchaseService purchaseService;
 
     @Autowired
@@ -118,7 +120,8 @@ public class PurchaseController {
 
     @GetMapping("/history")
     public String showPurchaseHistory(Model model) {
-        List<Booking> bookings = bookingService.getBookingsByCurrentUser(); // phương thức này để lấy các booking của người dùng hiện tại
+        User currentUser = userService.getCurrentUser();
+        List<Booking> bookings = bookingService.getBookingsByUser(currentUser.getId()); // phương thức này để lấy các booking của người dùng hiện tại
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("bookings", bookings);

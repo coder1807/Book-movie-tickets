@@ -18,8 +18,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Long getTotalPrice();
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.user.id = :user_id")
     Long getCountBookingByUser(@Param("user_id") long user_id);
+    @Query("SELECT b from Booking b WHERE b.user.id = :user_id ORDER BY b.createAt DESC")
+    List<Booking> findByUser(@Param("user_id") long user_id);
 
-    List<Booking> findByUser(User user);
+    @Query("SELECT SUM(b.price) FROM Booking b where b.user.id = :user_id")
+    Long getTotalPriceByUser(@Param("user_id") long user_id);
 
     List<Booking> findAllWithComboFoodByUser(User user);
 }

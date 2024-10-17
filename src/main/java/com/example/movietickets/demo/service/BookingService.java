@@ -61,6 +61,7 @@ public class BookingService {
 
     public Long getCountBookingByUser(long user_id) {return bookingRepository.getCountBookingByUser(user_id);}
 
+    public Long getTotalPriceByUser(long user_id) {return bookingRepository.getTotalPriceByUser(user_id);}
     public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {
         return seatRepository.findBySymbolInAndRoom(seatSymbols, room);
     }
@@ -69,33 +70,34 @@ public class BookingService {
         // Thay đổi phương thức để lấy các booking của người dùng hiện tại
         return bookingRepository.findAll();
     }
+    public List<Booking> getBookingsByUser(long user_id){return bookingRepository.findByUser(user_id);}
 
-    public List<Booking> getBookingsByCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication instanceof OAuth2AuthenticationToken) { //log in voi Oauth2
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-            String email = null;
-
-            Object principal = oauthToken.getPrincipal();
-            if (principal instanceof DefaultOidcUser) {
-                email = ((DefaultOidcUser) principal).getEmail();
-            } else if (principal instanceof DefaultOAuth2User) {
-                email = ((DefaultOAuth2User) principal).getAttribute("email");
-            }
-
-            if (email != null) {
-                User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
-                return bookingRepository.findByUser(user);
-            }
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) { //login binh thuong
-            String username = authentication.getName();
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
-            return bookingRepository.findByUser(user);
-        }
-
-        throw new UsernameNotFoundException("Không tìm thấy User");
-    }
+//    public List<Booking> getBookingsByCurrentUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication instanceof OAuth2AuthenticationToken) { //log in voi Oauth2
+//            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+//            String email = null;
+//
+//            Object principal = oauthToken.getPrincipal();
+//            if (principal instanceof DefaultOidcUser) {
+//                email = ((DefaultOidcUser) principal).getEmail();
+//            } else if (principal instanceof DefaultOAuth2User) {
+//                email = ((DefaultOAuth2User) principal).getAttribute("email");
+//            }
+//
+//            if (email != null) {
+//                User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
+//                return bookingRepository.findByUser(user);
+//            }
+//        } else if (authentication instanceof UsernamePasswordAuthenticationToken) { //login binh thuong
+//            String username = authentication.getName();
+//            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
+//            return bookingRepository.findByUser(user);
+//        }
+//
+//        throw new UsernameNotFoundException("Không tìm thấy User");
+//    }
 
 
 //    public List<Booking> getBookingsByCurrentUser() {
