@@ -1,5 +1,6 @@
 package com.example.movietickets.demo;
 
+import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.service.OauthService;
 import com.example.movietickets.demo.service.UserService;
 import jakarta.validation.constraints.NotNull;
@@ -88,10 +89,16 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
+                        .successHandler(((request, response, authentication) -> {
+                            User currentUser = userService.getCurrentUser();
+                            if (currentUser != null){
+                                String fullname = currentUser.getFullname();
+                                request.getSession().setAttribute("fullname",fullname);
+                            }
+                            response.sendRedirect("/");
+                        }))
                         .failureUrl("/login?error")
                         .permitAll())
-
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .failureUrl("/login?error")
@@ -103,25 +110,35 @@ public class SecurityConfig {
 
                             String email = null;
                             String username = null;
+                            String fullname = null;
 
                             if (principal instanceof DefaultOidcUser) {
                                 DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
                                 email = oidcUser.getEmail();
-                                username = oidcUser.getName();
+                                fullname = oidcUser.getFullName();
+                                username = email != null ? email.split("@")[0] : "User";
+
                             } else if (principal instanceof DefaultOAuth2User) {
                                 DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
                                 email = oauth2User.getAttribute("email");
-                                username = oauth2User.getAttribute("name");
+                                username = email != null ? email.split("@")[0] : "User";
+                                fullname = oauth2User.getAttribute("name");
+                                if (fullname==null){
+                                    fullname = oauth2User.getAttribute("given_name");
+                                }
+                                if (fullname == null) {
+                                    fullname = oauth2User.getAttribute("family_name");
+                                }
                             }
 
                             String provider = oauthToken.getAuthorizedClientRegistrationId()
                                     .toUpperCase();
-                            userService.saveOauthUser(email, username, provider);
+                            userService.saveOauthUser(email, username, fullname, provider);
+                            request.getSession().setAttribute("fullname", fullname);
                             response.sendRedirect("/"); // Chuyển hướng đến trang lịch sử
                             // sau khi đăng nhập thành công
                         })
                         .permitAll())
-
                 .rememberMe(rememberMe -> rememberMe
                         .key("3anhem")
                         .rememberMeCookieName("3anhem")

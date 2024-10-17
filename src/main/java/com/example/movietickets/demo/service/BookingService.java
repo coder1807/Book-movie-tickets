@@ -59,6 +59,8 @@ public class BookingService {
         return bookingRepository.getTotalPrice();
     }
 
+    public Long getCountBookingByUser(long user_id) {return bookingRepository.getCountBookingByUser(user_id);}
+
     public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {
         return seatRepository.findBySymbolInAndRoom(seatSymbols, room);
     }

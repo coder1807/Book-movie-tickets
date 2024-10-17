@@ -14,6 +14,7 @@ public interface IUserRepository extends JpaRepository<User, String> {
     List<User> findAllByOrderByIdDesc();
 
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
 

@@ -4,6 +4,7 @@ import com.example.movietickets.demo.model.Booking;
 import com.example.movietickets.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT SUM(b.price) FROM Booking b")
     Long getTotalPrice();
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.user.id = :user_id")
+    Long getCountBookingByUser(@Param("user_id") long user_id);
 
     List<Booking> findByUser(User user);
 

@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,6 +79,9 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
@@ -93,19 +98,33 @@ public class UserService implements UserDetailsService {
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
+            // Xử lý trường hợp đăng nhập bằng tài khoản thông thường
             String username = ((UserDetails) principal).getUsername();
             return findByUsername(username).orElse(null);
+
+        } else if (principal instanceof DefaultOidcUser) {
+            // Xử lý trường hợp đăng nhập bằng Google (OIDC)
+            DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
+            String email = oidcUser.getEmail();
+            return findByEmail(email).orElse(null);
+
+        } else if (principal instanceof DefaultOAuth2User) {
+            // Xử lý trường hợp đăng nhập qua OAuth2 mà không sử dụng OIDC
+            DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+            String email = oauth2User.getAttribute("email");
+            return findByEmail(email).orElse(null);
+
         } else {
             return null;
         }
     }
 
-    public void saveOauthUser(String email, String username, String provider) {
+    public void saveOauthUser(String email, String username, String fullname, String provider) {
         if (username == null || userRepository.findByUsername(username).isPresent())
             return;
-
         var user = new User();
         user.setUsername(username);
+        user.setFullname(fullname);
         user.setEmail(email != null ? email : username + "@example.com");
         user.setPassword(new BCryptPasswordEncoder().encode(username));
         user.setProvider(provider);
