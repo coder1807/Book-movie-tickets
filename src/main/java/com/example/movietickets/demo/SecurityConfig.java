@@ -51,13 +51,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/assets/**", "/css/**", "/js/**", "/", "/oauth/**",
                                 "/register", "/error", "/purchase", "/films",
-                                "/films/film-details/**", "/schedules/**","films/films-by-category/**",
+                                "/films/film-details/**", "/schedules/**", "films/films-by-category/**",
                                 "/cart", "/cart/**", "blog/details",
                                 "/popcorn", "/movie/details", "/movie/seat-plan",
                                 "/feedback", "/blog", "/blog/blog-details", "/about",
-                                "/blog/blog-details/{id}/comment")
+                                "/blog/blog-details/{id}/comment",
+                                "/register/verify")
                         .permitAll() // Cho phép truy cập không cần xác thực.
-                        .requestMatchers("admin/movie/edit/**", "/admin/movie/add",
+                        .requestMatchers("/admin", "admin/movie/edit/**", "/admin/movie/add",
                                 "/admin/films", "/admin/films/edit", "/admin/films/add",
                                 "/admin/countries", "/admin/countries/add",
                                 "/admin/countries/edit",
@@ -103,20 +104,26 @@ public class SecurityConfig {
 
                             String email = null;
                             String username = null;
+                            String fullname = null;
+                            String phoneNumber = null;
 
                             if (principal instanceof DefaultOidcUser) {
                                 DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
                                 email = oidcUser.getEmail();
-                                username = oidcUser.getName();
+                                username = oidcUser.getFullName();
+                                fullname = oidcUser.getFamilyName();
+                                phoneNumber = oidcUser.getPhoneNumber();
                             } else if (principal instanceof DefaultOAuth2User) {
                                 DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
                                 email = oauth2User.getAttribute("email");
                                 username = oauth2User.getAttribute("name");
+                                fullname = oauth2User.getAttribute("familyName");
+                                phoneNumber = oauth2User.getAttribute("phoneNumber");
                             }
 
                             String provider = oauthToken.getAuthorizedClientRegistrationId()
                                     .toUpperCase();
-                            userService.saveOauthUser(email, username, provider);
+                            userService.saveOauthUser(email, username, fullname, phoneNumber, provider);
                             response.sendRedirect("/"); // Chuyển hướng đến trang lịch sử
                             // sau khi đăng nhập thành công
                         })

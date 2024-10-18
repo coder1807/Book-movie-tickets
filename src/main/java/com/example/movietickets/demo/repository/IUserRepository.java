@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IUserRepository extends JpaRepository<User, String> {
+public interface IUserRepository extends JpaRepository<User, Long> {
     @Query("SELECT cf FROM User cf ORDER BY cf.id DESC")
     List<User> findAllByOrderByIdDesc();
 
