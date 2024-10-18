@@ -17,6 +17,7 @@
         <java.version>22</java.version>
         <maven.compiler.source>1.5</maven.compiler.source>
         <maven.compiler.target>1.5</maven.compiler.target>
+
     </properties>
     <dependencies>
         <dependency>
@@ -134,6 +135,19 @@
             <version>2.8.9</version> <!-- Bạn có thể kiểm tra phiên bản mới nhất -->
         </dependency>
         <!--end vnpay-->
+        <!--paypal-->
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>1.7.2</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+        <!-- end paypal-->
 
     </dependencies>
 
