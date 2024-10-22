@@ -132,6 +132,7 @@ public class PurchaseController {
             @RequestParam Long scheduleId,
             RedirectAttributes redirectAttributes
     ) {
+        System.out.println(payment);
         if (purchaseService.IsExist()) {
             Purchase purchase = purchaseService.Get();
             List<String> seatSymbols = new ArrayList<>();
@@ -181,6 +182,13 @@ public class PurchaseController {
                 return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount="  + booking.getPrice() + "&comboId="  + comboId ;
             }
 
+            if("paypal".equalsIgnoreCase(payment)){
+                return "redirect:/api/payment/create_paypal?scheduleId=" + scheduleId + "&amount="  + booking.getPrice() + "&comboId="  + comboId ;
+            }
+
+            if("momo".equalsIgnoreCase(payment)){
+                return "redirect:/api/payment/create_momo?scheduleId=" + scheduleId + "&amount="  + booking.getPrice() + "&comboId="  + comboId ;
+            }
             // Lấy thông tin người dùng hiện tại
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = getUserFromAuthentication(authentication);

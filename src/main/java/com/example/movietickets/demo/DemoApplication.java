@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("com.paypal.base.rest.APIContext")
+//@ComponentScan("com.paypal.base.rest.APIContext")
 //@ComponentScan("org.springframework.security.config.annotation.web.builders.HttpSecurity")
 public class DemoApplication {
 
