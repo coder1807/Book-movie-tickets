@@ -1,21 +1,28 @@
 package com.example.movietickets.demo.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.validation.constraints.*;
+import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.auditing.AuditableBeanWrapper;
+import org.springframework.data.auditing.AuditableBeanWrapperFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "User")
-public class User implements UserDetails { // Implement UserDetails
+public class User extends Auditable<String> implements UserDetails { // Implement UserDetails
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")  // Change to match your database column name for user_id
@@ -43,6 +50,15 @@ public class User implements UserDetails { // Implement UserDetails
     @Email
     private String email;
 
+    @Column(name = "account_verified")
+    private boolean accountVerified = false;
+    private boolean loginDisabled = false;
+
+    public boolean isAccountVerified() {
+        return accountVerified;
+    }
+
+
     @Column(name = "phone_number", length = 10, unique = true)  // Adjusted column name
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
@@ -56,6 +72,9 @@ public class User implements UserDetails { // Implement UserDetails
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "user")
+    Set<SecureToken> token;
 
     // Getters and setters for all fields
 
@@ -94,7 +113,7 @@ public class User implements UserDetails { // Implement UserDetails
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isAccountVerified(); // Chỉ được bật lên khi người dùng đã xác thực
     }
 
     @Override
@@ -109,4 +128,5 @@ public class User implements UserDetails { // Implement UserDetails
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }

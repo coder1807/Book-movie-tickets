@@ -3,7 +3,7 @@ package com.example.movietickets.demo.controller;
 import com.example.movietickets.demo.model.Category;
 import com.example.movietickets.demo.model.Feedback;
 import com.example.movietickets.demo.service.CategoryService;
-import com.example.movietickets.demo.service.EmailService;
+import com.example.movietickets.demo.mailing.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class FeedbackController {
         }*/
 
         // Gửi email phản hồi tới admin
-        emailService.sendFeedbackEmail(feedback);
+//        emailService.sendFeedbackEmail(feedback);
 
         model.addAttribute("message", "Feedback submitted successfully");
         return "redirect:/about";
