@@ -44,24 +44,24 @@
         </div>
     </section>
 
-    <section class="loyalty-points-section padding-top">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-12 text-center">
-                    <div class="points-text">
-                        <span class="cate">Tích điểm 3AE MEMBER</span>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress2 progress-moved">
-                            <div class="progress-bar2"
-                                 th:style="${'width:' + (userPoint / (userType == 'STANDARD' ? 2000 : 5000) * 100) + '%'}"></div>
-                        </div>
-                        <span class="points-text"
-                              th:text="${userPoint} + '/' + (${userType} == 'STANDARD' ? 2000 : 5000)"></span></div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!--    <section class="loyalty-points-section padding-top">-->
+<!--        <div class="container">-->
+<!--            <div class="row justify-content-center">-->
+<!--                <div class="col-lg-12 text-center">-->
+<!--                    <div class="points-text">-->
+<!--                        <span class="cate">Tích điểm 3AE MEMBER</span>-->
+<!--                    </div>-->
+<!--                    <div class="progress-container">-->
+<!--                        <div class="progress2 progress-moved">-->
+<!--                            <div class="progress-bar2"-->
+<!--                                 th:style="${'width:' + (userPoint / (userType == 'STANDARD' ? 2000 : 5000) * 100) + '%'}"></div>-->
+<!--                        </div>-->
+<!--                        <span class="points-text"-->
+<!--                              th:text="${userPoint} + '/' + (${userType} == 'STANDARD' ? 2000 : 5000)"></span></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
 
     <!-- ==========Contact-Section========== -->
     <section class="contact-section padding-top">

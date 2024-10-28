@@ -64,7 +64,8 @@ public class BookingService {
     }
 
     public Long getTotalPriceByUser(long user_id) {
-        return bookingRepository.getTotalPriceByUser(user_id);
+        Long totalPrice = bookingRepository.getTotalPriceByUser(user_id);
+        return totalPrice != null ? totalPrice : 0;
     }
 
     public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {

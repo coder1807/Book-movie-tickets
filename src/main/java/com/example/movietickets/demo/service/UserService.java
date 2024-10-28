@@ -146,7 +146,8 @@ public class UserService implements UserDetailsService {
 
 
     public Long getPointUser(Long user_id) {
-        return userRepository.getPointUser(user_id);
+        Long points = userRepository.getPointUser(user_id);
+        return points != null ? points : 0L;
     }
 
     public String getUserType(Long user_id) {

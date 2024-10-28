@@ -51,14 +51,12 @@
 
                     <div class="checkout-widget checkout-contact">
                         <h5 class="title"> Mã giảm giá </h5>
-                        <form class="checkout-contact-form">
-                            <div class="form-group">
-                                <input type="text" placeholder="Enter promo code">
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Xác nhận" class="custom-button">
-                            </div>
-                        </form>
+                        <select id="discountSelect" class="form-control">
+                            <option th:if="${userType == 'VIP'}" value="0.1" th:selected="${userType == 'VIP'}">Thành viên VIP - Giảm 10%</option>
+                            <option th:if="${userType == 'VIP'}" value="0.05"Thành viên FRIEND - Giảm 5%</option>
+                            <option th:if="${userType == 'FRIEND'}" value="0.05" th:selected="${userType == 'FRIEND'}">Thành viên FRIEND - Giảm 5%</option>
+                            <option value="0" th:selected="${userType == 'STANDARD'}">Không có mã khuyến mãi</option>
+                        </select>
                     </div>
                     <div class="checkout-widget checkout-card mb-2">
                         <h5 class="title">Đa dạng phương thức</h5>
@@ -104,6 +102,7 @@
                                 <input type="hidden" name="cinemaAddress" th:value="${cinemaAddress}" />
                                 <input type="hidden" name="roomName" th:value="${roomName}" />
                                 <input type="hidden" name="scheduleId" th:value="${scheduleId}">
+                                <input type="hidden" name="discountAmount" id="discountAmountInput" value="0">
 
                                 <label for="payment">Phương thức thanh toán:</label>
                                 <select class="form-control" name="payment" id="payment">
@@ -163,19 +162,26 @@
                             </li>
                         </ul>
                         <ul>
-                            <li>
-                                <span class="info"><span>Ghế thường</span><span>80.000</span></span>
-                                <span class="info"><span>Ghế VIP</span><span>100.000</span></span>
-                                <span class="info"><span>SweetBox</span><span>120.000</span></span>
+                            <li th:each="seat, iterStat : ${seatTypes}">
+                                <span class="info">
+                                    <span th:text="${seat.type}"></span>
+                                    <span th:text="${seatPriceFormatted[iterStat.index]}"></span>
+                                </span>
                             </li>
                         </ul>
                     </div>
                     <div class="proceed-area text-center">
                         <h6 class="subtitle">
-                            <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
+                            <span>Thành tiền</span><span class="initialTotal" th:text="${totalPrice}"></span>
                         </h6>
-<!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
+                        <h6 class="subtitle">
+                            <span class="discountPercent">Giảm giá</span><span class="discountAmount">0 VND</span>
+                        </h6>
+                        <h6 class="subtitle">
+                            <span>Tổng cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
+                        </h6>
                     </div>
+
                 </div>
             </div>
         </div>

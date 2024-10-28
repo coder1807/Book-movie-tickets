@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -55,6 +56,9 @@ public class PurchaseController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private SeatTypeService seatTypeService;
+
     @GetMapping
     public String showPurchase(Model model, @RequestParam(required = false) Long scheduleId) {
         if (purchaseService.IsExist()) {
@@ -85,6 +89,17 @@ public class PurchaseController {
             model.addAttribute("purchase", purchase);
             model.addAttribute("seats", seats);
             model.addAttribute("scheduleId", scheduleId);
+
+            List<SeatType> seatTypes = seatTypeService.getAllSeatTypes();
+            List<String> formattedSeatPrice = seatTypes.stream()
+                                                       .map(seatType -> currencyFormat.format(seatType.getPrice()))
+                                                       .toList();
+
+            model.addAttribute("seatTypes", seatTypes);
+            model.addAttribute("seatPriceFormatted",formattedSeatPrice);
+            User currentUser = userService.getCurrentUser();
+            String userType = userService.getUserType(currentUser.getId());
+            model.addAttribute("userType", userType);
         }
         return "/purchase/purchase";
     }
@@ -133,6 +148,7 @@ public class PurchaseController {
             @RequestParam("payment") String payment,
             @RequestParam String comboId, //nhận String từ form purrchase
             @RequestParam Long scheduleId,
+            @RequestParam Long discountAmount,
             RedirectAttributes redirectAttributes
     ) {
         if (purchaseService.IsExist()) {
@@ -171,7 +187,7 @@ public class PurchaseController {
             booking.setPayment(payment);
             booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
             booking.setCreateAt(new Date());
-            booking.setPrice(purchase.getTotalPrice()+ comboPrice); //cộng thêm giá từ food
+            booking.setPrice(purchase.getTotalPrice()+ comboPrice - discountAmount); //cộng thêm giá từ food
 
             if (comboFoodId != null) {
                 ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
