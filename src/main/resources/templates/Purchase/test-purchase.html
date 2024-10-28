@@ -20,7 +20,8 @@
     <!-- ==========Preloader========== -->
 
     <section class="banner-section">
-        <div class="banner-bg bg_img bg-fixed" data-background="/assets/img/history/history-bg.jpg" style="background-image: url(&quot;./assets/img/history/history-bg.jpg&quot;);"></div>
+        <div class="banner-bg bg_img bg-fixed" data-background="/assets/img/history/history-bg.jpg"
+             style="background-image: url(&quot;./assets/img/history/history-bg.jpg&quot;);"></div>
         <div class="container">
             <div class="banner-content">
                 <h1 class="title cd-headline clip">
@@ -62,7 +63,7 @@
                     <!--list film-->
                     <div class="tab-area">
                         <div class="tab-item">
-                            <div class="movie-area mb-10"  th:each="booking : ${bookings}">
+                            <div class="movie-area mb-10" th:each="booking : ${bookings}">
                                 <div class="movie-list">
                                     <div class="movie-thumb c-thumb">
                                         <a
@@ -98,7 +99,7 @@
                                             >
                                         </div>
                                         <div class="movie-tags">
-                                            <a href="#0"  th:text="${booking.cinemaName}"></a>
+                                            <a href="#0" th:text="${booking.cinemaName}"></a>
                                         </div>
                                         <ul
                                                 class="movie-rating-percent"
@@ -122,7 +123,7 @@
                                                             alt="movie"
                                                     />
                                                 </div>
-                                                <span class="content"  th:text="${'Tổng tiền: ' + booking.price}"
+                                                <span class="content" th:text="${'Tổng tiền: ' + booking.price}"
                                                 ></span
                                                 >
                                             </li>
@@ -164,7 +165,7 @@
                                                                     alt="icons"
                                                             />
                                                         </div>
-                                                        <span  th:text="${booking.cinemaAddress}" ></span>
+                                                        <span th:text="${booking.cinemaAddress}"></span>
                                                     </a>
                                                 </div>
                                                 <div class="react-item">
@@ -180,7 +181,7 @@
                                                                     alt="icons"
                                                             />
                                                         </div>
-                                                        <span  th:text="${booking.roomName}" ></span>
+                                                        <span th:text="${booking.roomName}"></span>
                                                     </a>
                                                 </div>
                                             </div>

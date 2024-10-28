@@ -36,9 +36,15 @@ public class ProfileController {
         List<Category> categories = categoryService.getAllCategories();
         List<Country> countries = countryService.getAllCountries();
         User currentUser = userService.getCurrentUser();
+        Long userPoint = userService.getPointUser(currentUser.getId());
+        String userType = userService.getUserType(currentUser.getId());
+
 
         Long totalPrice = bookingService.getTotalPriceByUser(currentUser.getId());
         Long bookingCount = bookingService.getCountBookingByUser(currentUser.getId());
+
+        model.addAttribute("userPoint", userPoint);
+        model.addAttribute("userType", userType);
         model.addAttribute("categories", categories);
         model.addAttribute("countries", countries);
         model.addAttribute("user", currentUser);
@@ -47,15 +53,18 @@ public class ProfileController {
 
         return "/profile/profile";
     }
+
     @PostMapping("/profile/update")
     public String updateProfile(@RequestParam("full_name") String fullName,
                                 @RequestParam("phone") String phone,
                                 Model model,
-                                HttpSession session){
+                                HttpSession session) {
         List<Category> categories = categoryService.getAllCategories();
         List<Country> countries = countryService.getAllCountries();
 
         User currentUser = userService.getCurrentUser();
+        Long userPoint = userService.getPointUser(currentUser.getId());
+        String userType = userService.getUserType(currentUser.getId());
         currentUser.setFullname(fullName);
         currentUser.setPhone(phone);
         userService.save(currentUser);
@@ -65,6 +74,8 @@ public class ProfileController {
 
         session.setAttribute("fullname", fullName);
 
+        model.addAttribute("userPoint", userPoint);
+        model.addAttribute("userType", userType);
         model.addAttribute("categories", categories);
         model.addAttribute("countries", countries);
         model.addAttribute("user", currentUser);
@@ -72,6 +83,36 @@ public class ProfileController {
         model.addAttribute("totalPrice", totalPrice);
 
         return "/profile/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/my-points")
+    public String showPoints(Model model) {
+        List<Category> categories = categoryService.getAllCategories();
+        List<Country> countries = countryService.getAllCountries();
+        User currentUser = userService.getCurrentUser();
+        Long userPoint = userService.getPointUser(currentUser.getId());
+        String userType = userService.getUserType(currentUser.getId());
+
+        Long totalPrice = bookingService.getTotalPriceByUser(currentUser.getId());
+        Long bookingCount = bookingService.getCountBookingByUser(currentUser.getId());
+        int progressWidth = Math.round(userPoint * 100 / 5000f);
+        String nextType;
+        if (userType.equals("STANDARD")) {
+            nextType = "FRIEND";
+        } else {
+            nextType = "VIP";
+        }
+        model.addAttribute("categories", categories);
+        model.addAttribute("countries", countries);
+        model.addAttribute("user", currentUser);
+        model.addAttribute("userPoint", userPoint);
+        model.addAttribute("userType", userType);
+        model.addAttribute("nextType", nextType);
+        model.addAttribute("bookingCount", bookingCount);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("progressWidth", progressWidth);
+        return "/profile/points";
     }
 }
 

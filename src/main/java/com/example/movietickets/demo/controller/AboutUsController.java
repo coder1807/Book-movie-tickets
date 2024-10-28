@@ -14,7 +14,7 @@ import java.util.List;
 public class AboutUsController {
 
     @Autowired
-            private CategoryService categoryService;
+    private CategoryService categoryService;
 
 
     @GetMapping("/about")

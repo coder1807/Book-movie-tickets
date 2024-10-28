@@ -91,9 +91,9 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .successHandler(((request, response, authentication) -> {
                             User currentUser = userService.getCurrentUser();
-                            if (currentUser != null){
+                            if (currentUser != null) {
                                 String fullname = currentUser.getFullname();
-                                request.getSession().setAttribute("fullname",fullname);
+                                request.getSession().setAttribute("fullname", fullname);
                             }
                             response.sendRedirect("/");
                         }))
@@ -123,7 +123,7 @@ public class SecurityConfig {
                                 email = oauth2User.getAttribute("email");
                                 username = email != null ? email.split("@")[0] : "User";
                                 fullname = oauth2User.getAttribute("name");
-                                if (fullname==null){
+                                if (fullname == null) {
                                     fullname = oauth2User.getAttribute("given_name");
                                 }
                                 if (fullname == null) {

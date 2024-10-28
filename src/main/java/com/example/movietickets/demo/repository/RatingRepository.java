@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     List<Rating> findAllByFilmId(Long FilmId);
+
     boolean existsByUserUsernameAndFilmId(String username, Long filmId);
 
     @Query("SELECT AVG(r.star) FROM Rating r WHERE r.film.id = :filmId")

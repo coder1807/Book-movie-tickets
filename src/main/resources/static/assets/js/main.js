@@ -233,6 +233,18 @@ $(document).ready(function () {
         }
       });
     });
+    //Odometer
+        $(".current-amount").each(function () {
+            $(this).isInViewport(function (status) {
+                if (status === "entered") {
+                    var el = $(this).find(".odometer");
+                    el.html(el.attr("data-odometer-final"));
+                    el.animateNumber({
+                        number: parseInt(el.attr("data-odometer-final"))
+                    });
+                }
+            });
+        });
     $(".social-icons li a").on("mouseover", function (e) {
       var social = $(this).parent("li");
       if (social.children("a").hasClass("active")) {
@@ -545,6 +557,8 @@ $(document).ready(function () {
     $(".blog-prev").on("click", function () {
       owlB.trigger("prev.owl.carousel", [300]);
     });
+
+
   });
 })(jQuery);
 

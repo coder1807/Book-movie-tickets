@@ -32,8 +32,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, // Validate đối tượng User
-            @NotNull BindingResult bindingResult, // Kết quả của quá trình validate
-            Model model) {
+                           @NotNull BindingResult bindingResult, // Kết quả của quá trình validate
+                           Model model) {
 
         if (userService.existsByUsername(user.getUsername())) {
             bindingResult.rejectValue("username", "error.user", "Tên tài khoản đã tồn tại");

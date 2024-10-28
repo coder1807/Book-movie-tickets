@@ -1,0 +1,171 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Ba Anh Em - Điểm tích lũy</title>
+
+    <style>
+        .img-poster {
+            width: 750px;
+            height: 360.61px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+<!-- ==========Preloader========== -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<section layout:fragment="content">
+    <!-- ==========Preloader========== -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <section class="main-page-header speaker-banner bg_img" data-background="/assets/img/banner/banner07.jpg"
+             style="background-image: url(&quot;/assets/img/banner/banner07.jpg&quot;);">
+        <div class="container">
+            <div class="speaker-banner-content">
+                <h2 class="title">3ae member</h2>
+                <ul class="breadcrumb">
+                    <li>
+                        <a th:href="@{/profile}"> Trang cá nhân </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/purchase/history}"> lịch sử đặt vé </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="rank-section">
+        <div class="container">
+            <div class="ranking-info">
+                <h3 class="ranking-title">Xếp hạng của bạn là <span class="rank-status" th:text="${userType}"></span>.
+                </h3>
+                <div class="flex-box">
+
+                </div>
+                <div class="spending-info-container">
+                    <p class="spending-info">Số tiền chi tiêu để nâng cấp lên <strong th:text="${nextType}"></strong>
+                    </p>
+                    <p class="current-amount">
+                        <strong class="odometer" th:data-odometer-final="(${userType} == 'STANDARD' ? 2000000 - ${totalPrice} :
+                                                          (${userType} == 'FRIEND' ? 5000000 - ${totalPrice} : 0))">0
+                        </strong> VND</p>
+                </div>
+
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress" th:style="${'width:' + progressWidth + '%'}"></div>
+                    </div>
+
+                    <div class="progress-member">
+                        <span></span>
+                        <span class="memberfriend">Friend</span>
+                        <span>VIP</span>
+
+                    </div>
+                    <div class="progress-labels">
+                        <span>0</span>
+                        <span class="numberfriend">2.000</span>
+                        <span class="milestone friend"></span>
+                        <span>5.000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="membership-section">
+        <div class="container">
+            <div class="membership-tier">
+                <div class="tier-card">
+                    <img src="/assets/img/profile/img-card-member2.jpg" alt="C'Friend" class="tier-image">
+                    <h4 class="tier-title">C'FRIEND</h4>
+                    <p class="tier-description">
+                        Được cấp lần đầu khi mua 2 vé xem phim bất kỳ tại Cinestar.
+                    </p>
+                    <ul class="tier-benefits">
+                        <li>Được giảm 10% trực tiếp trên giá trị hóa đơn bắp nước khi mua tại quầy.</li>
+                        <li>Được tặng 1 vé xem phim 2D vào tuần sinh nhật (từ Thứ Hai đến Chủ Nhật) với số điểm tích lũy
+                            tối thiểu 500 điểm.
+                        </li>
+                        <li>Tham gia các chương trình dành cho thành viên.</li>
+                    </ul>
+                </div>
+                <div class="tier-card">
+                    <img src="/assets/img/profile/img-card-vip.jpg" alt="C'VIP" class="tier-image">
+                    <h4 class="tier-title">C'VIP</h4>
+                    <p class="tier-description">
+                        Được cấp cho thành viên C'Friend khi tích lũy được ít nhất 10.000 điểm.
+                    </p>
+                    <ul class="tier-benefits">
+                        <li>Được giảm 15% trực tiếp trên giá trị hóa đơn bắp nước khi mua tại quầy.</li>
+                        <li>Được nhận vé tham gia Lễ Ra Mắt Phim và các chương trình khuyến mãi khác của Cinestar.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact-counter padding-top padding-bottom">
+        <div class="container">
+            <div class="row justify-content-center mb-30-none">
+                <a href="/purchase/history" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${bookingCount}">0</h5>
+                            </div>
+                            <p>Số lần đã đặt</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="/purchase/history" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${totalPrice}">0</h5>
+                            </div>
+                            <p>Số tiền đã chi</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="/my-points" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fa fa-gift"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${userPoint}">0</h5>
+                            </div>
+                            <p>Điểm của bạn</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+</section>

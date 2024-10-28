@@ -59,9 +59,14 @@ public class BookingService {
         return bookingRepository.getTotalPrice();
     }
 
-    public Long getCountBookingByUser(long user_id) {return bookingRepository.getCountBookingByUser(user_id);}
+    public Long getCountBookingByUser(long user_id) {
+        return bookingRepository.getCountBookingByUser(user_id);
+    }
 
-    public Long getTotalPriceByUser(long user_id) {return bookingRepository.getTotalPriceByUser(user_id);}
+    public Long getTotalPriceByUser(long user_id) {
+        return bookingRepository.getTotalPriceByUser(user_id);
+    }
+
     public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {
         return seatRepository.findBySymbolInAndRoom(seatSymbols, room);
     }
@@ -70,7 +75,10 @@ public class BookingService {
         // Thay đổi phương thức để lấy các booking của người dùng hiện tại
         return bookingRepository.findAll();
     }
-    public List<Booking> getBookingsByUser(long user_id){return bookingRepository.findByUser(user_id);}
+
+    public List<Booking> getBookingsByUser(long user_id) {
+        return bookingRepository.findByUser(user_id);
+    }
 
 //    public List<Booking> getBookingsByCurrentUser() {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

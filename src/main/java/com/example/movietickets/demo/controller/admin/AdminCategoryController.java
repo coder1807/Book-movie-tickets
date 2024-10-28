@@ -57,7 +57,7 @@ public class AdminCategoryController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + id));
         model.addAttribute("category", category);
         model.addAttribute("title", "Chỉnh sửa Thể loại #" + category.getId());
-        model.addAttribute("actionUrl", "/admin/categories/edit/"+id);
+        model.addAttribute("actionUrl", "/admin/categories/edit/" + id);
 
         return "/admin/category/category-add";
     }

@@ -1,6 +1,7 @@
 package com.example.movietickets.demo;
 
 import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
 public enum Role {
     ADMIN(1),

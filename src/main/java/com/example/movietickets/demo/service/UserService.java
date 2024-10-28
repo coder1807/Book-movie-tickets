@@ -79,6 +79,7 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -142,5 +143,19 @@ public class UserService implements UserDetailsService {
     // user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
     // userRepository.save(user);
     // }
+
+
+    public Long getPointUser(Long user_id) {
+        return userRepository.getPointUser(user_id);
+    }
+
+    public String getUserType(Long user_id) {
+        long point = getPointUser(user_id);
+        if (point >= 5000)
+            return "VIP";
+        else if (point >= 2000)
+            return "FRIEND";
+        return "STANDARD";
+    }
 
 }

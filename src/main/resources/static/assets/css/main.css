@@ -1287,12 +1287,12 @@ input[type="submit"] {
 }
 
 .section-header-3 .cate {
-    color: #31d7a9;
-    text-transform: uppercase;
-    display: block;
-    font-size: 18px;
-    margin-bottom: 10px;
-    margin-top: -8px;
+        color: #31d7a9;
+        text-transform: uppercase;
+        display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
+        margin-top: -8px;
 }
 
 .section-header-3 .title {
@@ -9647,3 +9647,154 @@ aside {
     }
 }
 /*# sourceMappingURL=main.css.map */
+
+//Trang tich luy
+/* Rank Section */
+.rank-section {
+    background-color: #3e3e3e;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+.rank-section .ranking-title {
+    font-size: 1.5rem;
+    margin: 20px;
+}
+
+.rank-section .ranking-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank-section .rank-status {
+    color: #ff4757;
+}
+.rank-section .spending-info-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    align-items: center;
+}
+
+.rank-section .spending-info {
+    font-size: 1.2rem;
+    flex-grow: 1; /* Giúp nội dung phần này giãn ra đều */
+    margin-right: 10px;
+    margin-top: 15px;
+    text-align: left; /* Căn trái nội dung này */
+}
+
+.rank-section .current-amount {
+    margin-top: -5px;
+    font-size: 1.5rem;
+    color: #ff4757;
+    text-align: right; /* Căn phải số tiền */
+}
+.rank-section .current-amount .odometer {
+    margin-top: -3px;
+}
+
+
+
+/* Progress Bar */
+.progress-bar-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.progress-bar {
+    background-color: #000;
+    border-radius: 5px;
+    height: 10px;
+    position: relative;
+}
+
+.progress-bar .progress {
+    background-color: #ff4757;
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+}
+.progress-member {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -7%;
+    position: relative;
+}
+.progress-member .memberfriend{
+    margin-left:-16%;
+}
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+}
+
+.milestone {
+    position: relative;
+}
+
+.milestone.friend{
+    content: '';
+    position: absolute;
+    top: -22px;
+    height: 22px;
+    width: 3px;
+    background-color: #fff;
+    left:40%;
+}
+.numberfriend{
+   margin-right:85px;
+}
+
+
+.membership-section {
+    background-color: #0e0e0e;
+    padding: 40px 0;
+}
+
+.membership-tier {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tier-card {
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 45%;
+}
+
+.tier-card .tier-image {
+    width: 100px;
+    margin-bottom: 15px;
+}
+
+.tier-card .tier-title {
+    font-size: 1.4rem;
+    color: #f9c74f;
+    margin-bottom: 15px;
+}
+
+.tier-card .tier-description {
+    color: #b0b0b0;
+    margin-bottom: 10px;
+}
+
+.tier-card .tier-benefits {
+    list-style-type: none;
+    padding: 0;
+    color: #fff;
+}
+
+.tier-card .tier-benefits li {
+    margin: 10px 0;
+}

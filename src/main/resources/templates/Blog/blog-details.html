@@ -72,10 +72,10 @@
                                         </div>
                                     </div>
                                     <div class="post-header">
-                                        <h4 class="m-title"  th:text="${blog.title}">
+                                        <h4 class="m-title" th:text="${blog.title}">
 
                                         </h4>
-                                        <p  th:text="${blog.content}">
+                                        <p th:text="${blog.content}">
 
                                         </p>
                                         <!-- <blockquote>
@@ -185,9 +185,11 @@
                                     <div class="blog-content">
                                         <p th:text="${comment.content}"></p>
                                     </div>
-                                    <div sec:authorize="hasAuthority('admin')" >
-                                        <form th:action="@{/blog/blog-details/{id}/delete/{commentId}(id=${blog.id}, commentId=${comment.id})}" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc không ?')">
+                                    <div sec:authorize="hasAuthority('admin')">
+                                        <form th:action="@{/blog/blog-details/{id}/delete/{commentId}(id=${blog.id}, commentId=${comment.id})}"
+                                              method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Bạn có chắc không ?')">
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
@@ -196,16 +198,20 @@
                                 </li>
                             </ul>
 
-                            <div sec:authorize="isAuthenticated()" >
+                            <div sec:authorize="isAuthenticated()">
                                 <div class="leave-comment">
                                     <h5 class="title">Để lại comment</h5>
-                                    <form class="blog-form" method="post" th:action="@{/blog/blog-details/{id}/comment(id=${blog.id})}" th:object="${comment}" enctype="multipart/form-data">
-                                        <input type="hidden" th:value="${blog.id}" name="blogId" /> <!-- Trường ẩn để lưu id của blog -->
+                                    <form class="blog-form" method="post"
+                                          th:action="@{/blog/blog-details/{id}/comment(id=${blog.id})}"
+                                          th:object="${comment}" enctype="multipart/form-data">
+                                        <input type="hidden" th:value="${blog.id}" name="blogId"/>
+                                        <!-- Trường ẩn để lưu id của blog -->
                                         <!--<div class="form-group">
                                             <input type="text" placeholder="Enter Your Full Name" th:value="${fullname}" readonly>
                                         </div>-->
                                         <div class="form-group">
-                                            <textarea placeholder="Viết cảm nghĩ của bạn" name="content" th:field="*{content}" required></textarea>
+                                            <textarea placeholder="Viết cảm nghĩ của bạn" name="content"
+                                                      th:field="*{content}" required></textarea>
                                             <!-- th:field="*{content}" sẽ binding dữ liệu với thuộc tính content của đối tượng newComment trong model -->
                                         </div>
                                         <div class="form-group">
@@ -227,7 +233,8 @@
                         <div class="widget widget-search">
                             <h5 class="title">Tìm kiếm</h5>
                             <form class="search-form" th:action="@{/blog/search}" method="get">
-                                <input type="text" name="keyword" th:value="${keyword}" placeholder="Enter your Search Blog" required="">
+                                <input type="text" name="keyword" th:value="${keyword}"
+                                       placeholder="Enter your Search Blog" required="">
                                 <button type="submit">
                                     <i class="flaticon-loupe"></i>Tìm
                                 </button>

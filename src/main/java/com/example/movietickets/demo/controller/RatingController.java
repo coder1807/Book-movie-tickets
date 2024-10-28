@@ -38,7 +38,7 @@ public class RatingController {
 
     @PostMapping("/film-details/{id}/rating")
     public String addRating(@PathVariable Long id, @Valid @ModelAttribute Rating rating,
-                             BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+                            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
 
         // Lấy thông tin blog từ id

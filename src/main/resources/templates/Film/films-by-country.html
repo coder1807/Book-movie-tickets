@@ -123,10 +123,11 @@
                 <div class="tab-area">
                     <div class="tab-item active">
                         <div class="flex-form">
-                            <form class="ticket-search-form"  th:action="@{/films/search}" method="get">
+                            <form class="ticket-search-form" th:action="@{/films/search}" method="get">
                                 <div class="form-group large">
                                     <div th:action="@{/films/search}" method="get">
-                                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm phim" required="">
+                                        <input type="text" name="keyword" th:value="${keyword}"
+                                               placeholder="Tìm kiếm phim" required="">
                                         <button type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>
@@ -136,12 +137,13 @@
                             <form>
                                 <div class="form-group flex-center">
                                     <div class="thumb-country">
-                                        <img src="/assets/img/ticket/city.png" alt="ticket" />
+                                        <img src="/assets/img/ticket/city.png" alt="ticket"/>
                                     </div>
                                     <span class="type type-country">Quốc gia: </span>
                                     <select class="select-bar" onchange="handleCountryChange(this)">
                                         <option value="" disabled selected>Chọn quốc gia</option>
-                                        <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}"></option>
+                                        <option th:each="country : ${countries}" th:value="${country.id}"
+                                                th:text="${country.name}"></option>
                                     </select>
                                 </div>
                             </form>
@@ -172,16 +174,16 @@
                             <h6 class="subtitle">Đa dạng ngôn ngữ </h6>
                             <div class="check-area">
                                 <div class="form-group">
-                                    <label >English</label>
+                                    <label>English</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >VietNames</label>
+                                    <label>VietNames</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Korean</label>
+                                    <label>Korean</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Chinese</label>
+                                    <label>Chinese</label>
                                 </div>
 
                             </div>
@@ -210,31 +212,31 @@
                             <h6 class="subtitle"> Đa dạng thể loại </h6>
                             <div class="check-area">
                                 <div class="form-group">
-                                    <label >Kinh
+                                    <label>Kinh
                                         dị</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Khoa
+                                    <label>Khoa
                                         học viễn tưởng </label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Chính
+                                    <label>Chính
                                         kịch</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Tình
+                                    <label>Tình
                                         cảm, lãng mạn</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Hành
+                                    <label>Hành
                                         động</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Hài
+                                    <label>Hài
                                         hước</label>
                                 </div>
                                 <div class="form-group">
-                                    <label >Phiêu
+                                    <label>Phiêu
                                         lưu</label>
                                 </div>
                                 <div class="form-group">
@@ -281,7 +283,7 @@
                         <!--list film-->
                         <div class="tab-area">
                             <div class="tab-item active">
-                                <div class="row mb-10 justify-content-center" th:if="${not #lists.isEmpty(films)}" >
+                                <div class="row mb-10 justify-content-center" th:if="${not #lists.isEmpty(films)}">
                                     <div class="col-sm-6 col-lg-4" th:each="film : ${films}">
                                         <div class="movie-grid">
                                             <div class="movie-thumb c-thumb">
@@ -291,7 +293,8 @@
                                             </div>
                                             <div class="movie-content bg-one">
                                                 <h5 class="title m-0">
-                                                    <a th:href="@{/films/film-details/{id}(id=${film.id})}" th:text="${film.name}" ></a>
+                                                    <a th:href="@{/films/film-details/{id}(id=${film.id})}"
+                                                       th:text="${film.name}"></a>
                                                 </h5>
                                                 <ul class="movie-rating-percent">
                                                     <li>
@@ -312,14 +315,15 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-10 justify-content-center search-nothing" th:if="${#lists.isEmpty(films)}" >
+                                <div class="row mb-10 justify-content-center search-nothing"
+                                     th:if="${#lists.isEmpty(films)}">
                                     <h2>Phim bạn đang tìm kiếm không có</h2>
                                 </div>
 
 
                             </div>
                             <div class="tab-item">
-                                <div class="movie-area mb-10"  th:each="film : ${films}">
+                                <div class="movie-area mb-10" th:each="film : ${films}">
                                     <div class="movie-list">
                                         <div class="movie-thumb c-thumb">
                                             <a
@@ -346,12 +350,14 @@
                                             </p>
 
                                             <div class="movie-tags">
-                                                <a href="#0" th:text="${film.category != null ? film.category.name : 'Thể loại không xác định'}"></a>
+                                                <a href="#0"
+                                                   th:text="${film.category != null ? film.category.name : 'Thể loại không xác định'}"></a>
                                             </div>
 
                                             <div class="release">
                                                 <span>Ngày khởi chiếu : </span>
-                                                <a href="#0" th:text="@{${film.openingday != null ? #dates.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
+                                                <a href="#0"
+                                                   th:text="@{${film.openingday != null ? #dates.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
                                                 </a
                                                 >
                                             </div>

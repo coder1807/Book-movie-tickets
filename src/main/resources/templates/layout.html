@@ -1,296 +1,303 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/all.min.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/animate.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/flaticon.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/odometer.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/owl.carousel.min.css}" />
-  <link rel="stylesheet" type="text/css" th:href="@{https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/owl.theme.default.min.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/nice-select.css}" />
-  <link rel="stylesheet" th:fragment="link-css" th:href="@{/assets/css/jquery.animatedheadline.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/contact.css}" />
-  <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/all.min.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/animate.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/flaticon.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/odometer.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/owl.carousel.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/owl.theme.default.min.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/nice-select.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{/assets/css/jquery.animatedheadline.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/contact.css}"/>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/assets/css/main.css}"/>
 
-  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/movie/cake2.png" />
-  <!--    "D:\Web_VS\Ba-Anh-Em\src\main\resources\static\assets\img\movie\cake2.png"-->
-  <!--    th:replace="~{::title}"-->
-  <title>Ba Anh Em - Đặt vé xem phim online</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/movie/cake2.png"/>
+    <!--    "D:\Web_VS\Ba-Anh-Em\src\main\resources\static\assets\img\movie\cake2.png"-->
+    <!--    th:replace="~{::title}"-->
+    <title>Ba Anh Em - Đặt vé xem phim online</title>
 
-  <link rel="shortcut icon" th:src="@{/assets/img/favicon.png}" type="image/x-icon" />
-  <!--    th:replace="~{::title}"-->
-  <title>Ba Anh Em - Online Ticket Booking Website</title>
+    <link rel="shortcut icon" th:src="@{/assets/img/favicon.png}" type="image/x-icon"/>
+    <!--    th:replace="~{::title}"-->
+    <title>Ba Anh Em - Online Ticket Booking Website</title>
 
-  <style>
-    .btn__logout {
-      background-image: -webkit-linear-gradient(169deg,
-          #5560ff 17%,
-          #aa52a1 63%,
-          #ff4343 100%);
-      padding: 10px 49px;
-      font-weight: 600;
-      border-radius: 25px;
-      display: inline-block;
-      transition: all 0.3s ease;
-    }
+    <style>
+        .btn__logout {
+          background-image: -webkit-linear-gradient(169deg,
+              #5560ff 17%,
+              #aa52a1 63%,
+              #ff4343 100%);
+          padding: 10px 49px;
+          font-weight: 600;
+          border-radius: 25px;
+          display: inline-block;
+          transition: all 0.3s ease;
+        }
 
-    .btn__logout:hover {
-      box-shadow: 0px 10px 15px 0px rgba(59, 55, 188, 0.5);
-    }
+        .btn__logout:hover {
+          box-shadow: 0px 10px 15px 0px rgba(59, 55, 188, 0.5);
+        }
 
-    .btn__logout:focus,
-    .btn__logout:active {
-      border: none;
-      outline: none;
-    }
+        .btn__logout:focus,
+        .btn__logout:active {
+          border: none;
+          outline: none;
+        }
 
-    .mt-50 {
-      margin-top: 50px;
-    }
-  </style>
+        .mt-50 {
+          margin-top: 50px;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- ==========Overlay========== -->
-  <div class="overlay"></div>
-  <a href="#0" class="scrollToTop">
+<!-- ==========Overlay========== -->
+<div class="overlay"></div>
+<a href="#0" class="scrollToTop">
     <i class="fas fa-angle-up"></i>
-  </a>
-  <!-- ==========Overlay========== -->
-  <header class="header-section">
+</a>
+<!-- ==========Overlay========== -->
+<header class="header-section">
     <div class="container">
-      <div class="header-wrapper">
-        <div class="logo">
-          <a th:href="@{/}">
-            <img th:src="@{/assets/img/logo/logo1.png}" alt="logo" />
-          </a>
+        <div class="header-wrapper">
+            <div class="logo">
+                <a th:href="@{/}">
+                    <img th:src="@{/assets/img/logo/logo1.png}" alt="logo"/>
+                </a>
+            </div>
+            <ul class="menu">
+                <li class="">
+                    <a href="/" class="active on_item" id="1">Trang chủ</a>
+                </li>
+                <li>
+                    <a href="/films" class="on_item" id="2">Phim</a>
+                </li>
+
+                <li class="menu-item-has-children">
+                    <a href="#0" class="on_item" id="3">Thể loại</a>
+                    <ul class="submenu">
+                        <li th:each="category : ${categories}">
+                            <a th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children">
+                    <a href="#0" class="on_item" id="4">
+                        Trang
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a th:href="@{/blog}">bài viết</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/feedback}">Liên hệ</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/about}">Về chúng tôi</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li sec:authorize="isAuthenticated()">
+                    <a href="#">Xin chào, <span th:text="${session.fullname}"></span>!</a>
+                    <ul class="submenu">
+                        <li>
+                            <a th:href="@{/profile}">Trang cá nhân</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/my-points}">Xem điểm của tôi</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/purchase/history}">Lịch sử mua vé</a>
+                        </li>
+
+                        <li>
+                            <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
+                            </form>
+                            <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Đăng
+                                xuất</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="header-button pr-0" sec:authorize="!isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <a th:href="@{/login}">Đăng nhập</a>
+                    </form>
+                </li>
+            </ul>
+            <div class="header-bar d-lg-none">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-        <ul class="menu">
-          <li class="">
-            <a href="/" class="active on_item" id="1">Trang chủ</a>
-          </li>
-          <li>
-            <a href="/films" class="on_item" id="2">Phim</a>
-          </li>
-
-          <li class="menu-item-has-children">
-            <a href="#0" class="on_item" id="3">Thể loại</a>
-            <ul class="submenu">
-              <li th:each="category : ${categories}">
-                <a th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
-              </li>
-            </ul>
-          </li>
-
-          <li class="menu-item-has-children">
-            <a href="#0" class="on_item" id="4">
-              Trang
-            </a>
-            <ul class="submenu">
-              <li>
-                <a th:href="@{/blog}">bài viết</a>
-              </li>
-              <li>
-                <a th:href="@{/feedback}">Liên hệ</a>
-              </li>
-              <li>
-                <a th:href="@{/about}">Về chúng tôi</a>
-              </li>
-            </ul>
-          </li>
-
-          <li sec:authorize="isAuthenticated()">
-            <a href="#">Xin chào, <span th:text="${session.fullname}"></span>!</a>
-            <ul class="submenu">
-              <li>
-                <a th:href="@{/profile}">Trang cá nhân</a>
-              </li>
-              <li>
-                <a th:href="@{/purchase/history}">Lịch sử mua vé</a>
-              </li>
-              <li>
-                <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
-                </form>
-                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Đăng xuất</a>
-              </li>
-
-            </ul>
-          </li>
-
-          <li class="header-button pr-0" sec:authorize="!isAuthenticated()">
-            <form th:action="@{/logout}" method="post">
-              <a th:href="@{/login}">Đăng nhập</a>
-            </form>
-          </li>
-        </ul>
-        <div class="header-bar d-lg-none">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
     </div>
-  </header>
-  <main>
+</header>
+<main>
     <section layout:fragment="content"></section>
-  </main>
-  <footer class="footer-section mt-50">
+</main>
+<footer class="footer-section mt-50">
     <div class="container">
-      <div class="newslater-container bg_img" data-background="/assets/img/newslater/newslater-bg01.jpg">
-        <div class="newslater-wrapper">
-          <h5 class="cate">Đăng kí Ba Anh Em</h5>
-          <h3 class="title">Nhận ngay nhiều voucher hấp dẫn đừng bỏ lỡ!</h3>
-          <form class="newslater-form">
-            <input type="text" placeholder="Địa chỉ email của bạn" />
-            <button type="submit">Đăng kí</button>
-          </form>
-          <p>
-            Chúng tôi rất tôn trọng quyền riêng tư của bạn,
-            chúng tôi sẽ không bao giờ chia sẻ thông tin của bạn
-          </p>
+        <div class="newslater-container bg_img" data-background="/assets/img/newslater/newslater-bg01.jpg">
+            <div class="newslater-wrapper">
+                <h5 class="cate">Đăng kí Ba Anh Em</h5>
+                <h3 class="title">Nhận ngay nhiều voucher hấp dẫn đừng bỏ lỡ!</h3>
+                <form class="newslater-form">
+                    <input type="text" placeholder="Địa chỉ email của bạn"/>
+                    <button type="submit">Đăng kí</button>
+                </form>
+                <p>
+                    Chúng tôi rất tôn trọng quyền riêng tư của bạn,
+                    chúng tôi sẽ không bao giờ chia sẻ thông tin của bạn
+                </p>
+            </div>
         </div>
-      </div>
     </div>
     </div>
     <div class="container">
-      <div class="footer-top">
-        <div class="logo">
-          <a href="index-1.html">
-            <img src="/assets/img/logo/logo1.png" width="185px" alt="footer" />
-          </a>
+        <div class="footer-top">
+            <div class="logo">
+                <a href="index-1.html">
+                    <img src="/assets/img/logo/logo1.png" width="185px" alt="footer"/>
+                </a>
+            </div>
+            <ul class="social-icons">
+                <li>
+                    <a href="#0">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#0" class="active">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#0">
+                        <i class="fab fa-pinterest-p"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#0">
+                        <i class="fab fa-google"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#0">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <ul class="social-icons">
-          <li>
-            <a href="#0">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#0" class="active">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#0">
-              <i class="fab fa-pinterest-p"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#0">
-              <i class="fab fa-google"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#0">
-              <i class="fab fa-instagram"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-bottom-area">
-          <div class="left">
-            <p>
-              Copyright © 2024.All Rights Reserved By
-              <a href="#0">Ba Anh Em </a>
-            </p>
-          </div>
-          <ul class="links">
-            <li>
-              <a href="#0">Về chúng tôi </a>
-            </li>
-            <li>
-              <a href="#0">Terms Of Use</a>
-            </li>
-            <li>
-              <a href="#0">Chính sách quyền riêng tư</a>
-            </li>
-            <li>
-              <a href="#0">FAQ</a>
-            </li>
-            <li>
-              <a href="#0">Phản hồi</a>
-            </li>
-          </ul>
+        <div class="footer-bottom">
+            <div class="footer-bottom-area">
+                <div class="left">
+                    <p>
+                        Copyright © 2024.All Rights Reserved By
+                        <a href="#0">Ba Anh Em </a>
+                    </p>
+                </div>
+                <ul class="links">
+                    <li>
+                        <a href="#0">Về chúng tôi </a>
+                    </li>
+                    <li>
+                        <a href="#0">Terms Of Use</a>
+                    </li>
+                    <li>
+                        <a href="#0">Chính sách quyền riêng tư</a>
+                    </li>
+                    <li>
+                        <a href="#0">FAQ</a>
+                    </li>
+                    <li>
+                        <a href="#0">Phản hồi</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </div>
-  </footer>
-  <div>
+</footer>
+<div>
     <!-- contact social media animation -->
     <div id="button-contact-vr" class="">
-      <div id="gom-all-in-one">
-        <!-- v3 -->
-        <!-- fb-->
-        <div id="fb-vr" class="button-contact">
-          <div class="phone-vr">
-            <div class="phone-vr-circle-fill"></div>
-            <div class="phone-vr-img-circle">
-              <a target="_blank" href="https://www.facebook.com/profile.php?id=61561613647441">
-                <img
-                  src="https://th.bing.com/th/id/R.e790c25db5e52838040686612b1a732c?rik=uVuLX4sResGMKA&riu=http%3a%2f%2fpngimg.com%2fuploads%2ffacebook_logos%2ffacebook_logos_PNG19757.png&ehk=JL234rPBfx%2bf3tobhEVbPdNgJiWOhk251WyRwRAg940%3d&risl=&pid=ImgRaw&r=0" />
-              </a>
+        <div id="gom-all-in-one">
+            <!-- v3 -->
+            <!-- fb-->
+            <div id="fb-vr" class="button-contact">
+                <div class="phone-vr">
+                    <div class="phone-vr-circle-fill"></div>
+                    <div class="phone-vr-img-circle">
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=61561613647441">
+                            <img
+                                    src="https://th.bing.com/th/id/R.e790c25db5e52838040686612b1a732c?rik=uVuLX4sResGMKA&riu=http%3a%2f%2fpngimg.com%2fuploads%2ffacebook_logos%2ffacebook_logos_PNG19757.png&ehk=JL234rPBfx%2bf3tobhEVbPdNgJiWOhk251WyRwRAg940%3d&risl=&pid=ImgRaw&r=0"/>
+                        </a>
+                    </div>
+                    <div class="fb-bar fb-bar-n">
+                        <a href="https://www.facebook.com/profile.php?id=61561613647441" target="_blank">
+                            <span class="text-phone">Xem bài viết ngay, voucher liền tay</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="fb-bar fb-bar-n">
-              <a href="https://www.facebook.com/profile.php?id=61561613647441" target="_blank">
-                <span class="text-phone">Xem bài viết ngay, voucher liền tay</span>
-              </a>
+            <!-- end fb -->
+            <!-- viber -->
+            <!-- end viber -->
+            <!-- zalo -->
+            <div id="zalo-vr" class="button-contact">
+                <div class="phone-vr">
+                    <div class="phone-vr-circle-fill"></div>
+                    <div class="phone-vr-img-circle">
+                        <a target="_blank" href="https://zalo.me/0931034852">
+                            <img src="https://tourngay.vn/wp-content/plugins/button-contact-vr-master/img/zalo.png"/>
+                        </a>
+                    </div>
+                    <div class="zalo-bar zalo-bar-n">
+                        <a href="https://zalo.me/0931034852">
+                            <span class="text-phone">Gửi yêu cầu tư vấn ngay</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <!-- end fb -->
-        <!-- viber -->
-        <!-- end viber -->
-        <!-- zalo -->
-        <div id="zalo-vr" class="button-contact">
-          <div class="phone-vr">
-            <div class="phone-vr-circle-fill"></div>
-            <div class="phone-vr-img-circle">
-              <a target="_blank" href="https://zalo.me/0931034852">
-                <img src="https://tourngay.vn/wp-content/plugins/button-contact-vr-master/img/zalo.png" />
-              </a>
+            <!-- end zalo -->
+            <!-- Phone -->
+            <div id="phone-vr" class="button-contact">
+                <div class="phone-vr">
+                    <div class="phone-vr-circle-fill"></div>
+                    <div class="phone-vr-img-circle">
+                        <a href="tel:0931034852">
+                            <img src="https://tourngay.vn/wp-content/plugins/button-contact-vr-master/img/phone.png"/>
+                        </a>
+                    </div>
+                    <div class="phone-bar phone-bar-n">
+                        <a href="tel:0931034852">
+                            <span class="text-phone">093.1034.852(a Phát)</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="zalo-bar zalo-bar-n">
-              <a href="https://zalo.me/0931034852">
-                <span class="text-phone">Gửi yêu cầu tư vấn ngay</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- end zalo -->
-        <!-- Phone -->
-        <div id="phone-vr" class="button-contact">
-          <div class="phone-vr">
-            <div class="phone-vr-circle-fill"></div>
-            <div class="phone-vr-img-circle">
-              <a href="tel:0931034852">
-                <img src="https://tourngay.vn/wp-content/plugins/button-contact-vr-master/img/phone.png" />
-              </a>
-            </div>
-            <div class="phone-bar phone-bar-n">
-              <a href="tel:0931034852">
-                <span class="text-phone">093.1034.852(a Phát)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- end phone -->
-      </div><!-- end v3 class gom-all-in-one -->
+            <!-- end phone -->
+        </div><!-- end v3 class gom-all-in-one -->
 
     </div>
-  </div>
-  <script>!function (s, u, b, i, z) { var o, t, r, y; s[i] || (s._sbzaccid = z, s[i] = function () { s[i].q.push(arguments) }, s[i].q = [], s[i]("setAccount", z), r = ["widget.subiz.net", "storage.googleapis" + (t = ".com"), "app.sbz.workers.dev", i + "a" + (o = function (k, t) { var n = t <= 6 ? 5 : o(k, t - 1) + o(k, t - 3); return k !== t ? n : n.toString(32) })(20, 20) + t, i + "b" + o(30, 30) + t, i + "c" + o(40, 40) + t], (y = function (k) { var t, n; s._subiz_init_2094850928430 || r[k] && (t = u.createElement(b), n = u.getElementsByTagName(b)[0], t.async = 1, t.src = "https://" + r[k] + "/sbz/app.js?accid=" + z, n.parentNode.insertBefore(t, n), setTimeout(y, 2e3, k + 1)) })(0)) }(window, document, "script", "subiz", "acsadgnruqpvzqeqzezv")</script>
+</div>
+<script>
+    !function (s, u, b, i, z) { var o, t, r, y; s[i] || (s._sbzaccid = z, s[i] = function () { s[i].q.push(arguments) }, s[i].q = [], s[i]("setAccount", z), r = ["widget.subiz.net", "storage.googleapis" + (t = ".com"), "app.sbz.workers.dev", i + "a" + (o = function (k, t) { var n = t <= 6 ? 5 : o(k, t - 1) + o(k, t - 3); return k !== t ? n : n.toString(32) })(20, 20) + t, i + "b" + o(30, 30) + t, i + "c" + o(40, 40) + t], (y = function (k) { var t, n; s._subiz_init_2094850928430 || r[k] && (t = u.createElement(b), n = u.getElementsByTagName(b)[0], t.async = 1, t.src = "https://" + r[k] + "/sbz/app.js?accid=" + z, n.parentNode.insertBefore(t, n), setTimeout(y, 2e3, k + 1)) })(0)) }(window, document, "script", "subiz", "acsadgnruqpvzqeqzezv")
+</script>
 
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
       const comboFoodSelect = document.getElementById('comboFoodSelect');
       const totalCheckoutSpan = document.querySelector('.totalCheckout');
@@ -313,27 +320,48 @@
         totalCheckoutSpan.textContent = newTotalPrice.toLocaleString('vi-VN') + ' VND';
       });
     });
-  </script>
+</script>
 
 
-  <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
-  <script th:src="@{/assets/js/modernizr-3.6.0.min.js}"></script>
-  <script th:src="@{/assets/js/plugins.js}"></script>
-  <script th:src="@{/assets/js/bootstrap.min.js}"></script>
-  <script th:src="@{/assets/js/heandline.js}"></script>
-  <script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
-  <script th:src="@{/assets/js/magnific-popup.min.js}"></script>
-  <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
-  <script th:src="@{/assets/js/wow.min.js}"></script>
-  <script th:src="@{/assets/js/countdown.min.js}"></script>
-  <script th:src="@{/assets/js/odometer.min.js}"></script>
-  <script th:src="@{/assets/js/viewport.jquery.js}"></script>
-  <script th:src="@{/assets/js/nice-select.js}"></script>
-  <script th:src="@{/assets/js/seat.js}"></script>
-  <script type="text/javascript" th:src="@{https://cdn.jsdelivr.net/npm/toastify-js}"></script>
-  <script th:src="@{/assets/js/app.js}"></script>
-  <script th:src="@{/assets/js/main.js}"></script>
-
+<script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/assets/js/modernizr-3.6.0.min.js}"></script>
+<script th:src="@{/assets/js/plugins.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/heandline.js}"></script>
+<script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/magnific-popup.min.js}"></script>
+<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/assets/js/wow.min.js}"></script>
+<script th:src="@{/assets/js/countdown.min.js}"></script>
+<script th:src="@{/assets/js/odometer.min.js}"></script>
+<script th:src="@{/assets/js/viewport.jquery.js}"></script>
+<script th:src="@{/assets/js/nice-select.js}"></script>
+<script th:src="@{/assets/js/seat.js}"></script>
+<script type="text/javascript" th:src="@{https://cdn.jsdelivr.net/npm/toastify-js}"></script>
+<script th:src="@{/assets/js/app.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

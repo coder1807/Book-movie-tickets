@@ -37,6 +37,7 @@ public class SeatTypeService {
         existingSeatType.setPrice(seatType.getPrice());
         seatTypeRepository.save(existingSeatType);
     }
+
     public void deleteSeatTypeById(Long id) {
         if (!seatTypeRepository.existsById(id)) {
             throw new IllegalStateException("SeatType with ID " + id + " does not exist.");

@@ -59,14 +59,15 @@
                             <div th:if="${not #lists.isEmpty(blogs)}">
                                 <div class="post-thumb">
                                     <a th:href="@{/blog/blog-details/{id}(id=${blog.id})}">
-                                        <img class="img-poster" th:src="@{${blog.poster}}" alt="blog" />
+                                        <img class="img-poster" th:src="@{${blog.poster}}" alt="blog"/>
                                     </a>
                                 </div>
 
                                 <div class="post-content">
                                     <div class="post-header">
                                         <h4 class="title">
-                                            <a th:href="@{/blog/blog-details/{id}(id=${blog.id})}" th:text="${blog.title}"></a>
+                                            <a th:href="@{/blog/blog-details/{id}(id=${blog.id})}"
+                                               th:text="${blog.title}"></a>
                                         </h4>
                                         <div class="meta-post">
                                             <a href="#0" class="mr-4">
@@ -79,13 +80,14 @@
                                         <div class="left">
                                             <span class="date" th:text="${blog.getFormattedDate()}"></span>
                                         </div>
-                                        <a th:href="@{/blog/blog-details/{id}(id=${blog.id})}" class="buttons">Read More <i class="flaticon-right"></i></a>
+                                        <a th:href="@{/blog/blog-details/{id}(id=${blog.id})}" class="buttons">Read More
+                                            <i class="flaticon-right"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div  th:if="${#lists.isEmpty(blogs)}" class="post-item search-nothing" >
+                        <div th:if="${#lists.isEmpty(blogs)}" class="post-item search-nothing">
                             <h2>Blog mà bạn đang tìm kiếm hiện không có</h2>
                         </div>
                     </article>
@@ -108,7 +110,8 @@
                         <div class="widget widget-search">
                             <h5 class="title">search</h5>
                             <form class="search-form" th:action="@{/blog/search}" method="get">
-                                <input type="text" name="keyword" th:value="${keyword}" placeholder="Enter your Search Blog" required="">
+                                <input type="text" name="keyword" th:value="${keyword}"
+                                       placeholder="Enter your Search Blog" required="">
                                 <button type="submit">
                                     <i class="flaticon-loupe"></i>Search
                                 </button>

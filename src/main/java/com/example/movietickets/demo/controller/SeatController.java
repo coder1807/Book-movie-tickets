@@ -74,7 +74,7 @@ public class SeatController {
                 for (BookingDetail bookingDetail : bookingDetails) {
                     if (bookingDetail.getSeat().getId().equals(seat.getId())) {
                         seat.setStatus("booked"); // Đánh dấu là 'booked' nếu có trong BookingDetail của suất chiếu hiện
-                                                  // tại
+                        // tại
                         break;
                     }
                 }
