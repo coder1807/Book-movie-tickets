@@ -67,7 +67,7 @@ public class ProfileController {
         String userType = userService.getUserType(currentUser.getId());
         currentUser.setFullname(fullName);
         currentUser.setPhone(phone);
-        userService.save(currentUser);
+        userService.saveWithoutPass(currentUser);
 
         Long totalPrice = bookingService.getTotalPriceByUser(currentUser.getId());
         Long bookingCount = bookingService.getCountBookingByUser(currentUser.getId());

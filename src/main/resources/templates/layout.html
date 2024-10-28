@@ -308,7 +308,7 @@
 
       let initialTotalPrice = parseFloat(initialTotalSpan.textContent.replace(/\D/g, ''));
       let currentComboPrice = 0; // Giá của combo hiện tại (ban đầu là 0)
-      let currentDiscount = 0;
+      let currentDiscount = parseFloat(discountSelect.value) || 0;;
 
        function updateTotalPrice(newInitialTotalPrice) {
         // Tính giá combo và áp dụng mã khuyến mãi
@@ -324,6 +324,7 @@
         // Cập nhật tổng cộng sau khi giảm giá
         totalCheckoutSpan.textContent = newTotalPrice.toLocaleString('vi-VN') + ' VND';
       }
+      updateTotalPrice(initialTotalPrice);
       comboFoodSelect.addEventListener('change', function () {
         const selectedOption = comboFoodSelect.options[comboFoodSelect.selectedIndex];
         const comboDetails = selectedOption.value.split('-');

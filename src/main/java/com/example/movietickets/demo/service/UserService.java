@@ -52,6 +52,9 @@ public class UserService implements UserDetailsService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
+    public void saveWithoutPass(@NotNull User user){
+        userRepository.save(user);
+    }
 
     public void setDefaultRole(String username) {
         userRepository.findByUsername(username).ifPresentOrElse(

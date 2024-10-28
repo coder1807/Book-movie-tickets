@@ -52,11 +52,18 @@
                     <div class="checkout-widget checkout-contact">
                         <h5 class="title"> Mã giảm giá </h5>
                         <select id="discountSelect" class="form-control">
-                            <option th:if="${userType == 'VIP'}" value="0.1" th:selected="${userType == 'VIP'}">Thành viên VIP - Giảm 10%</option>
-                            <option th:if="${userType == 'VIP'}" value="0.05"Thành viên FRIEND - Giảm 5%</option>
-                            <option th:if="${userType == 'FRIEND'}" value="0.05" th:selected="${userType == 'FRIEND'}">Thành viên FRIEND - Giảm 5%</option>
-                            <option value="0" th:selected="${userType == 'STANDARD'}">Không có mã khuyến mãi</option>
+                            <option th:if="${userType == 'VIP'}"
+                                    th:value="0.1"
+                                    th:selected="${userType == 'VIP'}">Thành viên VIP - Giảm 10%</option>
+
+                            <option th:if="${userType == 'VIP' or userType == 'FRIEND'}"
+                                    th:value="0.05"
+                                    th:selected="${userType == 'FRIEND'}">Thành viên FRIEND - Giảm 5%</option>
+
+                            <option th:value="0"
+                                    th:selected="${userType == 'STANDARD'}">Không có mã khuyến mãi</option>
                         </select>
+
                     </div>
                     <div class="checkout-widget checkout-card mb-2">
                         <h5 class="title">Đa dạng phương thức</h5>
