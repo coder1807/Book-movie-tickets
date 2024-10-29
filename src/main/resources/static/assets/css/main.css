@@ -9756,8 +9756,7 @@ aside {
 
 
 .membership-section {
-    background-color: #0e0e0e;
-    padding: 40px 0;
+    padding: 35px 0;
 }
 
 .membership-tier {
@@ -9770,31 +9769,45 @@ aside {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 45%;
+    width: 48%;
 }
 
 .tier-card .tier-image {
-    width: 100px;
-    margin-bottom: 15px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .tier-card .tier-title {
     font-size: 1.4rem;
     color: #f9c74f;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .tier-card .tier-description {
     color: #b0b0b0;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: left;
 }
-
+.tier-card .tier-how{
+    text-align: justify;
+    text: bold;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 2px;
+    font-family: 'Trebuchet MS';
+}
 .tier-card .tier-benefits {
     list-style-type: none;
     padding: 0;
     color: #fff;
+    text-align: justify;
 }
 
 .tier-card .tier-benefits li {
-    margin: 10px 0;
+    display:list-item;
+    list-style-position:inside;
+    list-style-type:disc ;
+}
+.content-section {
+    padding: 35px 0;
 }
