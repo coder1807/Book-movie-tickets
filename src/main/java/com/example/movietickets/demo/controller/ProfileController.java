@@ -1,9 +1,7 @@
 package com.example.movietickets.demo.controller;
 
-import com.example.movietickets.demo.model.Category;
-import com.example.movietickets.demo.model.Cinema;
-import com.example.movietickets.demo.model.Country;
-import com.example.movietickets.demo.model.User;
+import com.example.movietickets.demo.DTO.DistanceMatrixResponse;
+import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -33,9 +35,9 @@ public class ProfileController {
     @Autowired
     private CinemaService cinemaService;
     @Autowired
-    private DistanceService distanceService;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private GoogleMapsService googleMapsService;
 
 
     @PreAuthorize("isAuthenticated()")
@@ -163,13 +165,16 @@ public class ProfileController {
         return "/profile/points";
     }
 
-//    @GetMapping("/nearest-cinema")
-//    public String getNearestCinema() {
-//        User currentUser = userService.getCurrentUser();
-//        List<Cinema> cinemas = cinemaService.getAllCinemas();
-//        return distanceService.findNearestCinema(currentUser.getAddress(), cinemas);
-//
-//    }
+    @GetMapping("/profile/nearest")
+    public String  getNearestCinemas(Model model) {
+        User currentUser = userService.getCurrentUser();
+        List<Cinema> cinemas = cinemaService.getAllCinemas();
+        List<CinemaDistance> cinemaDistances = googleMapsService.getDistances(currentUser.getAddress(), cinemas);
+        model.addAttribute("cinemaDistances", cinemaDistances);
+        return "/profile/nearest";
+    }
+
+
 
 
 }
