@@ -50,9 +50,10 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
     @Email
     private String email;
 
-    @Column(name = "account_verified")
+
     private boolean accountVerified = false;
-    private boolean loginDisabled = false;
+
+    private boolean loginDisabled = false ;
 
     public boolean isAccountVerified() {
         return accountVerified;

@@ -140,8 +140,6 @@ public class PurchaseController {
                 seatSymbols.add(seat.getSymbol());
             }
 
-
-
             Room room = roomRepository.findByName(purchase.getRoomName());
             List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
 
@@ -193,9 +191,8 @@ public class PurchaseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = getUserFromAuthentication(authentication);
             booking.setUser(user);
-
             bookingService.saveBooking(booking, seats, schedule);
-
+            System.out.println("Thành công");
             redirectAttributes.addFlashAttribute("message", "Đặt vé thành công!");
         } else {
             redirectAttributes.addFlashAttribute("message", "Không có thông tin đặt vé.");

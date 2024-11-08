@@ -73,7 +73,6 @@ public class AuthenticationController {
         model.addAttribute("registrationSuccess", "Bạn đã đăng ký tài khoản thành công! " +
                 "Hãy kiểm tra email để chúng tôi hoàn tất xác thực đăng ký tài khoản của bạn.");
         return "/mailing/registrationSuccessful";
-        // return "redirect:/login"; // Chuyển hướng người dùng tới trang "login"
     }
 
     @GetMapping("/register/verify")

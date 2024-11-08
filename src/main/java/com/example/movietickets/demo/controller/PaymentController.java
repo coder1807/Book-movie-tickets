@@ -1,6 +1,8 @@
 package com.example.movietickets.demo.controller;
 
-
+import com.example.movietickets.demo.mailing.AbstractEmailContext;
+import com.example.movietickets.demo.mailing.DefaultEmailService;
+import com.example.movietickets.demo.mailing.EmailService;
 import com.example.movietickets.demo.DTO.PaymentResDTO;
 import com.example.movietickets.demo.config.Config;
 import com.example.movietickets.demo.config.MoMoConfig;
@@ -13,8 +15,10 @@ import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +29,12 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -39,19 +48,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Autowired
     private PurchaseService purchaseService;
@@ -80,6 +86,8 @@ public class PaymentController {
     @Autowired
     private  PaypalService paypalService;
 
+    @Autowired
+    private DefaultEmailService emailService;
 
     @GetMapping("create_payment")
     public ResponseEntity<?> createPayment(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException {
@@ -294,8 +302,9 @@ public class PaymentController {
     }
     @GetMapping("create_momo")
     public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws Exception {
-
-
+        System.out.println(amount);
+        System.out.println(scheduleId);
+        System.out.println(comboId);
         String amountStr = String.valueOf(amount);
         String orderId = MoMoConfig.PARTNER_CODE + new Date().getTime();
         String requestId = orderId;
@@ -369,6 +378,8 @@ public class PaymentController {
         User user = getUserFromAuthentication(authentication);
         booking.setUser(user);
 
+         String userMail = user.getEmail();
+
         bookingService.saveBooking(booking, seats, schedule);
 
 
@@ -376,13 +387,29 @@ public class PaymentController {
             String payUrl = responseJson.get("payUrl").getAsString();
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(payUrl));
+            String userEmail = user.getEmail();
+            scheduleEmailSending(() -> {
+                try {
+                    emailService.sendSimpleMessage(userEmail, user, booking);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            }, 30);
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
-
-        return null;
+        return ResponseEntity.ok(responseJson);
     }
 
-
+    @GetMapping("/callback")
+    public ResponseEntity<?> handleCallback(@RequestBody Map<String, Object> body) {
+        System.out.println("MoMo callback data: " + body);
+        int resultCode = (int) body.get("resultCode");
+        if (resultCode == 0) {
+            return ResponseEntity.ok(body);
+        } else {
+            return ResponseEntity.status(400).body("Transaction failed with resultCode: " + resultCode);
+        }
+    }
     private Date parseDate(String dateStr) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -404,5 +431,14 @@ public class PaymentController {
         }
         throw new UsernameNotFoundException("User not found");
     }
+    public void scheduleEmailSending(Runnable task, long delayInSeconds) {
+        scheduler.schedule(task, delayInSeconds, TimeUnit.SECONDS);
+    }
 
+    private String loadHtmlTemplate(String path) throws IOException {
+        ClassPathResource resource = new ClassPathResource(path);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
+    }
 }

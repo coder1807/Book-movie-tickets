@@ -106,10 +106,10 @@
                                 <input type="hidden" name="scheduleId" th:value="${scheduleId}">
 
                                 <label for="payment">Phương thức thanh toán:</label>
-                                <select class="form-control" name="payment" id="payment" onchange="updatePaymentOption()">
+                                <select class="form-control" name="payment" id="payment"  onchange="updatePaymentOption()">
                                     <option value="">Chọn phương thức</option>
                                     <option value="Cash">Trả tiền tại quầy</option>
-                                    <option value="momo">MOMO</option>
+                                    <option value="momo" selected>MOMO</option>
                                     <option value="paypal">Paypal</option>
                                     <option value="vnpay">VNPay</option>
                                 </select>
