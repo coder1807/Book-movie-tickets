@@ -48,6 +48,9 @@ public class User implements UserDetails { // Implement UserDetails
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
     private String phone;
 
+    @Column(name = "address", length = 250, nullable = true)
+    private String address;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -66,6 +69,7 @@ public class User implements UserDetails { // Implement UserDetails
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .toList();
     }
+
 
     @Override
     public String getPassword() {

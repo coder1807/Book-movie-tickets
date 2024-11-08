@@ -12,6 +12,8 @@
             object-fit: cover;
         }
     </style>
+
+
 </head>
 
 <body>
@@ -35,6 +37,7 @@
         </div>
     </div>
     <!-- ==========Preloader========== -->
+
     <section class="main-page-header speaker-banner bg_img" data-background="/assets/img/banner/banner07.jpg"
              style="background-image: url(&quot;/assets/img/banner/banner07.jpg&quot;);">
         <div class="container">
@@ -64,9 +67,17 @@
 <!--    </section>-->
 
     <!-- ==========Contact-Section========== -->
+
     <section class="contact-section padding-top">
         <div class="contact-container">
             <div class="container">
+                <div th:if="${success}" class="alert alert-success">
+                    <pre th:text="${success}"></pre>
+                </div>
+                <div th:if="${error}" class="alert alert-danger">
+                    <pre th:text="${error}"></pre>
+                </div>
+                <br>
                 <div class="row justify-content-between">
                     <div class="col-md-7 col-lg-6 col-xl-5">
                         <div class="section-header-3 left-style">
@@ -89,7 +100,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="address">Địa chỉ</label>
-                                <textarea name="address" id="address"></textarea>
+                                <input type="text" name="address" id="address" th:value="${user.address}" />
                             </div>
                             <div class="form-group">
                                 <input type="submit" name="update-profile" value="Thay đổi"/>
@@ -100,10 +111,8 @@
                         <div class="section-header-3 left-style">
                             <span class="cate">Đổi mật khẩu</span>
                         </div>
-                        <form class="contact-form" id="form_submit_password" action="" method="POST">
-                            <div class="form-group">
-                                <label></label>
-                            </div>
+                        <form class="contact-form" id="form_submit_password" th:action="@{/profile/change-password}" method="POST">
+
                             <div class="form-group">
                                 <label for="password">Mật khẩu cũ <span>*</span></label>
                                 <input type="password" name="password" id="password" required/>
@@ -174,3 +183,19 @@
         </div>
     </section>
 </section>
+
+<script type="text/javascript" th:if="${successMessage}">
+    Toastify({
+        text: [[${successMessage}]], // Hiển thị thông báo từ server
+        duration: 3000, // Thời gian hiển thị thông báo (3 giây)
+        close: true, // Hiển thị nút đóng
+        gravity: "top", // Vị trí thông báo (top hoặc bottom)
+        position: "right", // Vị trí thông báo (left, center hoặc right)
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Màu nền thông báo
+    }).showToast();
+
+    // Chuyển hướng người dùng sau khi thông báo hiển thị (3 giây)
+    setTimeout(function () {
+        window.location.href = "/profile";
+    }, 3000);
+</script>
