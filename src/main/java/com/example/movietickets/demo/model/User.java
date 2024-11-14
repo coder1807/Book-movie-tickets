@@ -16,7 +16,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
 @Data
 @Entity
 @AllArgsConstructor
@@ -25,7 +24,7 @@ import java.util.*;
 public class User extends Auditable<String> implements UserDetails { // Implement UserDetails
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")  // Change to match your database column name for user_id
+    @Column(name = "USER_ID") // Change to match your database column name for user_id
     private Long id;
 
     @Column(name = "username", length = 50, unique = true)
@@ -58,8 +57,7 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
         return accountVerified;
     }
 
-
-    @Column(name = "phone_number", length = 10, unique = true)  // Adjusted column name
+    @Column(name = "phone_number", length = 10, unique = true) // Adjusted column name
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
     private String phone;
@@ -68,9 +66,7 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
     private String address;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -88,7 +84,6 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .toList();
     }
-
 
     @Override
     public String getPassword() {
@@ -122,8 +117,10 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
         User user = (User) o;
         return getId() != null && Objects.equals(getId(), user.getId());
     }

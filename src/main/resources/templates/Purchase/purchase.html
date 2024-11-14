@@ -197,6 +197,163 @@
             </div>
         </div>
     </section>
+
+
+    <div class="movie-facility padding-bottom padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="checkout-widget d-flex flex-wrap align-items-center justify-content-between">
+                        <div class="title-area">
+                            <h5 class="title">Bạn đã là thành viên của Ba Anh Em ?</h5>
+                            <p>
+                                Đăng nhập ngay để nhận nhiều ưu đãi và đặt vé dễ dàng hơn
+                            </p>
+                        </div>
+                        <a href="#0" class="sign-in-area">
+                            <i class="fas fa-user"></i><span>Đăng kí</span>
+                        </a>
+                    </div>
+
+                    <div class="checkout-widget checkout-contact">
+                        <h5 class="title"> Mã giảm giá </h5>
+                        <form class="checkout-contact-form" id="promoForm" onsubmit="handlePromoForm(event)">
+                            <div class="form-group">
+                                <input type="text" id="promoCode" placeholder="Enter promo code">
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Xác nhận" class="custom-button">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="checkout-widget checkout-card mb-2">
+                        <h5 class="title">Đa dạng phương thức</h5>
+                        <ul class="payment-option">
+                            <li>
+                                <a>
+                                    <img src="/assets/img/payment/card.png" alt="payment" />
+                                    <span class="payment-value">Debit Card</span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a>
+                                    <img src="/assets/img/payment/momo.png" alt="payment" />
+                                    <span class="payment-value">MOMO</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a>
+                                    <img src="/assets/img/payment/paypal.png" alt="payment" />
+                                    <span class="payment-value">paypal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a>
+                                    <img src="/assets/img/payment/v-vnpay-svgrepo-com.svg" alt="payment" />
+                                    <span class="payment-value">VNPAY</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div th:if="${selectedSeats}">
+                        <!-- Các thông tin khác -->
+                        <div class="checkout-widget checkout-card mb-2">
+                            <form action="#" th:action="@{/purchase/checkout}" method="post">
+                                <input type="hidden" name="seatSymbols" th:value="${selectedSeats}" />
+                                <input type="hidden" name="totalPrice" th:value="${totalPrice}" />
+                                <input type="hidden" name="startTime" th:value="${startTime}" />
+                                <input type="hidden" name="filmTitle" th:value="${filmTitle}" />
+                                <input type="hidden" name="poster" th:value="${poster}" />
+                                <input type="hidden" name="category" th:value="${category}" />
+                                <input type="hidden" name="cinemaName" th:value="${cinemaName}" />
+                                <input type="hidden" name="cinemaAddress" th:value="${cinemaAddress}" />
+                                <input type="hidden" name="roomName" th:value="${roomName}" />
+                                <input type="hidden" name="scheduleId" th:value="${scheduleId}">
+
+                                <label for="payment">Phương thức thanh toán:</label>
+                                <select class="form-control" name="payment" id="payment"
+                                    onchange="updatePaymentOption()">
+                                    <option value="">Chọn phương thức</option>
+                                    <option value="Cash">Trả tiền tại quầy</option>
+                                    <option value="momo" selected>MOMO</option>
+                                    <option value="paypal">Paypal</option>
+                                    <option value="vnpay">VNPay</option>
+                                </select>
+                                <label for="comboFoodSelect" class="form-label mt-3">Combo Food:</label>
+                                <select name="comboId" id="comboFoodSelect" class="form-control">
+                                    <option value="0-0">Không</option>
+                                    <option th:each="combo : ${comboFoods}" th:value="${combo.id + '-' + combo.price}"
+                                        th:text="${combo.comboName} + ' - '+ ${combo.description} + ' - ' + ${combo.price} + 'VND'">
+                                    </option>
+                                </select>
+
+                                <button type="submit" class="custom-button mt-5">Thanh toán</button>
+                            </form>
+                        </div>
+                        <div th:if="${message}" class="mt-5">
+                            <p th:text="${message}" class="text-danger fw-bold"></p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="booking-summery bg-one">
+                        <h4 class="title">Chi tiết vé</h4>
+                        <ul>
+                            <li>
+                                <h5 class="subtitle" th:text="${filmTitle}"></h5>
+                                <span class="info" th:text="${category}"></span>
+                            </li>
+                            <li>
+                                <h6 class="subtitle">
+                                    <span>Rạp</span> <span th:text="${cinemaName}"></span>
+                                </h6>
+                                <div class="info">
+                                    <span>Suất chiếu: </span> <span th:text="${startTime}"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <h6 class="subtitle">
+                                    <span>Phòng: </span><span th:text="${roomName}"></span>
+                                </h6>
+                                <div class="info">
+                                    <span>Vị trí : </span> <span th:text="${cinemaAddress}"></span>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="side-shape">
+                            <li>
+                                <h6 class="subtitle mb-0">
+                                    <span>Ghế đã chọn</span> <span th:text="${selectedSeats}"></span>
+                                </h6>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span class="info"><span>Ghế thường</span><span>80.000</span></span>
+                                <span class="info"><span>Ghế VIP</span><span>100.000</span></span>
+                                <span class="info"><span>SweetBox</span><span>120.000</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="proceed-area text-center">
+                        <h6 class="subtitle">
+                            <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
+                        </h6>
+                        <!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
 </body>
+<script>
+
+</script>
 
 </html>

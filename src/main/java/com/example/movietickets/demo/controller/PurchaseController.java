@@ -203,13 +203,21 @@ public class PurchaseController {
                         + "&comboId=" + comboId;
             }
 
+            if ("paypal".equalsIgnoreCase(payment)) {
+                return "redirect:/api/payment/create_paypal?scheduleId=" + scheduleId + "&amount=" + booking.getPrice()
+                        + "&comboId=" + comboId;
+            }
+
+            if ("momo".equalsIgnoreCase(payment)) {
+                return "redirect:/api/payment/create_momo?scheduleId=" + scheduleId + "&amount=" + booking.getPrice()
+                        + "&comboId=" + comboId;
+            }
             // Lấy thông tin người dùng hiện tại
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = getUserFromAuthentication(authentication);
             booking.setUser(user);
-
             bookingService.saveBooking(booking, seats, schedule);
-
+            System.out.println("Thành công");
             redirectAttributes.addFlashAttribute("message", "Đặt vé thành công!");
         } else {
             redirectAttributes.addFlashAttribute("message", "Không có thông tin đặt vé.");
