@@ -197,7 +197,6 @@ public class UserService implements UserDetailsService {
         user.setFullname(fullname);
         user.setEmail(email != null ? email : username + "@example.com");
         user.setFullname(fullname);
-        user.setPhone(phoneNumber);
         user.setPassword(new BCryptPasswordEncoder().encode(username));
         user.setProvider(provider);
         user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
