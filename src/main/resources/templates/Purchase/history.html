@@ -22,19 +22,20 @@
 <body>
 <section layout:fragment="content">
 
-        <!-- ==========Preloader========== -->
-        <div class="preloader">
-            <div class="preloader-inner">
-                <div class="preloader-icon">
-                    <span></span>
-                    <span></span>
-                </div>
+    <!-- ==========Preloader========== -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
             </div>
         </div>
-        <!-- ==========Preloader========== -->
+    </div>
+    <!-- ==========Preloader========== -->
 
     <section class="banner-section">
-        <div class="banner-bg bg_img bg-fixed" data-background="/assets/img/history/history-bg.jpg" style="background-image: url(&quot;./assets/img/history/history-bg.jpg&quot;);"></div>
+        <div class="banner-bg bg_img bg-fixed" data-background="/assets/img/history/history-bg.jpg"
+             style="background-image: url(&quot;./assets/img/history/history-bg.jpg&quot;);"></div>
         <div class="container">
             <div class="banner-content">
                 <h1 class="title cd-headline clip">
@@ -74,7 +75,7 @@
                 </div>
                 <div class="col-lg-9 mb-50 mb-lg-0">
                     <!--list film-->
-                    <div class="movie-area mb-10"  th:each="booking : ${bookings}">
+                    <div class="movie-area mb-10" th:each="booking : ${bookings}">
                         <div class="movie-list">
                             <div class="movie-thumb c-thumb">
                                 <a
@@ -108,14 +109,14 @@
                                             <a href="#0" th:text="${'Suất chiếu: ' + booking.startTime}"></a>
                                         </div>
                                         <div class="movie-tags">
-                                            <a href="#0"  th:text="${'Rạp phim: '+booking.cinemaName}"></a>
+                                            <a href="#0" th:text="${'Rạp phim: '+booking.cinemaName}"></a>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="thumb">
-                                            <img   class="comboFood"
-                                                   src="/assets/img/logo/frame.png"
-                                                   alt="icons"
+                                            <img class="comboFood"
+                                                 src="/assets/img/logo/frame.png"
+                                                 alt="icons"
                                             />
                                         </div>
                                     </div>
@@ -133,13 +134,14 @@
                                         >
                                     </li>
                                     <li th:if="${booking.comboFood != null}" style="display: block;">
-                                        <div class="thumb"  >
-                                            <img th:src="@{${booking.comboFood.poster}}" alt="combo" class="comboFood" />
+                                        <div class="thumb">
+                                            <img th:src="@{${booking.comboFood.poster}}" alt="combo" class="comboFood"/>
                                         </div>
-                                        <span class="mt-3 content" th:text="${booking.comboFood.comboName + ' - ' + booking.comboFood.description}"></span>
+                                        <span class="mt-3 content"
+                                              th:text="${booking.comboFood.comboName + ' - ' + booking.comboFood.description}"></span>
 
                                     </li>
-                                    <li style= "margin-top: -20px;">
+                                    <li style="margin-top: -20px;">
                                         <div th:if="${booking.comboFood == null}">
                                             <span class="content">Không có combo nào được chọn</span>
                                         </div>
@@ -151,7 +153,8 @@
                                                     alt="movie"
                                             />
                                         </div>
-                                        <span class="content" th:text="${'Tổng tiền: ' + #numbers.formatDecimal(booking.price, 0, 'POINT', 0, 'POINT') + 'VND'}"
+                                        <span class="content"
+                                              th:text="${'Tổng tiền: ' + #numbers.formatDecimal(booking.price, 0, 'POINT', 0, 'POINT') + 'VND'}"
                                         ></span>
                                     </li>
                                     <li>
@@ -165,7 +168,8 @@
                                         ></span>
                                     </li>
                                     <li>
-                                        <span class="content" style="color: #31d7a9"  th:text="${booking.status == true ? 'Đã thanh toán': 'Chưa thanh toán'}"
+                                        <span class="content" style="color: #31d7a9"
+                                              th:text="${booking.status == true ? 'Đã thanh toán': 'Chưa thanh toán'}"
                                         ></span>
                                     </li>
                                 </ul>
@@ -179,19 +183,19 @@
                                                             alt="icons"
                                                     />
                                                 </div>
-                                                <span  th:text="${'Vị trí: '+booking.cinemaAddress}" ></span>
+                                                <span th:text="${'Vị trí: '+booking.cinemaAddress}"></span>
                                             </a>
                                         </div>
                                         <div class="react-item">
-                                            <a      href="#0"
-                                                    class="popup-video">
+                                            <a href="#0"
+                                               class="popup-video">
                                                 <div class="thumb">
                                                     <img
                                                             src="/assets/img/history/event-icon03.png"
                                                             alt="icons"
                                                     />
                                                 </div>
-                                                <span  th:text="${'Phòng chiếu: '+booking.roomName}" ></span>
+                                                <span th:text="${'Phòng chiếu: '+booking.roomName}"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -199,26 +203,26 @@
                             </div>
                         </div>
                     </div>
-<!--                    <table>-->
-<!--                                <thead>-->
-<!--                                <tr>-->
-<!--                                    <th>Film Name</th>-->
-<!--                                    <th>Cinema Name</th>-->
-<!--                                    <th>Seat</th>-->
-<!--                                    <th>Start Time</th>-->
-<!--                                    <th>Price</th>-->
-<!--                                </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                <tr th:each="booking : ${bookings}">-->
-<!--                                    <td th:text="${booking.filmName}"></td>-->
-<!--                                    <td th:text="${booking.cinemaName}"></td>-->
-<!--                                    <td th:text="${booking.seatName}"></td>-->
-<!--                                    <td th:text="${#dates.format(booking.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
-<!--                                    <td th:text="${booking.price}"></td>-->
-<!--                                </tr>-->
-<!--                                </tbody>-->
-<!--                            </table>-->
+                    <!--                    <table>-->
+                    <!--                                <thead>-->
+                    <!--                                <tr>-->
+                    <!--                                    <th>Film Name</th>-->
+                    <!--                                    <th>Cinema Name</th>-->
+                    <!--                                    <th>Seat</th>-->
+                    <!--                                    <th>Start Time</th>-->
+                    <!--                                    <th>Price</th>-->
+                    <!--                                </tr>-->
+                    <!--                                </thead>-->
+                    <!--                                <tbody>-->
+                    <!--                                <tr th:each="booking : ${bookings}">-->
+                    <!--                                    <td th:text="${booking.filmName}"></td>-->
+                    <!--                                    <td th:text="${booking.cinemaName}"></td>-->
+                    <!--                                    <td th:text="${booking.seatName}"></td>-->
+                    <!--                                    <td th:text="${#dates.format(booking.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+                    <!--                                    <td th:text="${booking.price}"></td>-->
+                    <!--                                </tr>-->
+                    <!--                                </tbody>-->
+                    <!--                            </table>-->
 
                 </div>
             </div>

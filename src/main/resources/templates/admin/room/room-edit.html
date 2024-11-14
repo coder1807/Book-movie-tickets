@@ -36,7 +36,6 @@
                                     <div class="col-6">
                                         <select class="js-example-basic-single" id="cinema"
                                                 name="cinema_id" th:field="*{cinema}">
-                                            <option value="">Chọn rạp</option>
                                             <option th:each="item: ${cinemas}" th:value="${item.id}"
                                                     th:text="${item.name}"></option>
                                         </select>

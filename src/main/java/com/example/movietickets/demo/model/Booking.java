@@ -14,7 +14,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOOKING_ID")
-    private Long  id;
+    private Long id;
 
     @Column(name = "FILM_NAME")
     private String filmName;
@@ -41,7 +41,7 @@ public class Booking {
     private Long price;
 
     @Column(name = "SEAT_NAME")
-    private String  seatName;
+    private String seatName;
 
     @Column(name = "PAYMENT")
     private String payment;

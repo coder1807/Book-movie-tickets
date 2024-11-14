@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title  th:text="${title} ?: 'Kết Quả'">Title</title>
+    <title th:text="${title} ?: 'Kết Quả'">Title</title>
 </head>
 <body>
 <section layout:fragment="content" class="mt-5">
@@ -24,15 +24,15 @@
 
 
     <div class="container">
-<!--        <div class="mb-5">-->
-<!--            <form method="get" action="/admin/seats">-->
-<!--                <label for="roomId">Select Room:</label>-->
-<!--                <select class="form-control" id="roomId" name="roomId" onchange="this.form.submit()">-->
-<!--                    <option value="">All Rooms</option>-->
-<!--                    <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}" th:selected="${room.id == selectedRoomId}"></option>-->
-<!--                </select>-->
-<!--            </form>-->
-<!--        </div>-->
+        <!--        <div class="mb-5">-->
+        <!--            <form method="get" action="/admin/seats">-->
+        <!--                <label for="roomId">Select Room:</label>-->
+        <!--                <select class="form-control" id="roomId" name="roomId" onchange="this.form.submit()">-->
+        <!--                    <option value="">All Rooms</option>-->
+        <!--                    <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}" th:selected="${room.id == selectedRoomId}"></option>-->
+        <!--                </select>-->
+        <!--            </form>-->
+        <!--        </div>-->
         <table th:object="${seat}" class="table table-bordered table-hover">
             <thead>
             <tr class="text-white">
@@ -43,7 +43,7 @@
                 <th>Seat Image</th>
                 <th>Status</th>
                 <th>Room</th>
-<!--                <th>Actions</th>-->
+                <!--                <th>Actions</th>-->
             </tr>
             </thead>
             <tbody>
@@ -57,11 +57,11 @@
                 </td>
                 <td th:text="${seat.status}"></td>
                 <td th:text="${seat.room.name}"></td>
-<!--                <td>-->
-<!--                    <a th:href="@{/admin/seats/edit/{id}(id=${seat.id})}" class="btn btn-warning">Edit</a>-->
-<!--                    <a th:href="@{/admin/seats/delete/{id}(id=${seat.id})}" onclick="return confirm('Bạn có chắc không ?')" class="btn btn-danger">Delete</a>-->
+                <!--                <td>-->
+                <!--                    <a th:href="@{/admin/seats/edit/{id}(id=${seat.id})}" class="btn btn-warning">Edit</a>-->
+                <!--                    <a th:href="@{/admin/seats/delete/{id}(id=${seat.id})}" onclick="return confirm('Bạn có chắc không ?')" class="btn btn-danger">Delete</a>-->
 
-<!--                </td>-->
+                <!--                </td>-->
             </tr>
             </tbody>
         </table>

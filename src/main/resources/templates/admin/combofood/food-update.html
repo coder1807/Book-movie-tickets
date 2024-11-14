@@ -17,36 +17,43 @@
             </h3>
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="#">Trang chủ >></a></li>
-                <li class="breadcrumb-item active ">Sửa danh mục </li>
+                <li class="breadcrumb-item active ">Sửa danh mục</li>
             </ol>
         </div>
     </div>
     <!-- Header End -->
     <!-- /BREADCRUMB -->
     <!--    <h1 class="mb-4">Update Category</h1>-->
-    <form th:action="@{/admin/comboFood/edit/{id}(id=${comboFood.id})}" enctype="multipart/form-data" th:object="${comboFood}" method="post" class="needs-validation" >
+    <form th:action="@{/admin/comboFood/edit/{id}(id=${comboFood.id})}" enctype="multipart/form-data"
+          th:object="${comboFood}" method="post" class="needs-validation">
 
         <div class="mb-3">
             <label for="name" class="form-label">Tên comboFood:</label>
             <input type="text" th:field="*{comboName}" class="form-control" id="name" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('comboName')}" th:errors="*{comboName}">Valid name is required.</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('comboName')}" th:errors="*{comboName}">Valid name
+                is required.
+            </div>
         </div>
 
         <div class="mb-3">
             <label for="price" class="form-label">Giá sản phẩm</label>
             <input type="text" th:field="*{price}" class="form-control" id="price" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Lỗi giá sản phẩm</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Lỗi giá sản
+                phẩm
+            </div>
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Mô tả sản phẩm</label>
             <input type="text" th:field="*{description}" class="form-control" id="description" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Lỗi mô tả sản phẩm</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Lỗi mô
+                tả sản phẩm
+            </div>
         </div>
 
         <div class="mb-3">
             <label for="poster" class="form-label">Poster</label>
-            <input type="file" id="poster" name = "poster" th:field="*{poster}" class="form-control"/>
+            <input type="file" id="poster" name="poster" th:field="*{poster}" class="form-control"/>
             <!--<div class="text-danger" th:if="${#fields.hasErrors('poster')}" th:errors="*{poster}"></div>-->
         </div>
 

@@ -1,0 +1,202 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Ba Anh Em - Điểm tích lũy</title>
+
+    <style>
+        .img-poster {
+            width: 750px;
+            height: 360.61px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+<!-- ==========Preloader========== -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<section layout:fragment="content">
+    <!-- ==========Preloader========== -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <section class="main-page-header speaker-banner bg_img" data-background="/assets/img/banner/banner07.jpg"
+             style="background-image: url(&quot;/assets/img/banner/banner07.jpg&quot;);">
+        <div class="container">
+            <div class="speaker-banner-content">
+                <h2 class="title">3ae member</h2>
+                <ul class="breadcrumb">
+                    <li>
+                        <a th:href="@{/profile}"> Trang cá nhân </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/purchase/history}"> lịch sử đặt vé </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="rank-section">
+        <div class="container">
+            <div class="ranking-info">
+                <h3 class="ranking-title">Xếp hạng của bạn là <span class="rank-status" th:text="${userType}"></span>.
+                </h3>
+                <div class="flex-box">
+
+                </div>
+                <div class="spending-info-container">
+                    <p class="spending-info">Số tiền chi tiêu để nâng cấp lên <strong th:text="${nextType}"></strong>
+                    </p>
+                    <p class="current-amount">
+                        <strong class="odometer" th:data-odometer-final="(${userType} == 'STANDARD' ? 2000000 - ${totalPrice} :
+                                                          (${userType} == 'FRIEND' ? 5000000 - ${totalPrice} : 0))">0
+                        </strong> VND</p>
+                </div>
+
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress" th:style="${'width:' + progressWidth + '%'}"></div>
+                    </div>
+
+                    <div class="progress-member">
+                        <span></span>
+                        <span class="memberfriend">Friend</span>
+                        <span>VIP</span>
+
+                    </div>
+                    <div class="progress-labels">
+                        <span>0</span>
+                        <span class="numberfriend">2.000</span>
+                        <span class="milestone friend"></span>
+                        <span>5.000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="membership-section">
+        <div class="container">
+            <div class="membership-tier">
+                <div class="tier-card">
+                    <img src="/assets/img/profile/img-card-member2.jpg" alt="3AE'Friend" class="tier-image">
+                    <h4 class="tier-title">3AE'FRIEND</h4>
+                    <p class="tier-description">
+                        Được cấp cho thành viên Standard khi tích lũy ít nhất 2.000 điểm.
+                    </p>
+                    <p class="tier-how">
+                        Được tích lũy điểm theo giá trị mua hàng hóa dịch vụ như sau:
+                    </p>
+                    <ul class="tier-benefits">
+                        <li>Được giảm 5% trực tiếp trên giá trị hóa đơn bắp nước khi mua tại quầy.</li>
+                        <li>Tham gia các chương trình dành cho thành viên.</li>
+                    </ul>
+                </div>
+                <div class="tier-card">
+                    <img src="/assets/img/profile/img-card-vip.jpg" alt="3AE'VIP" class="tier-image">
+                    <h4 class="tier-title">3AE'VIP</h4>
+                    <p class="tier-description">
+                        Được cấp cho thành viên Friend khi tích lũy được ít nhất 5.000 điểm.
+                    </p>
+                    <p class="tier-how">
+                        Được tích lũy điểm theo giá trị mua hàng hóa dịch vụ như sau:
+                    </p>
+                    <ul class="tier-benefits">
+                        <li>Được giảm 10% trực tiếp trên giá trị hóa đơn bắp nước khi mua tại quầy.</li>
+                        <li>Được nhận vé tham gia Lễ Ra Mắt Phim và các chương trình khuyến mãi khác của 3AE.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-counter padding-top padding-bottom">
+        <div class="container">
+            <div class="row justify-content-center mb-30-none">
+                <a href="/purchase/history" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${bookingCount}">0</h5>
+                            </div>
+                            <p>Số lần đã đặt</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="/purchase/history" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${totalPrice}">0</h5>
+                            </div>
+                            <p>Số tiền đã chi</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="/my-points" class="col-sm-6 col-md-3">
+                    <div class="contact-counter-item">
+                        <div class="contact-counter-thumb">
+                            <i class="fa fa-gift"></i>
+                        </div>
+                        <div class="contact-counter-content">
+                            <div class="counter-item">
+                                <h5 class="title odometer" th:data-odometer-final="${userPoint}">0</h5>
+                            </div>
+                            <p>Điểm của bạn</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <div class="info_box mt30 pr30" style="background:#333; padding: 20px;">
+                <ul>
+                    <li><b>Chương trình Khách hàng Thường xuyên của 3AE Cinema</b> là chương trình ưu đãi dựa trên điểm
+                        tích lũy của các thành viên, với những quyền lợi và mức ưu đãi khác nhau tương ứng với các cấp
+                        độ thành viên khác nhau.
+                    </li>
+                    <br/>
+                </ul>
+                <ul>
+                    <li class="title_membership"><b>ĐIỂM TÍCH LUỸ CINEMA COIN</b></li>
+                    <li>Thành viên có thể sử dụng điểm tích lũy Cinema Coin để thanh toán các giao dịch tại quầy vé hoặc
+                        quầy bắp nước như tiền mặt. Số điểm tối thiểu cho mỗi giao dịch thanh toán là <b>1 điểm</b></li>
+                    <li style="text-align:center"><span style="color:red;"><b>1 Cinema Coin = 1,000 VND</b></span></li>
+                    <li><b>Lưu ý:</b></li>
+                    <li>&nbsp;&nbsp;&nbsp;- Điểm tích lũy Cinema Coint có thời hạn sử dụng tới 31/12 của năm kế tiếp
+                        (Điểm tích lũy của năm 2024 sẽ hết hạn vào 31/12/2024; điểm tích lũy của năm 2025 sẽ hết hạn vào
+                        31/12/2025);
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;- Sau 01 (một) năm, điểm tích lũy sẽ reset lại từ đầu.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</section>

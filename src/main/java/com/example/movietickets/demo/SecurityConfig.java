@@ -1,5 +1,6 @@
 package com.example.movietickets.demo;
 
+import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.service.OauthService;
 import com.example.movietickets.demo.service.UserService;
 import jakarta.validation.constraints.NotNull;
@@ -51,25 +52,28 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/assets/**", "/css/**", "/js/**", "/", "/oauth/**",
                                 "/register", "/error", "/purchase", "/films",
-                                "/films/film-details/**", "/schedules/**",
+                                "/films/film-details/**", "/schedules/**", "films/films-by-category/**",
                                 "/cart", "/cart/**", "blog/details",
                                 "/popcorn", "/movie/details", "/movie/seat-plan",
                                 "/feedback", "/blog", "/blog/blog-details", "/about",
-                                "/blog/blog-details/{id}/comment")
+                                "/blog/blog-details/{id}/comment",
+                                "/register/verify")
                         .permitAll() // Cho phép truy cập không cần xác thực.
-                        .requestMatchers("admin/movie/edit/**", "/admin/movie/add",
+                        .requestMatchers("/admin", "admin/movie/edit/**", "/admin/movie/add",
                                 "/admin/films", "/admin/films/edit", "/admin/films/add",
                                 "/admin/countries", "/admin/countries/add",
                                 "/admin/countries/edit",
                                 "/admin/categories/add", "/admin/categories",
                                 "/admin/categories/edit",
-                                "/admin/schedules", "/admin/schedules/add",
+                                "/admin/cinemas", "/admin/cinemas/add", "/admin/cinemas/edit",
+                                "/admin/rooms", "/admin/rooms/add", "/admin/rooms/edit",
+                                "/admin/schedules", "/admin/schedules/add", //
                                 "/admin/schedules/edit",
-                                "/admin/blog/add", "/admin/blog/delete",
-                                "/admin/blog/update",
-                                "/admin/comboFoods", "/admin/comboFoods/add",
-                                "/admin/comboFoods/edit",
+                                "/admin/blogs", "/admin/blogs/add", "/admin/blogs/edit",
+                                "/admin/comboFoods", "/admin/comboFoods/add", "/admin/comboFoods/edit",
                                 "/admin/users", "/admin/users/detail",
+                                "/admin/seats", "/admin/seats/add", "/admin/seats/edit",
+                                "/admin/seattypes", "/admin/seattypes/edit",
                                 "/admin/seatPrice", "/admin/seatPrice/add",
                                 "/admin/seatPrice/edit", "/admin/seatPrice/delete",
                                 "/admin/bookings", "/admin/bookings/detail",
@@ -78,6 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/**")
                         .permitAll()
                         .anyRequest().authenticated())
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
@@ -88,10 +93,16 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
+                        .successHandler(((request, response, authentication) -> {
+                            User currentUser = userService.getCurrentUser();
+                            if (currentUser != null) {
+                                String fullname = currentUser.getFullname();
+                                request.getSession().setAttribute("fullname", fullname);
+                            }
+                            response.sendRedirect("/");
+                        }))
                         .failureUrl("/login?error")
                         .permitAll())
-
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .failureUrl("/login?error")
@@ -103,25 +114,35 @@ public class SecurityConfig {
 
                             String email = null;
                             String username = null;
+                            String fullname = null;
 
                             if (principal instanceof DefaultOidcUser) {
                                 DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
                                 email = oidcUser.getEmail();
-                                username = oidcUser.getName();
+                                fullname = oidcUser.getFullName();
+                                username = email != null ? email.split("@")[0] : "User";
+
                             } else if (principal instanceof DefaultOAuth2User) {
                                 DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
                                 email = oauth2User.getAttribute("email");
-                                username = oauth2User.getAttribute("name");
+                                username = email != null ? email.split("@")[0] : "User";
+                                fullname = oauth2User.getAttribute("name");
+                                if (fullname == null) {
+                                    fullname = oauth2User.getAttribute("given_name");
+                                }
+                                if (fullname == null) {
+                                    fullname = oauth2User.getAttribute("family_name");
+                                }
                             }
 
                             String provider = oauthToken.getAuthorizedClientRegistrationId()
                                     .toUpperCase();
-                            userService.saveOauthUser(email, username, provider);
+                            userService.saveOauthUser(email, username, fullname, provider);
+                            request.getSession().setAttribute("fullname", fullname);
                             response.sendRedirect("/"); // Chuyển hướng đến trang lịch sử
                             // sau khi đăng nhập thành công
                         })
                         .permitAll())
-
                 .rememberMe(rememberMe -> rememberMe
                         .key("3anhem")
                         .rememberMeCookieName("3anhem")

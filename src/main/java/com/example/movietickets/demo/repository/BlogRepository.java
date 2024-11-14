@@ -15,11 +15,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BlogRepository extends  PagingAndSortingRepository<Blog, Long>,JpaRepository<Blog, Long>{
+public interface BlogRepository extends PagingAndSortingRepository<Blog, Long>, JpaRepository<Blog, Long> {
     default Page<Blog> findAllBlogForUser(Integer pageNo, Integer pageSize, String sortBy) {
         return findAll(PageRequest.of(pageNo, pageSize, Sort.by(sortBy)));
-        }
+    }
+
     @Query("SELECT b FROM Blog b WHERE b.title LIKE %:keyword%")
-    List<Blog> searchBlogsByTitle (@Param("keyword") String keyword);
+    List<Blog> searchBlogsByTitle(@Param("keyword") String keyword);
 
 }

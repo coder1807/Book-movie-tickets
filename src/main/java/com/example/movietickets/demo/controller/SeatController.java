@@ -74,7 +74,7 @@ public class SeatController {
                 for (BookingDetail bookingDetail : bookingDetails) {
                     if (bookingDetail.getSeat().getId().equals(seat.getId())) {
                         seat.setStatus("booked"); // Đánh dấu là 'booked' nếu có trong BookingDetail của suất chiếu hiện
-                                                  // tại
+                        // tại
                         break;
                     }
                 }
@@ -103,7 +103,6 @@ public class SeatController {
             model.addAttribute("cinemaName", cinemaName);
             model.addAttribute("cinemaAddress", cinemaAddress);
             model.addAttribute("roomName", roomName);
-
             return "/seat/seat-choose"; // chuyển đến trang chọn ghế
         } else {
             return "redirect:/404"; // Redirect nếu không tìm thấy lịch chiếu

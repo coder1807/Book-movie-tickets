@@ -15,12 +15,13 @@ public class SeatType {
     @Column(name = "SEAT_TYPE_ID")
     private Long id;
 
-    private  String type;
+    private String type;
 
     @Min(value = 1, message = "Giá phải lớn hơn 0")
     @Column(name = "PRICE")
     private Long price;
 
-    @OneToMany(mappedBy = "seattype", cascade = CascadeType.ALL, orphanRemoval = true) //cascade=all cho phép khi Update tat cả bảng con tham chiếu den SeatType,orphanRemoval=true cho phep khi xoa seatType thi tat ca bang con cx bi xoa theo
+    @OneToMany(mappedBy = "seattype", cascade = CascadeType.ALL, orphanRemoval = true)
+    //cascade=all cho phép khi Update tat cả bảng con tham chiếu den SeatType,orphanRemoval=true cho phep khi xoa seatType thi tat ca bang con cx bi xoa theo
     private List<Seat> seats;
 }

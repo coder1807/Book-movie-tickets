@@ -4,7 +4,7 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title  th:text="${title} ?: 'Kết Quả'">Title</title>
+    <title th:text="${title} ?: 'Kết Quả'">Title</title>
 </head>
 <body>
 <section layout:fragment="content" class="mt-5">
@@ -29,7 +29,7 @@
         <div>
             <a th:href="@{/admin/seats/add}" class="btn btn-primary mb-3">Thêm ghế mới</a>
         </div>
-    <table class="table table-bordered table-hover" >
+        <table class="table table-bordered table-hover">
             <thead>
             <tr class="text-white">
                 <th>ID</th>
@@ -47,20 +47,21 @@
                 <td class="text-white" th:text="${seat.id}"></td>
                 <td class="text-white" th:text="${seat.symbol}"></td>
                 <td class="text-white" th:text="${seat.seattype.type}"></td>
-                <td >
+                <td>
                     <img th:src="${seat.image}" style="max-width:100px" alt="seat image">
                 </td>
                 <td class="text-white" th:text="${seat.seattype.price}"></td>
-                <td  class="text-white" th:text="${seat.status}"></td>
-                <td  class="text-white" th:text="${seat.room.name}"></td>
+                <td class="text-white" th:text="${seat.status}"></td>
+                <td class="text-white" th:text="${seat.room.name}"></td>
                 <td>
                     <a th:href="@{/admin/seats/edit/{id}(id=${seat.id})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{/admin/seats/delete/{id}(id=${seat.id})}" onclick="return confirm('Bạn có chắc không ?')" class="btn btn-danger">Delete</a>
+                    <a th:href="@{/admin/seats/delete/{id}(id=${seat.id})}"
+                       onclick="return confirm('Bạn có chắc không ?')" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
             </tbody>
         </table>
-        </div>
-    </section>
+    </div>
+</section>
 </body>
 </html>

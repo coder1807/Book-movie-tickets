@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Nearest Cinemas</title>
+</head>
+<body>
+
+<h1>Nearest Cinemas</h1>
+
+<div th:if="${cinemaDistances != null}">
+  <ul>
+    <li th:each="cinemaDistance : ${cinemaDistances}">
+      <strong th:text="${cinemaDistance.cinema.name}">Cinema Name</strong>
+      <br>
+      <span>Address: <span th:text="${cinemaDistance.cinema.address}">Cinema Address</span></span>
+      <br>
+      <span>Distance: <span th:text="${cinemaDistance.distance}">Distance in meters</span></span>
+    </li>
+  </ul>
+</div>
+
+<div th:if="${cinemaDistances == null}">
+  <p>No cinemas found.</p>
+</div>
+
+</body>
+</html>

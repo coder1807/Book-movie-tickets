@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+
+    <!-- FontAwesome 6.2.0 CSS -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+            integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/all.min.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/animate.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/flaticon.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/magnific-popup.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/odometer.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/owl.carousel.min.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/owl.theme.default.min.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/nice-select.css}"/>
+    <link rel="stylesheet" th:fragment="link-css" th:href="@{assets/css/main.css}"/>
+
+    <link
+            rel="shortcut icon"
+            href="assets/img/favicon.png"
+            type="image/x-icon"
+    />
+
+    <title>Ba Anh Em - Đặt vé xem phim online</title>
+
+    <style>
+        .text-danger {
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- ==========Preloader========== -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- ==========Preloader========== -->
+
+<section
+        class="account-section bg_img"
+        data-background="/assets/img/account/account-bg.jpg"
+>
+    <div class="container">
+        <div class="padding-top padding-bottom">
+            <div class="account-area">
+                <div class="section-header-3">
+                    <span class="cate">Chúc mừng</span>
+                    <h2 class="title">Bạn đã đăng ký tài khoản thành công!</h2>
+                    <br>
+                    <p>Hãy kiểm tra email để chúng tôi hoàn tất xác thực đăng ký tài khoản của bạn.</p>
+                    <br>
+                    <div style="font-size: 20px">
+                        <a th:href="@{/login}">Trở về trang đăng nhập tài khoản</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ==========Sign-In-Section========== -->
+<script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/assets/js/modernizr-3.6.0.min.js}"></script>
+<script th:src="@{/assets/js/plugins.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/heandline.js}"></script>
+<script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/magnific-popup.min.js}"></script>
+<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/assets/js/wow.min.js}"></script>
+<script th:src="@{/assets/js/countdown.min.js}"></script>
+<script th:src="@{/assets/js/odometer.min.js}"></script>
+<script th:src="@{/assets/js/viewport.jquery.js}"></script>
+<script th:src="@{/assets/js/nice-select.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+</body>
+</html>

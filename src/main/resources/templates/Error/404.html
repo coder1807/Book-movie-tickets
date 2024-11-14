@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout}">
+      layout:decorate="~{layout}">
 
 <head>
     <meta charset="UTF-8">
@@ -8,30 +8,30 @@
 </head>
 
 <body>
-    <section layout:fragment="content">
+<section layout:fragment="content">
 
-        <!-- ==========Preloader========== -->
-        <div class="preloader">
-            <div class="preloader-inner">
-                <div class="preloader-icon">
-                    <span></span>
-                    <span></span>
-                </div>
+    <!-- ==========Preloader========== -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
             </div>
         </div>
-        <!-- ==========Preloader========== -->
+    </div>
+    <!-- ==========Preloader========== -->
 
-        <!-- ==========Four-Not-Four-Section========== -->
-        <section class="section-404 padding-top padding-bottom">
-            <div class="container">
-                <div class="thumb-404">
-                    <img src="/assets/img/404.png" alt="404" />
-                </div>
-                <h3 class="title">Oop... Trang truy cập đã bị chặn:(</h3>
-                <a href="index.html" class="custom-button" th:href="@{/}">
-                    Trở về Trang Chủ <i class="flaticon-right"></i></a>
+    <!-- ==========Four-Not-Four-Section========== -->
+    <section class="section-404 padding-top padding-bottom">
+        <div class="container">
+            <div class="thumb-404">
+                <img src="/assets/img/404.png" alt="404"/>
             </div>
-        </section>
-        <!-- ==========Four-Not-Four-Section========== -->
+            <h3 class="title">Oop... Trang truy cập đã bị chặn:(</h3>
+            <a href="index.html" class="custom-button" th:href="@{/}">
+                Trở về Trang Chủ <i class="flaticon-right"></i></a>
+        </div>
     </section>
+    <!-- ==========Four-Not-Four-Section========== -->
+</section>
 </body>

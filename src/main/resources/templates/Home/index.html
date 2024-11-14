@@ -67,7 +67,8 @@
     <!-- ==========Preloader========== -->
 
     <section class="banner-section">
-        <div class="banner-bg bg_img bg-fixed" data-background="./assets/img/banner/banner011.jpg" style="background-image: url(&quot;./assets/img/banner/banner011.jpg&quot;);"></div>
+        <div class="banner-bg bg_img bg-fixed" data-background="./assets/img/banner/banner011.jpg"
+             style="background-image: url(&quot;./assets/img/banner/banner011.jpg&quot;);"></div>
         <div class="container">
             <div class="banner-content">
                 <h1 class="title cd-headline clip">
@@ -89,7 +90,8 @@
 
     <section class="search-ticket-section padding-top pt-lg-0">
         <div class="container">
-            <div class="search-tab bg_img" data-background="/assets/img/ticket/ticket-bg01.jpg" style="background-image: url(&quot;./assets/img/ticket/ticket-bg01.jpg&quot;);">
+            <div class="search-tab bg_img" data-background="/assets/img/ticket/ticket-bg01.jpg"
+                 style="background-image: url(&quot;./assets/img/ticket/ticket-bg01.jpg&quot;);">
                 <div class="row align-items-center mb--20">
                     <div class="col-lg-6 mb-20">
                         <div class="search-ticket-header">
@@ -123,10 +125,11 @@
                 <div class="tab-area">
                     <div class="tab-item active">
                         <div class="flex-form">
-                            <form class="ticket-search-form"  th:action="@{/films/search}" method="get">
+                            <form class="ticket-search-form" th:action="@{/films/search}" method="get">
                                 <div class="form-group large">
                                     <div th:action="@{/films/search}" method="get">
-                                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm phim" required="">
+                                        <input type="text" name="keyword" th:value="${keyword}"
+                                               placeholder="Tìm kiếm phim" required="">
                                         <button type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>
@@ -136,12 +139,13 @@
                             <form>
                                 <div class="form-group flex-center">
                                     <div class="thumb-country">
-                                        <img src="/assets/img/ticket/city.png" alt="ticket" />
+                                        <img src="/assets/img/ticket/city.png" alt="ticket"/>
                                     </div>
                                     <span class="type type-country">Quốc gia: </span>
                                     <select class="select-bar" onchange="handleCountryChange(this)">
                                         <option value="" disabled selected>Chọn quốc gia</option>
-                                        <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}"></option>
+                                        <option th:each="country : ${countries}" th:value="${country.id}"
+                                                th:text="${country.name}"></option>
                                     </select>
                                 </div>
                             </form>
@@ -161,19 +165,22 @@
                             <ul>
                                 <li>
                                     <a href="#0">
-                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar01.png" alt="sidebar"></span>
+                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar01.png"
+                                                               alt="sidebar"></span>
                                         <span class="cate">24/7 Chăm sóc</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#0">
-                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar02.png" alt="sidebar"></span>
+                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar02.png"
+                                                               alt="sidebar"></span>
                                         <span class="cate">100% Đảm bảo</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#0">
-                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar03.png" alt="sidebar"></span>
+                                        <span class="img"><img src="./assets/img/sidebar/icons/sidebar03.png"
+                                                               alt="sidebar"></span>
                                         <span class="cate">Chính sách của Ba Anh Em</span>
                                     </a>
                                 </li>

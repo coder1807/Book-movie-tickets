@@ -16,7 +16,7 @@ public class BlogService {
     @Autowired
     private BlogRepository blogRepository;
 
-    public Page<Blog> getAllPostsForUser(Integer pageNo, Integer pageSize, String sortBy ) {
+    public Page<Blog> getAllPostsForUser(Integer pageNo, Integer pageSize, String sortBy) {
         return blogRepository.findAllBlogForUser(pageNo, pageSize, sortBy);
     }
 

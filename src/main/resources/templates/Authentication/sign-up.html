@@ -52,55 +52,61 @@
                         <span class="cate">Chào mừng</span>
                         <h2 class="title">đến với Ba Anh Em</h2>
                     </div>
+                    <form class="account-form" th:action="@{/register}" th:object="${user}" method="post">
+                        <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                            <ul>
+                                <li th:each="error : ${errors}" th:text="${error}" class="textdanger text-start"></li>
+                            </ul>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="fullname">Họ và Tên<span>*</span></label>
-                        <input type="text" placeholder="Nhập tên đầy đủ" id="fullname" required
-                            th:field="*{fullname}" />
-                    </div>
+                        <div class="form-group">
+                            <label for="fullname">Họ và Tên<span>*</span></label>
+                            <input type="text" placeholder="Nhập tên đầy đủ" id="fullname" required
+                                th:field="*{fullname}" />
+                        </div>
 
-                    <div class="form-group">
-                        <label for="username">Tên tài khoản<span>*</span></label>
-                        <input type="text" placeholder="Nhập tên tài khoản" id="username" required
-                            th:field="*{username}" />
-                        <div th:if="${#fields.hasErrors('username')}" class="text-danger">
-                            <p th:errors="*{username}">Tên tài khoản đã được đăng kí</p>
+                        <div class="form-group">
+                            <label for="username">Tên tài khoản<span>*</span></label>
+                            <input type="text" placeholder="Nhập tên tài khoản" id="username" required
+                                th:field="*{username}" />
+                            <div th:if="${#fields.hasErrors('username')}" class="text-danger">
+                                <p th:errors="*{username}">Tên tài khoản đã được đăng kí</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="email1">Email<span>*</span></label>
-                        <input type="text" placeholder="Nhập Email của bạn" id="email1" required
-                            th:field="*{email}" />
-                        <div th:if="${#fields.hasErrors('email')}" class="text-danger">
-                            <p th:errors="*{email}">Email chưa đúng hoặc đã được đăng kí</p>
+                        <div class="form-group">
+                            <label for="email1">Email<span>*</span></label>
+                            <input type="text" placeholder="Nhập Email của bạn" id="email1" required
+                                th:field="*{email}" />
+                            <div th:if="${#fields.hasErrors('email')}" class="text-danger">
+                                <p th:errors="*{email}">Email chưa đúng hoặc đã được đăng kí</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pass1">Mật khẩu<span>*</span></label>
-                        <input type="password" placeholder="Nhập mật khẩu" id="pass1" required
-                            th:field="*{password}" />
-                        <div th:if="${#fields.hasErrors('password')}" class="text-danger">
-                            <p th:errors="*{password}">Nhập lại mật khẩu khác</p>
+                        <div class="form-group">
+                            <label for="pass1">Mật khẩu<span>*</span></label>
+                            <input type="password" placeholder="Nhập mật khẩu" id="pass1" required
+                                th:field="*{password}" />
+                            <div th:if="${#fields.hasErrors('password')}" class="text-danger">
+                                <p th:errors="*{password}">Nhập lại mật khẩu khác</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phonenumber">Số điện thoại<span>*</span></label>
-                        <input type="tel" placeholder="Nhập số điện thoại" id="phonenumber" required
-                            th:field="*{phone}" />
-                        <div th:if="${#fields.hasErrors('phone')}" class="text-danger">
-                            <p th:errors="*{phone}">Số điện chưa đúng hoặc đã được đăng kí</p>
+                        <div class="form-group">
+                            <label for="phonenumber">Số điện thoại<span>*</span></label>
+                            <input type="tel" placeholder="Nhập số điện thoại" id="phonenumber" required
+                                th:field="*{phone}" />
+                            <div th:if="${#fields.hasErrors('phone')}" class="text-danger">
+                                <p th:errors="*{phone}">Số điện chưa đúng hoặc đã được đăng kí</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group checkgroup">
-                        <input type="checkbox" id="bal" required checked />
-                        <label for="bal">Tôi đồng ý với các
-                            <a href="#0">Điều khoản, Chính sách bảo mật</a> và
-                            <a href="#0">Chi phí</a></label>
-                    </div>
-                    <div class="form-group text-center">
-                        <input type="submit" value="Đăng kí" />
-                    </div>
+                        <div class="form-group checkgroup">
+                            <input type="checkbox" id="bal" required checked />
+                            <label for="bal">Tôi đồng ý với các
+                                <a href="#0">Điều khoản, Chính sách bảo mật</a> và
+                                <a href="#0">Chi phí</a></label>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" value="Đăng kí" />
+                        </div>
                     </form>
                     <div class="option">
                         Bạn đã có tài khoản
@@ -144,7 +150,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
         </div>
     </section>
     <!-- ==========Sign-In-Section========== -->
