@@ -67,7 +67,6 @@ public class PurchaseController {
             model.addAttribute("startTime", purchase.getStartTime());
             model.addAttribute("roomName", purchase.getRoomName());
             model.addAttribute("poster", purchase.getPoster());
-            //format Currency VND
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             String formattedTotalPrice = currencyFormat.format(purchase.getTotalPrice());
             model.addAttribute("totalPrice", formattedTotalPrice);
@@ -86,7 +85,6 @@ public class PurchaseController {
         }
         return "/purchase/purchase";
     }
-
 
 
     @GetMapping("/clear")
@@ -116,6 +114,11 @@ public class PurchaseController {
         return "redirect:/purchase?scheduleId=" + scheduleId;
     }
 
+    @GetMapping("/detect")
+    public String detectStudentCard(Model model) {
+        return "purchase/detect-card-uni";
+    }
+
     @GetMapping("/history")
     public String showPurchaseHistory(Model model) {
         List<Booking> bookings = bookingService.getBookingsByCurrentUser(); // phương thức này để lấy các booking của người dùng hiện tại
@@ -138,7 +141,6 @@ public class PurchaseController {
             for (Purchase.Seat2 seat : purchase.getSeatsList()) {
                 seatSymbols.add(seat.getSymbol());
             }
-
 
 
             Room room = roomRepository.findByName(purchase.getRoomName());
@@ -168,7 +170,7 @@ public class PurchaseController {
             booking.setPayment(payment);
             booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
             booking.setCreateAt(new Date());
-            booking.setPrice(purchase.getTotalPrice()+ comboPrice); //cộng thêm giá từ food
+            booking.setPrice(purchase.getTotalPrice() + comboPrice); //cộng thêm giá từ food
 
             if (comboFoodId != null) {
                 ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
@@ -178,7 +180,7 @@ public class PurchaseController {
             // Kiểm tra phương thức thanh toán
             if ("vnpay".equalsIgnoreCase(payment)) {
                 //return "redirect:/api/payment/create_payment?amount=" + purchase.getTotalPrice();
-                return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount="  + booking.getPrice() + "&comboId="  + comboId ;
+                return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount=" + booking.getPrice() + "&comboId=" + comboId;
             }
 
             // Lấy thông tin người dùng hiện tại

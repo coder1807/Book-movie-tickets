@@ -64,13 +64,15 @@ public class SecurityConfig {
                                 "/admin/countries/edit",
                                 "/admin/categories/add", "/admin/categories",
                                 "/admin/categories/edit",
-                                "/admin/schedules", "/admin/schedules/add",
+                                "/admin/cinemas", "/admin/cinemas/add", "/admin/cinemas/edit",
+                                "/admin/rooms", "/admin/rooms/add", "/admin/rooms/edit",
+                                "/admin/schedules", "/admin/schedules/add", //
                                 "/admin/schedules/edit",
-                                "/admin/blog/add", "/admin/blog/delete",
-                                "/admin/blog/update",
-                                "/admin/comboFoods", "/admin/comboFoods/add",
-                                "/admin/comboFoods/edit",
+                                "/admin/blogs", "/admin/blogs/add", "/admin/blogs/edit",
+                                "/admin/comboFoods", "/admin/comboFoods/add", "/admin/comboFoods/edit",
                                 "/admin/users", "/admin/users/detail",
+                                "/admin/seats", "/admin/seats/add", "/admin/seats/edit",
+                                "/admin/seattypes", "/admin/seattypes/edit",
                                 "/admin/seatPrice", "/admin/seatPrice/add",
                                 "/admin/seatPrice/edit", "/admin/seatPrice/delete",
                                 "/admin/bookings", "/admin/bookings/detail",
@@ -79,6 +81,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/**")
                         .permitAll()
                         .anyRequest().authenticated())
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")

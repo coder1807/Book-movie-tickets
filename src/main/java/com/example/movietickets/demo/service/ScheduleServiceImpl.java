@@ -1,5 +1,6 @@
 package com.example.movietickets.demo.service;
 
+import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.repository.ScheduleRepository;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     public void updateSchedule(Schedule schedule) {
+//        Schedule existingSchedule = scheduleRepository.findById(schedule.getId())
+//                .orElseThrow(() -> new IllegalStateException("Schedule with ID " + schedule.getId() + " does not exist."));
+//        existingSchedule.setName(room.getName());
         scheduleRepository.save(schedule);
     }
 

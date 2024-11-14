@@ -18,7 +18,7 @@
         </div>
     </div>
     <!-- ==========Preloader========== -->
-    <section class="details-banner hero-area bg_img seat-plan-banner" data-background="/assets/img/banner/banner04.jpg"
+    <section class="details-banner hero-area bg_img seat-plan-banner" th:attr="data-background=${poster}"
              style="background-image: url(&quot;/assets/img/banner/banner04.jpg&quot;);">
         <div class="container">
             <div class="details-banner-wrapper">
@@ -94,15 +94,15 @@
                         <!-- Các thông tin khác -->
                         <div class="checkout-widget checkout-card mb-2">
                             <form action="#" th:action="@{/purchase/checkout}" method="post">
-                                <input type="hidden" name="seatSymbols" th:value="${selectedSeats}" />
-                                <input type="hidden" name="totalPrice" th:value="${totalPrice}" />
-                                <input type="hidden" name="startTime" th:value="${startTime}" />
-                                <input type="hidden" name="filmTitle" th:value="${filmTitle}" />
-                                <input type="hidden" name="poster" th:value="${poster}" />
-                                <input type="hidden" name="category" th:value="${category}" />
-                                <input type="hidden" name="cinemaName" th:value="${cinemaName}" />
-                                <input type="hidden" name="cinemaAddress" th:value="${cinemaAddress}" />
-                                <input type="hidden" name="roomName" th:value="${roomName}" />
+                                <input type="hidden" name="seatSymbols" th:value="${selectedSeats}"/>
+                                <input type="hidden" name="totalPrice" th:value="${totalPrice}"/>
+                                <input type="hidden" name="startTime" th:value="${startTime}"/>
+                                <input type="hidden" name="filmTitle" th:value="${filmTitle}"/>
+                                <input type="hidden" name="poster" th:value="${poster}"/>
+                                <input type="hidden" name="category" th:value="${category}"/>
+                                <input type="hidden" name="cinemaName" th:value="${cinemaName}"/>
+                                <input type="hidden" name="cinemaAddress" th:value="${cinemaAddress}"/>
+                                <input type="hidden" name="roomName" th:value="${roomName}"/>
                                 <input type="hidden" name="scheduleId" th:value="${scheduleId}">
 
                                 <label for="payment">Phương thức thanh toán:</label>
@@ -114,9 +114,10 @@
                                     <option value="vnpay">VNPay</option>
                                 </select>
                                 <label for="comboFoodSelect" class="form-label mt-3">Combo Food:</label>
-                                <select name="comboId" id="comboFoodSelect" class="form-control" >
+                                <select name="comboId" id="comboFoodSelect" class="form-control">
                                     <option value="0-0">Không</option>
-                                    <option th:each="combo : ${comboFoods}"  th:value="${combo.id + '-' + combo.price}" th:text="${combo.comboName} + ' - '+ ${combo.description} + ' - ' + ${combo.price} + 'VND'"></option>
+                                    <option th:each="combo : ${comboFoods}" th:value="${combo.id + '-' + combo.price}"
+                                            th:text="${combo.comboName} + ' - '+ ${combo.description} + ' - ' + ${combo.price} + 'VND'"></option>
                                 </select>
 
                                 <button type="submit" class="custom-button mt-5">Thanh toán</button>
@@ -174,7 +175,7 @@
                         <h6 class="subtitle">
                             <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
                         </h6>
-<!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
+                        <!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
                     </div>
                 </div>
             </div>
