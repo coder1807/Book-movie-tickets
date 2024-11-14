@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="~{layout}">
+      xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="~{layout}">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Ba Anh Em - Phim, xi nê, movie</title>
 
     <style>
@@ -46,369 +46,369 @@
 </head>
 
 <body>
-    <section layout:fragment="content">
-        <!-- ==========Preloader========== -->
-        <div class="preloader">
-            <div class="preloader-inner">
-                <div class="preloader-icon">
-                    <span></span>
-                    <span></span>
+<section layout:fragment="content">
+    <!-- ==========Preloader========== -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ==========Preloader========== -->
+    <!--    data-background="/assets/img/banner/banner03.jpg"-->
+    <section class="details-banner bg_img" th:object="${film}" th:attr="data-background=${film.poster}"
+             style="background-image: url('/assets/img/banner/banner03.jpg')">
+        <div class="container">
+            <div class="details-banner-wrapper">
+                <div class="details-banner-thumb">
+                    <img th:src="@{${film.poster}}" alt="movie"/>
+                    <a th:href="@{'https://www.youtube.com/watch?v=' + ${film.trailer}}" class="video-popup">
+                        <img src="/assets/img/movie/video-button.png" alt="movie"/>
+                    </a>
+                    <!--                    <a href="#" rel="noopener" class="video-popup" onclick="openTrailer('${film.trailer}')">-->
+                    <!--                        <img src="/assets/img/movie/video-button.png" alt="movie">-->
+                    <!--                    </a>-->
+                    <!--                    <script>-->
+                    <!--                        function openTrailer(url) {-->
+                    <!--                            var popup = window.open('', 'videoPopup', 'width=800,height=450');-->
+                    <!--                            popup.document.write('<iframe width="800" height="450" src="' + url + '" frameborder="0" allowfullscreen></iframe>');-->
+                    <!--                        }-->
+                    <!--                    </script>-->
+                </div>
+                <div class="details-banner-content offset-lg-3">
+                    <h3 class="title" th:text="${film.name}"></h3>
+                    <div class="tags">
+                        <a href="#0" th:text="${'Phụ đề: ' + film.subtitle}"></a>
+                    </div>
+                    <div th:if="${film.categories != null}">
+                        <a class="button mr-3" href="#0" th:each="category : ${film.categories}"
+                           th:text="${category.name}"></a>
+                    </div>
+                    <div class="social-and-duration">
+                        <div class="duration-area">
+                            <div class="item">
+                                <i class="fas fa-calendar-alt"></i><span
+                                    th:text="${film.openingday != null ? #dates.format(film.openingday, 'dd/MM/yyyy') : 'Chưa có ngày chiếu'}"></span>
+                            </div>
+                            <div class="item">
+                                <i class="far fa-clock"></i><span th:text="${film.duration + ' phút'}"></span>
+                            </div>
+                        </div>
+                        <ul class="social-share">
+                            <li>
+                                <a href="#0"><i class="fab fa-facebook-f"></i></a>
+                            </li>
+                            <li>
+                                <a href="#0"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#0"><i class="fab fa-pinterest-p"></i></a>
+                            </li>
+                            <li>
+                                <a href="#0"><i class="fab fa-linkedin-in"></i></a>
+                            </li>
+                            <li>
+                                <a href="#0"><i class="fab fa-google-plus-g"></i></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- ==========Preloader========== -->
-        <!--    data-background="/assets/img/banner/banner03.jpg"-->
-        <section class="details-banner bg_img" th:object="${film}" th:attr="data-background=${film.poster}"
-            style="background-image: url('/assets/img/banner/banner03.jpg')">
-            <div class="container">
-                <div class="details-banner-wrapper">
-                    <div class="details-banner-thumb">
-                        <img th:src="@{${film.poster}}" alt="movie" />
-                        <a th:href="@{'https://www.youtube.com/watch?v=' + ${film.trailer}}" class="video-popup">
-                            <img src="/assets/img/movie/video-button.png" alt="movie" />
-                        </a>
-                        <!--                    <a href="#" rel="noopener" class="video-popup" onclick="openTrailer('${film.trailer}')">-->
-                        <!--                        <img src="/assets/img/movie/video-button.png" alt="movie">-->
-                        <!--                    </a>-->
-                        <!--                    <script>-->
-                        <!--                        function openTrailer(url) {-->
-                        <!--                            var popup = window.open('', 'videoPopup', 'width=800,height=450');-->
-                        <!--                            popup.document.write('<iframe width="800" height="450" src="' + url + '" frameborder="0" allowfullscreen></iframe>');-->
-                        <!--                        }-->
-                        <!--                    </script>-->
-                    </div>
-                    <div class="details-banner-content offset-lg-3">
-                        <h3 class="title" th:text="${film.name}"></h3>
-                        <div class="tags">
-                            <a href="#0" th:text="${'Phụ đề: ' + film.subtitle}"></a>
-                        </div>
-                        <div th:if="${film.categories != null}">
-                            <a class="button mr-3" href="#0" th:each="category : ${film.categories}"
-                                th:text="${category.name}"></a>
-                        </div>
-                        <div class="social-and-duration">
-                            <div class="duration-area">
-                                <div class="item">
-                                    <i class="fas fa-calendar-alt"></i><span
-                                        th:text="${film.openingday != null ? #dates.format(film.openingday, 'dd/MM/yyyy') : 'Chưa có ngày chiếu'}"></span>
-                                </div>
-                                <div class="item">
-                                    <i class="far fa-clock"></i><span th:text="${film.duration + ' phút'}"></span>
-                                </div>
-                            </div>
-                            <ul class="social-share">
-                                <li>
-                                    <a href="#0"><i class="fab fa-facebook-f"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#0"><i class="fab fa-twitter"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#0"><i class="fab fa-pinterest-p"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#0"><i class="fab fa-linkedin-in"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#0"><i class="fab fa-google-plus-g"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    </section>
 
-        <section class="book-section bg-one">
-            <div class="container">
-                <div class="book-wrapper offset-lg-3">
-                    <div class="left-side">
-                        <div class="item">
-                            <div class="item-header">
-                                <div class="thumb">
-                                    <img src="/assets/img/movie/tomato2.png" alt="movie" />
-                                </div>
-                                <div class="counter-area">
+    <section class="book-section bg-one">
+        <div class="container">
+            <div class="book-wrapper offset-lg-3">
+                <div class="left-side">
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="thumb">
+                                <img src="/assets/img/movie/tomato2.png" alt="movie"/>
+                            </div>
+                            <div class="counter-area">
                                     <span class="counter-item odometer odometer-auto-theme" data-odometer-final="88">
                                         <div class="odometer-inside">
                                             <span class="odometer-digit"><span
                                                     class="odometer-digit-spacer">8</span><span
                                                     class="odometer-digit-inner"><span class="odometer-ribbon"><span
-                                                            class="odometer-ribbon-inner"><span
-                                                                class="odometer-value">8</span></span></span></span></span><span
+                                                    class="odometer-ribbon-inner"><span
+                                                    class="odometer-value">8</span></span></span></span></span><span
                                                 class="odometer-digit"><span class="odometer-digit-spacer">8</span><span
-                                                    class="odometer-digit-inner"><span class="odometer-ribbon"><span
-                                                            class="odometer-ribbon-inner"><span
-                                                                class="odometer-value">8</span></span></span></span></span>
+                                                class="odometer-digit-inner"><span class="odometer-ribbon"><span
+                                                class="odometer-ribbon-inner"><span
+                                                class="odometer-value">8</span></span></span></span></span>
                                         </div>
                                     </span>
-                                </div>
                             </div>
-                            <p>tomatometer</p>
                         </div>
-                        <div class="item">
-                            <div class="item-header">
-                                <div class="thumb">
-                                    <img src="/assets/img/movie/cake2.png" alt="movie" />
-                                </div>
-                                <div class="counter-area">
+                        <p>tomatometer</p>
+                    </div>
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="thumb">
+                                <img src="/assets/img/movie/cake2.png" alt="movie"/>
+                            </div>
+                            <div class="counter-area">
                                     <span class="counter-item odometer odometer-auto-theme" data-odometer-final="88">
                                         <div class="odometer-inside">
                                             <span class="odometer-digit"><span
                                                     class="odometer-digit-spacer">8</span><span
                                                     class="odometer-digit-inner"><span class="odometer-ribbon"><span
-                                                            class="odometer-ribbon-inner"><span
-                                                                class="odometer-value">8</span></span></span></span></span><span
+                                                    class="odometer-ribbon-inner"><span
+                                                    class="odometer-value">8</span></span></span></span></span><span
                                                 class="odometer-digit"><span class="odometer-digit-spacer">8</span><span
-                                                    class="odometer-digit-inner"><span class="odometer-ribbon"><span
-                                                            class="odometer-ribbon-inner"><span
-                                                                class="odometer-value">8</span></span></span></span></span>
+                                                class="odometer-digit-inner"><span class="odometer-ribbon"><span
+                                                class="odometer-ribbon-inner"><span
+                                                class="odometer-value">8</span></span></span></span></span>
                                         </div>
                                     </span>
-                                </div>
                             </div>
-                            <p>audience Score</p>
                         </div>
-                        <div class="item">
-                            <div class="item-header">
-                                <h5 class="title" th:text="${averageRating}"></h5>
-
-                                <div class="rated" th:if="${averageRating > 0}">
-                                    <i style="margin-left:3px;" class="fas fa-heart"
-                                        th:each="i : ${#numbers.sequence(1, averageRating)}"></i>
-                                </div>
-
-                                <div class="rated rate-it" th:if="${averageRating <= 0}" style="margin-left:10px;">
-                                    <i class="fas fa-heart"></i>
-                                    <i class="fas fa-heart"></i>
-                                    <i class="fas fa-heart"></i>
-                                    <i class="fas fa-heart"></i>
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                            </div>
-                            <p>Users Rating</p>
-                        </div>
+                        <p>audience Score</p>
                     </div>
-                    <a th:href="@{/schedules/{id}(id=${film.id})}" class="custom-button">
-                        Đặt vé
-                    </a>
+                    <div class="item">
+                        <div class="item-header">
+                            <h5 class="title" th:text="${averageRating}"></h5>
+
+                            <div class="rated" th:if="${averageRating > 0}">
+                                <i style="margin-left:3px;" class="fas fa-heart"
+                                   th:each="i : ${#numbers.sequence(1, averageRating)}"></i>
+                            </div>
+
+                            <div class="rated rate-it" th:if="${averageRating <= 0}" style="margin-left:10px;">
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                        <p>Users Rating</p>
+                    </div>
                 </div>
+                <a th:href="@{/schedules/{id}(id=${film.id})}" class="custom-button">
+                    Đặt vé
+                </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="movie-details-section padding-top padding-bottom" th:object="${film}">
-            <div class="container">
-                <div class="row justify-content-center flex-wrap-reverse mb--50">
-                    <div class="col-lg-3 col-sm-10 col-md-6 mb-50">
-                        <div class="widget-1 widget-tags">
-                            <ul>
-                                <li>
-                                    <a href="#0" th:text="${film.quanlity}"></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="widget-1 widget-offer">
-                            <h3 class="title">Applicable offer</h3>
-                            <div class="offer-body">
-                                <div class="offer-item">
-                                    <div class="thumb">
-                                        <img src="/assets/img/sidebar/offer01.png" alt="sidebar" />
-                                    </div>
-                                    <div class="content">
-                                        <h6>
-                                            <a href="#0">Amazon Pay Cashback Offer</a>
-                                        </h6>
-                                        <p>Win Cashback Upto Rs 300*</p>
-                                    </div>
+    <section class="movie-details-section padding-top padding-bottom" th:object="${film}">
+        <div class="container">
+            <div class="row justify-content-center flex-wrap-reverse mb--50">
+                <div class="col-lg-3 col-sm-10 col-md-6 mb-50">
+                    <div class="widget-1 widget-tags">
+                        <ul>
+                            <li>
+                                <a href="#0" th:text="${film.quanlity}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget-1 widget-offer">
+                        <h3 class="title">Applicable offer</h3>
+                        <div class="offer-body">
+                            <div class="offer-item">
+                                <div class="thumb">
+                                    <img src="/assets/img/sidebar/offer01.png" alt="sidebar"/>
                                 </div>
-                                <div class="offer-item">
-                                    <div class="thumb">
-                                        <img src="/assets/img/sidebar/offer02.png" alt="sidebar" />
-                                    </div>
-                                    <div class="content">
-                                        <h6>
-                                            <a href="#0">PayPal Offer</a>
-                                        </h6>
-                                        <p>
-                                            Transact first time with Paypal and get 100% cashback up
-                                            to Rs. 500
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="offer-item">
-                                    <div class="thumb">
-                                        <img src="/assets/img/sidebar/offer03.png" alt="sidebar" />
-                                    </div>
-                                    <div class="content">
-                                        <h6>
-                                            <a href="#0">HDFC Bank Offer</a>
-                                        </h6>
-                                        <p>
-                                            Get 15% discount up to INR 100* and INR 50* off on
-                                            F&amp;B T&amp;C apply
-                                        </p>
-                                    </div>
+                                <div class="content">
+                                    <h6>
+                                        <a href="#0">Amazon Pay Cashback Offer</a>
+                                    </h6>
+                                    <p>Win Cashback Upto Rs 300*</p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="widget-1 widget-banner">
-                            <div class="widget-1-body">
-                                <a href="#0">
-                                    <img src="/assets/img/sidebar/banner/banner01.jpg" alt="banner" />
-                                </a>
+                            <div class="offer-item">
+                                <div class="thumb">
+                                    <img src="/assets/img/sidebar/offer02.png" alt="sidebar"/>
+                                </div>
+                                <div class="content">
+                                    <h6>
+                                        <a href="#0">PayPal Offer</a>
+                                    </h6>
+                                    <p>
+                                        Transact first time with Paypal and get 100% cashback up
+                                        to Rs. 500
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="offer-item">
+                                <div class="thumb">
+                                    <img src="/assets/img/sidebar/offer03.png" alt="sidebar"/>
+                                </div>
+                                <div class="content">
+                                    <h6>
+                                        <a href="#0">HDFC Bank Offer</a>
+                                    </h6>
+                                    <p>
+                                        Get 15% discount up to INR 100* and INR 50* off on
+                                        F&amp;B T&amp;C apply
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9 mb-50">
-                        <div class="movie-details">
-                            <h3 class="title">Trailer chi tiết</h3>
-                            <div class="details-photos">
-                                <iframe width="660" height="415"
+                    <div class="widget-1 widget-banner">
+                        <div class="widget-1-body">
+                            <a href="#0">
+                                <img src="/assets/img/sidebar/banner/banner01.jpg" alt="banner"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 mb-50">
+                    <div class="movie-details">
+                        <h3 class="title">Trailer chi tiết</h3>
+                        <div class="details-photos">
+                            <iframe width="660" height="415"
                                     th:src="@{'https://www.youtube.com/embed/' + ${film.trailer}}" frameborder="0"
                                     allowfullscreen></iframe>
-                            </div>
-                            <div class="tab summery-review">
-                                <ul class="tab-menu">
-                                    <li class="active">tóm tắt</li>
-                                    <li>đánh giá <span th:text="${numberOfRatings}"></span></li>
-                                </ul>
-                                <div class="tab-area">
-                                    <div class="tab-item active">
-                                        <div class="item">
-                                            <h5 class="sub-title">Mô tả</h5>
-                                            <p th:text="${film.description}"></p>
-                                        </div>
-                                        <div class="item">
-                                            <h5 class="sub-title">Đạo diễn</h5>
-                                            <p th:text="${film.director}"></p>
-                                        </div>
-                                        <div class="item">
-                                            <div class="header">
-                                                <h5 class="sub-title">Diễn viên</h5>
-                                                <div class="navigation">
-                                                    <div class="cast-prev">
-                                                        <i class="flaticon-double-right-arrows-angles"></i>
-                                                    </div>
-                                                    <div class="cast-next">
-                                                        <i class="flaticon-double-right-arrows-angles"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="casting-slider owl-carousel">
-                                                <div th:each="actor : ${actors}" class="cast-item">
-                                                    <div class="cast-thumb">
-                                                        <a href="#0">
-                                                            <img class="owl-lazy" data-src="/assets/img/cast/cast00.jpg"
-                                                                alt="cast" />
-                                                        </a>
-                                                    </div>
-                                                    <div class="cast-content">
-                                                        <h6 class="cast-title">
-                                                            <a href="#0" th:text="${actor}"></a>
-                                                        </h6>
-                                                        <span class="cate">actor</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                        </div>
+                        <div class="tab summery-review">
+                            <ul class="tab-menu">
+                                <li class="active">tóm tắt</li>
+                                <li>đánh giá <span th:text="${numberOfRatings}"></span></li>
+                            </ul>
+                            <div class="tab-area">
+                                <div class="tab-item active">
+                                    <div class="item">
+                                        <h5 class="sub-title">Mô tả</h5>
+                                        <p th:text="${film.description}"></p>
                                     </div>
-                                    <div class="tab-item">
-                                        <div sec:authorize="isAuthenticated()">
-                                            <div th:if="${!hasRated}">
-                                                <div class="leave-comment">
-                                                    <h5 class="title">Leave a comment</h5>
-                                                    <form class="rating-form" method="post"
-                                                        th:action="@{/films/film-details/{id}/rating(id=${film.id})}"
-                                                        th:object="${rating}" enctype="multipart/form-data">
-                                                        <input type="hidden" th:value="${film.id}" name="filmId" />
-                                                        <!-- Trường ẩn để lưu id của film -->
-                                                        <div class="form-group">
-                                                            <div class="rating-stars star-flex">
-                                                                <i class="fas fa-heart" id="star1"
-                                                                    onclick="rate(1)"></i>
-                                                                <i class="fas fa-heart" id="star2"
-                                                                    onclick="rate(2)"></i>
-                                                                <i class="fas fa-heart" id="star3"
-                                                                    onclick="rate(3)"></i>
-                                                                <i class="fas fa-heart" id="star4"
-                                                                    onclick="rate(4)"></i>
-                                                                <i class="fas fa-heart" id="star5"
-                                                                    onclick="rate(5)"></i>
-                                                            </div>
-                                                            <input type="hidden" id="rating" name="rating"
-                                                                th:field="*{star}">
-                                                            <!-- Trường ẩn để lưu giá trị đánh giá sao -->
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <textarea placeholder="Viết cảm nghĩ của bạn" name="content"
-                                                                th:field="*{content}" required></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input type="submit" value="Comment"
-                                                                onclick="return validateForm()" />
-                                                        </div>
-                                                    </form>
+                                    <div class="item">
+                                        <h5 class="sub-title">Đạo diễn</h5>
+                                        <p th:text="${film.director}"></p>
+                                    </div>
+                                    <div class="item">
+                                        <div class="header">
+                                            <h5 class="sub-title">Diễn viên</h5>
+                                            <div class="navigation">
+                                                <div class="cast-prev">
+                                                    <i class="flaticon-double-right-arrows-angles"></i>
+                                                </div>
+                                                <div class="cast-next">
+                                                    <i class="flaticon-double-right-arrows-angles"></i>
                                                 </div>
                                             </div>
-                                            <div th:if="${hasRated}" style="font-size: 32px;font-weight: bold;">
-                                                BẠN ĐÃ ĐÁNH GIÁ BỘ PHIM NÀY
-                                            </div>
                                         </div>
-
-                                        <div sec:authorize="!isAuthenticated()"
-                                            style="font-size: 32px;font-weight: bold;">
-                                            <h3>Bạn cần đăng nhập để có thể bình luận.</h3>
-                                        </div>
-
-                                        <div class="movie-review-item" th:each="rating : ${ratings}">
-                                            <div class="flex-rating">
-                                                <div class="movie-review-info">
-                                                    <div>
-                                                        <span class="reply-date"
-                                                            th:text="${rating.getFormattedDate()}"></span>
-                                                    </div>
-
-                                                    <h6 class="subtitle">
-                                                        <a href="#0" th:text="${rating.user.fullname}"></a>
+                                        <div class="casting-slider owl-carousel">
+                                            <div th:each="actor : ${actors}" class="cast-item">
+                                                <div class="cast-thumb">
+                                                    <a href="#0">
+                                                        <img class="owl-lazy" data-src="/assets/img/cast/cast00.jpg"
+                                                             alt="cast"/>
+                                                    </a>
+                                                </div>
+                                                <div class="cast-content">
+                                                    <h6 class="cast-title">
+                                                        <a href="#0" th:text="${actor}"></a>
                                                     </h6>
+                                                    <span class="cate">actor</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-item">
+                                    <div sec:authorize="isAuthenticated()">
+                                        <div th:if="${!hasRated}">
+                                            <div class="leave-comment">
+                                                <h5 class="title">Leave a comment</h5>
+                                                <form class="rating-form" method="post"
+                                                      th:action="@{/films/film-details/{id}/rating(id=${film.id})}"
+                                                      th:object="${rating}" enctype="multipart/form-data">
+                                                    <input type="hidden" th:value="${film.id}" name="filmId"/>
+                                                    <!-- Trường ẩn để lưu id của film -->
+                                                    <div class="form-group">
+                                                        <div class="rating-stars star-flex">
+                                                            <i class="fas fa-heart" id="star1"
+                                                               onclick="rate(1)"></i>
+                                                            <i class="fas fa-heart" id="star2"
+                                                               onclick="rate(2)"></i>
+                                                            <i class="fas fa-heart" id="star3"
+                                                               onclick="rate(3)"></i>
+                                                            <i class="fas fa-heart" id="star4"
+                                                               onclick="rate(4)"></i>
+                                                            <i class="fas fa-heart" id="star5"
+                                                               onclick="rate(5)"></i>
+                                                        </div>
+                                                        <input type="hidden" id="rating" name="rating"
+                                                               th:field="*{star}">
+                                                        <!-- Trường ẩn để lưu giá trị đánh giá sao -->
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <textarea placeholder="Viết cảm nghĩ của bạn" name="content"
+                                                                      th:field="*{content}" required></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="submit" value="Comment"
+                                                               onclick="return validateForm()"/>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div th:if="${hasRated}" style="font-size: 32px;font-weight: bold;">
+                                            BẠN ĐÃ ĐÁNH GIÁ BỘ PHIM NÀY
+                                        </div>
+                                    </div>
+
+                                    <div sec:authorize="!isAuthenticated()"
+                                         style="font-size: 32px;font-weight: bold;">
+                                        <h3>Bạn cần đăng nhập để có thể bình luận.</h3>
+                                    </div>
+
+                                    <div class="movie-review-item" th:each="rating : ${ratings}">
+                                        <div class="flex-rating">
+                                            <div class="movie-review-info">
+                                                <div>
+                                                        <span class="reply-date"
+                                                              th:text="${rating.getFormattedDate()}"></span>
                                                 </div>
 
-                                                <div class="movie-review-content">
-                                                    <div class="review">
+                                                <h6 class="subtitle">
+                                                    <a href="#0" th:text="${rating.user.fullname}"></a>
+                                                </h6>
+                                            </div>
+
+                                            <div class="movie-review-content">
+                                                <div class="review">
                                                         <span th:each="star : ${#numbers.sequence(1, rating.star)}">
                                                             <i class="flaticon-favorite-heart-button"></i>
                                                         </span>
-                                                    </div>
-                                                </div>
-
-                                                <div sec:authorize="hasAuthority('admin')" style="margin-left: 85px">
-                                                    <form
-                                                        th:action="@{/films/film-details/{filmId}/delete-rating/{ratingId}(filmId=${film.id}, ratingId=${rating.id})}"
-                                                        method="post" style="display: inline">
-                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Bạn có chắc không ?')">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </div>
 
-                                            <p class="rating-content" th:text="${rating.content}"></p>
+                                            <div sec:authorize="hasAuthority('admin')" style="margin-left: 85px">
+                                                <form
+                                                        th:action="@{/films/film-details/{filmId}/delete-rating/{ratingId}(filmId=${film.id}, ratingId=${rating.id})}"
+                                                        method="post" style="display: inline">
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Bạn có chắc không ?')">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
 
-                                        <!-- <div class="load-more text-center">
-                                                      <a href="#0" class="custom-button transparent">load more</a>
-                                                  </div>-->
+                                        <p class="rating-content" th:text="${rating.content}"></p>
                                     </div>
+
+                                    <!-- <div class="load-more text-center">
+                                                  <a href="#0" class="custom-button transparent">load more</a>
+                                              </div>-->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </section>
+</section>
 </body>
 
 </html>

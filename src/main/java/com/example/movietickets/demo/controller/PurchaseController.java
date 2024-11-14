@@ -24,11 +24,14 @@ import org.springframework.security.core.Authentication;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/purchase")
 public class PurchaseController {
+    @Autowired
+    private UserService userService;
     @Autowired
     private PurchaseService purchaseService;
 
@@ -53,6 +56,9 @@ public class PurchaseController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private SeatTypeService seatTypeService;
+
     @GetMapping
     public String showPurchase(Model model, @RequestParam(required = false) Long scheduleId) {
         if (purchaseService.IsExist()) {
@@ -74,25 +80,34 @@ public class PurchaseController {
             List<ComboFood> comboFoods = comboFoodService.getAllComboFood();
             Room room = roomRepository.findByName(purchase.getRoomName());
             List<Seat> seats = seatRepository.findByRoom(room);
-            //add thêm trn header
+            // add thêm trn header
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
             model.addAttribute("comboFoods", comboFoods);
-            //lấy ra các seat booked
+            // lấy ra các seat booked
             model.addAttribute("purchase", purchase);
             model.addAttribute("seats", seats);
             model.addAttribute("scheduleId", scheduleId);
+
+            List<SeatType> seatTypes = seatTypeService.getAllSeatTypes();
+            List<String> formattedSeatPrice = seatTypes.stream()
+                    .map(seatType -> currencyFormat.format(seatType.getPrice()))
+                    .toList();
+
+            model.addAttribute("seatTypes", seatTypes);
+            model.addAttribute("seatPriceFormatted", formattedSeatPrice);
+            User currentUser = userService.getCurrentUser();
+            String userType = userService.getUserType(currentUser.getId());
+            model.addAttribute("userType", userType);
         }
         return "/purchase/purchase";
     }
-
 
     @GetMapping("/clear")
     public String clearPurchase() {
         purchaseService.clearPurchase();
         return "redirect:/purchase";
     }
-
 
     @PostMapping("/add")
     public String addPurchase(
@@ -106,10 +121,10 @@ public class PurchaseController {
             @RequestParam("cinemaAddress") String cinemaAddress,
             @RequestParam("roomName") String roomName,
             @RequestParam("scheduleId") Long scheduleId,
-            Model model
-    ) {
+            Model model) {
         System.out.println("scheduleId in addPurchase: " + scheduleId); // Debugging
-        purchaseService.addToBuy(seatSymbols, filmTitle, poster, category, totalPrice, cinemaAddress, cinemaName, startTime, roomName);
+        purchaseService.addToBuy(seatSymbols, filmTitle, poster, category, totalPrice, cinemaAddress, cinemaName,
+                startTime, roomName);
         model.addAttribute("scheduleId", scheduleId);
         return "redirect:/purchase?scheduleId=" + scheduleId;
     }
@@ -121,7 +136,10 @@ public class PurchaseController {
 
     @GetMapping("/history")
     public String showPurchaseHistory(Model model) {
-        List<Booking> bookings = bookingService.getBookingsByCurrentUser(); // phương thức này để lấy các booking của người dùng hiện tại
+        User currentUser = userService.getCurrentUser();
+        List<Booking> bookings = bookingService.getBookingsByUser(currentUser.getId()); // phương thức này để lấy các
+                                                                                        // booking của người dùng hiện
+                                                                                        // tại
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("bookings", bookings);
@@ -131,10 +149,10 @@ public class PurchaseController {
     @PostMapping("/checkout")
     public String checkout(
             @RequestParam("payment") String payment,
-            @RequestParam String comboId, //nhận String từ form purrchase
+            @RequestParam String comboId, // nhận String từ form purrchase
             @RequestParam Long scheduleId,
-            RedirectAttributes redirectAttributes
-    ) {
+            @RequestParam Long discountAmount,
+            RedirectAttributes redirectAttributes) {
         if (purchaseService.IsExist()) {
             Purchase purchase = purchaseService.Get();
             List<String> seatSymbols = new ArrayList<>();
@@ -142,12 +160,12 @@ public class PurchaseController {
                 seatSymbols.add(seat.getSymbol());
             }
 
-
             Room room = roomRepository.findByName(purchase.getRoomName());
             List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
 
             // Lấy schedule từ scheduleId
-            Schedule schedule = scheduleService.getScheduleById(scheduleId).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
+            Schedule schedule = scheduleService.getScheduleById(scheduleId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
 
             // Tách comboId và comboPrice từ giá trị của request parameter
             Long comboFoodId = null;
@@ -157,7 +175,6 @@ public class PurchaseController {
                 comboFoodId = Long.parseLong(comboDetails[0]);
                 comboPrice = Long.parseLong(comboDetails[1]);
             }
-
 
             Booking booking = new Booking();
             booking.setFilmName(purchase.getFilmTitle());
@@ -170,17 +187,20 @@ public class PurchaseController {
             booking.setPayment(payment);
             booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
             booking.setCreateAt(new Date());
-            booking.setPrice(purchase.getTotalPrice() + comboPrice); //cộng thêm giá từ food
+            booking.setPrice(purchase.getTotalPrice() + comboPrice - discountAmount); // cộng thêm giá từ food
 
             if (comboFoodId != null) {
-                ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
+                ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId)
+                        .orElseThrow(() -> new EntityNotFoundException("Combo not found"));
                 booking.setComboFood(comboFood);
             }
 
             // Kiểm tra phương thức thanh toán
             if ("vnpay".equalsIgnoreCase(payment)) {
-                //return "redirect:/api/payment/create_payment?amount=" + purchase.getTotalPrice();
-                return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount=" + booking.getPrice() + "&comboId=" + comboId;
+                // return "redirect:/api/payment/create_payment?amount=" +
+                // purchase.getTotalPrice();
+                return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount=" + booking.getPrice()
+                        + "&comboId=" + comboId;
             }
 
             // Lấy thông tin người dùng hiện tại
@@ -200,8 +220,10 @@ public class PurchaseController {
     private User getUserFromAuthentication(Authentication authentication) {
         if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             // Trường hợp đăng nhập thông thường
-            String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
-            return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal())
+                    .getUsername();
+            return userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         } else if (authentication.getPrincipal() instanceof DefaultOAuth2User) {
             // Trường hợp đăng nhập bằng OAuth2 (Facebook, Google)
             String email = ((DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
@@ -209,7 +231,6 @@ public class PurchaseController {
         }
         throw new UsernameNotFoundException("User not found");
     }
-
 
     private Date parseDate(String dateStr) {
         try {

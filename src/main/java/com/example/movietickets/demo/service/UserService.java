@@ -21,6 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
@@ -60,15 +62,6 @@ public class UserService implements UserDetailsService {
 
     public Long getCountUser() {
         return user_Repository.getCountUser();
-    }
-
-    // Kiểm tra user tồn tại
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
     }
 
     // Gửi thông báo xác nhận qua email bằng token
@@ -119,6 +112,10 @@ public class UserService implements UserDetailsService {
         sendRegistrationConfirmationEmail(user);
     }
 
+    public void saveWithoutPass(@NotNull User user) {
+        userRepository.save(user);
+    }
+
     public void setDefaultRole(String username) {
         userRepository.findByUsername(username).ifPresentOrElse(
                 user -> {
@@ -152,6 +149,18 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     public boolean existsByPhone(String phone) {
         return userRepository.existsByPhone(phone);
     }
@@ -159,19 +168,33 @@ public class UserService implements UserDetailsService {
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
+            // Xử lý trường hợp đăng nhập bằng tài khoản thông thường
             String username = ((UserDetails) principal).getUsername();
             return findByUsername(username).orElse(null);
+
+        } else if (principal instanceof DefaultOidcUser) {
+            // Xử lý trường hợp đăng nhập bằng Google (OIDC)
+            DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
+            String email = oidcUser.getEmail();
+            return findByEmail(email).orElse(null);
+
+        } else if (principal instanceof DefaultOAuth2User) {
+            // Xử lý trường hợp đăng nhập qua OAuth2 mà không sử dụng OIDC
+            DefaultOAuth2User oauth2User = (DefaultOAuth2User) principal;
+            String email = oauth2User.getAttribute("email");
+            return findByEmail(email).orElse(null);
+
         } else {
             return null;
         }
     }
 
-    public void saveOauthUser(String email, String username, String fullname, String phoneNumber, String provider) {
+    public void saveOauthUser(String email, String username, String fullname, String provider) {
         if (username == null || userRepository.findByUsername(username).isPresent())
             return;
-
         var user = new User();
         user.setUsername(username);
+        user.setFullname(fullname);
         user.setEmail(email != null ? email : username + "@example.com");
         user.setFullname(fullname);
         user.setPhone(phoneNumber);
@@ -191,5 +214,19 @@ public class UserService implements UserDetailsService {
     // user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
     // userRepository.save(user);
     // }
+
+    public Long getPointUser(Long user_id) {
+        Long points = userRepository.getPointUser(user_id);
+        return points != null ? points : 0L;
+    }
+
+    public String getUserType(Long user_id) {
+        long point = getPointUser(user_id);
+        if (point >= 5000)
+            return "VIP";
+        else if (point >= 2000)
+            return "FRIEND";
+        return "STANDARD";
+    }
 
 }

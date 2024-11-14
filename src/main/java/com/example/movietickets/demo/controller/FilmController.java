@@ -22,9 +22,9 @@ import java.util.List;
 @Controller("userFilmController")
 public class FilmController {
     @Autowired
-    private  final FilmService filmService;
+    private final FilmService filmService;
     @Autowired
-    private  final CountryService countryService;
+    private final CountryService countryService;
     @Autowired
     private final CategoryService categoryService;
     @Autowired
@@ -36,9 +36,9 @@ public class FilmController {
     // Hiển thị danh sách danh mục
     @GetMapping("/films")
     public String listFilms(Model model,
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "9") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy
+                            @RequestParam(defaultValue = "0") Integer pageNo,
+                            @RequestParam(defaultValue = "9") Integer pageSize,
+                            @RequestParam(defaultValue = "id") String sortBy
 
     ) {
         Page<Film> page = filmService.getAllFilmsForUser(pageNo, pageSize, sortBy);
@@ -114,10 +114,10 @@ public class FilmController {
     }
 
     @GetMapping("films/search")
-    public String getFilmsByName(Model model, @RequestParam("keyword") String keyword){
+    public String getFilmsByName(Model model, @RequestParam("keyword") String keyword) {
         List<Film> films = filmService.getAllFilms();
-        if (keyword!=null &&!keyword.isEmpty()){
-           films  = filmService.searchFilmsByName(keyword);
+        if (keyword != null && !keyword.isEmpty()) {
+            films = filmService.searchFilmsByName(keyword);
         }
         List<Country> countries = countryService.getAllCountries();
         List<Category> categories = categoryService.getAllCategories();

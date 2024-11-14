@@ -58,7 +58,7 @@ public class AdminCountryController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid country Id:" + id));
         model.addAttribute("country", country);
         model.addAttribute("title", "Chỉnh sửa Quốc gia #" + country.getId());
-        model.addAttribute("actionUrl", "/admin/countries/edit/"+id);
+        model.addAttribute("actionUrl", "/admin/countries/edit/" + id);
 
         return "/admin/country/country-add";
     }

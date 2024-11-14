@@ -40,12 +40,13 @@ public class SeatService {
         seatRepository.save(seat);
     }
 
-    public Seat updateSeat(Seat seat){
+    public Seat updateSeat(Seat seat) {
         if (seat.getId() == null) {
             throw new IllegalArgumentException("Seat ID cannot be null for update");
         }
         return seatRepository.save(seat);
     }
+
     public Seat saveSeat(Seat seat) {
         return seatRepository.save(seat);
     }
@@ -56,9 +57,6 @@ public class SeatService {
         }
         seatRepository.deleteById(seatId);
     }
-
-
-
 
 
 }
