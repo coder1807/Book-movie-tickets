@@ -26,6 +26,6 @@ public interface FilmRepository extends PagingAndSortingRepository<Film, Long>, 
     List<Film> searchFilmByName(@Param("keyword") String keyword);
 
     List<Film> findByCountry_Id(Long countryId);
-
+    @Query("SELECT f FROM Film f JOIN f.categories c WHERE c.id = :categoryId")
     List<Film> findByCategoryId(Long categoryId);
 }

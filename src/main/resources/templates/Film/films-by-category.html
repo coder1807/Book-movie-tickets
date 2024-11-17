@@ -319,8 +319,9 @@
 
                                             </p>
 
-                                            <div class="movie-tags">
-                                                <a href="#0" th:text="${film.category.name}"></a>
+                                            <div class="movie-tags" th:if="${film.categories != null}">
+                                                <a href="#0" th:each="category : ${film.categories}"
+                                                   th:text="${category.name}"></a>
                                             </div>
                                             <div class="release">
                                                 <span>Ngày khởi chiếu : </span>
