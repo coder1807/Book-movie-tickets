@@ -1,6 +1,7 @@
 package com.example.movietickets.demo.controller;
 
 import com.example.movietickets.demo.DTO.DistanceMatrixResponse;
+import com.example.movietickets.demo.exception.UserAlreadyExistException;
 import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -81,21 +82,20 @@ public class ProfileController {
         String oldAddress = currentUser.getAddress();
 
         String message = "Thay đổi thông tin thành công";
-        if (!oldFullname.equals(fullName))
-        {
+        if (!oldFullname.equals(fullName)) {
             currentUser.setFullname(fullName);
-            message= message +  "\nĐổi tên từ "+oldFullname+" thành "+fullName;
+            message = message + "\nĐổi tên từ " + oldFullname + " thành " + fullName;
             session.setAttribute("fullname", fullName);
         }
         if (!oldPhone.equals(phone)) {
             currentUser.setPhone(phone);
-            message= message + "\nĐổi SĐT từ "+oldPhone+" thành "+phone;
+            message = message + "\nĐổi SĐT từ " + oldPhone + " thành " + phone;
         }
-        if (!oldAddress.equals(address)){
+        if (!oldAddress.equals(address)) {
             currentUser.setAddress(address);
-            message= message + "\nĐổi địa chỉ từ "+oldAddress+" thành "+address;
+            message = message + "\nĐổi địa chỉ từ " + oldAddress + " thành " + address;
         }
-        redirectAttributes.addFlashAttribute("success",message);
+        redirectAttributes.addFlashAttribute("success", message);
         userService.saveWithoutPass(currentUser);
 
         model.addAttribute("userPoint", userPoint);
@@ -127,7 +127,11 @@ public class ProfileController {
 
         // Cập nhật mật khẩu mới cho người dùng
         currentUser.setPassword(newPassword);
-        userService.save(currentUser);
+        try {
+            userService.save(currentUser);
+        } catch (UserAlreadyExistException e) {
+            throw new RuntimeException(e);
+        }
 
         // Thêm thông báo thành công
         redirectAttributes.addFlashAttribute("success", "Thay đổi mật khẩu thành công!");
@@ -166,15 +170,13 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/nearest")
-    public String  getNearestCinemas(Model model) {
+    public String getNearestCinemas(Model model) {
         User currentUser = userService.getCurrentUser();
         List<Cinema> cinemas = cinemaService.getAllCinemas();
         List<CinemaDistance> cinemaDistances = googleMapsService.getDistances(currentUser.getAddress(), cinemas);
         model.addAttribute("cinemaDistances", cinemaDistances);
         return "/profile/nearest";
     }
-
-
 
 
 }

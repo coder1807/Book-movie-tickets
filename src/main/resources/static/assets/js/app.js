@@ -33,3 +33,37 @@
                 window.location.href = `/films/by-country?countryId=${countryId}`;
              }
         }
+    function updatePaymentOption() {
+            var selectedPayment = document.getElementById("payment").value;
+            var paymentOptions = document.querySelectorAll('.payment-option li');
+            paymentOptions.forEach(function(option) {
+                var paymentValue = option.querySelector('.payment-value').innerText.toLowerCase();
+                if (paymentValue === selectedPayment) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+    }
+    function handlePromoForm(){
+  event.preventDefault(); // Ngăn form submit lại trang
+
+    var promoCode = document.getElementById("promoCode").value;
+    var totalPrice = parseFloat(document.getElementById("totalPriceHidden").value);
+    if (promoCode.toLowerCase() === "baanhem") {
+        var discount = 0;
+        if (totalPrice >= 200000) {
+            discount = 0.2;
+        } else if (totalPrice >= 100000) {
+            discount = 0.15;
+        } else if (totalPrice >= 80000) {
+            discount = 0.1;
+        } else {
+            discount = 0.05;
+        }
+        var discountedPrice = totalPrice - (totalPrice * discount);
+        document.getElementById("totalPriceDisplay").innerText = discountedPrice.toFixed(0) + " VND";
+    } else {
+        alert("Mã giảm giá không hợp lệ!");
+    }
+    }

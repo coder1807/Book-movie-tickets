@@ -17,6 +17,7 @@
         <java.version>22</java.version>
         <maven.compiler.source>1.5</maven.compiler.source>
         <maven.compiler.target>1.5</maven.compiler.target>
+
     </properties>
     <dependencies>
         <dependency>
@@ -106,6 +107,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
@@ -134,6 +141,31 @@
             <version>2.8.9</version> <!-- Bạn có thể kiểm tra phiên bản mới nhất -->
         </dependency>
         <!--end vnpay-->
+        <!--paypal-->
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>paypal-core</artifactId>
+            <version>1.7.2</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+        <!-- end paypal-->
+        <!--Momo-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+        <!--End Momo-->
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

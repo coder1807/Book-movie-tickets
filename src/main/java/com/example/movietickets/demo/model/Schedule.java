@@ -23,6 +23,10 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "ROOM_ID")
     private Room room;
+    
+    @ManyToOne
+    @JoinColumn(name = "CINEMA_ID")
+    private Cinema cinema;
 
     @Column(name = "START_TIME")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

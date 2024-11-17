@@ -43,9 +43,9 @@
                                     <div class="profile__group">
                                         <label class="profile__label" for="cinema">Rạp</label>
                                         <select class="js-example-basic-single" id="cinema"
-                                                name="cinema_id">
-                                            <option th:each="item: ${rooms}" th:value="${item.cinema.id}"
-                                                    th:text="${item.cinema.name}"></option>
+                                                name="cinema_id" th:field="*{cinema.id}">
+                                            <option th:each="item: ${cinemas}" th:value="${item.id}"
+                                                    th:text="${item.name}"></option>
                                         </select>
                                     </div>
                                 </div>

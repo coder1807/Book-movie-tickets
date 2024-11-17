@@ -108,8 +108,6 @@ public class FilmController {
         List<Country> countries = countryService.getAllCountries();
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
-
-
         model.addAttribute("films", films);
         model.addAttribute("countries", countries);
         return "film/films-by-category";  // Tên template view để hiển thị danh sách phim theo category

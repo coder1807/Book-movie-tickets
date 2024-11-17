@@ -52,25 +52,28 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/assets/**", "/css/**", "/js/**", "/", "/oauth/**",
                                 "/register", "/error", "/purchase", "/films",
-                                "/films/film-details/**", "/schedules/**",
+                                "/films/film-details/**", "/schedules/**", "films/films-by-category/**",
                                 "/cart", "/cart/**", "blog/details",
                                 "/popcorn", "/movie/details", "/movie/seat-plan",
                                 "/feedback", "/blog", "/blog/blog-details", "/about",
-                                "/blog/blog-details/{id}/comment")
+                                "/blog/blog-details/{id}/comment",
+                                "/register/verify")
                         .permitAll() // Cho phép truy cập không cần xác thực.
-                        .requestMatchers("admin/movie/edit/**", "/admin/movie/add",
+                        .requestMatchers("/admin", "admin/movie/edit/**", "/admin/movie/add",
                                 "/admin/films", "/admin/films/edit", "/admin/films/add",
                                 "/admin/countries", "/admin/countries/add",
                                 "/admin/countries/edit",
                                 "/admin/categories/add", "/admin/categories",
                                 "/admin/categories/edit",
-                                "/admin/schedules", "/admin/schedules/add",
+                                "/admin/cinemas", "/admin/cinemas/add", "/admin/cinemas/edit",
+                                "/admin/rooms", "/admin/rooms/add", "/admin/rooms/edit",
+                                "/admin/schedules", "/admin/schedules/add", //
                                 "/admin/schedules/edit",
-                                "/admin/blog/add", "/admin/blog/delete",
-                                "/admin/blog/update",
-                                "/admin/comboFoods", "/admin/comboFoods/add",
-                                "/admin/comboFoods/edit",
+                                "/admin/blogs", "/admin/blogs/add", "/admin/blogs/edit",
+                                "/admin/comboFoods", "/admin/comboFoods/add", "/admin/comboFoods/edit",
                                 "/admin/users", "/admin/users/detail",
+                                "/admin/seats", "/admin/seats/add", "/admin/seats/edit",
+                                "/admin/seattypes", "/admin/seattypes/edit",
                                 "/admin/seatPrice", "/admin/seatPrice/add",
                                 "/admin/seatPrice/edit", "/admin/seatPrice/delete",
                                 "/admin/bookings", "/admin/bookings/detail",
@@ -79,6 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/**")
                         .permitAll()
                         .anyRequest().authenticated())
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")

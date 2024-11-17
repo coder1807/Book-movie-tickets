@@ -1,6 +1,7 @@
 package com.example.movietickets.demo.controller.admin;
 
 import com.example.movietickets.demo.model.Film;
+import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.service.CinemaService;
 import com.example.movietickets.demo.service.FilmService;
@@ -35,12 +36,11 @@ public class AdminScheduleController {
     public String listSchedules(Model model) {
         List<Schedule> schedules = scheduleService.getAllSchedules();
         model.addAttribute("schedules", schedules);
-        System.out.println(schedules);
         model.addAttribute("title", "Danh sách lịch chiếu");
         return "/admin/schedule/schedule-list";
     }
 
-    @GetMapping("/schedules/add")
+    @GetMapping("/schedules/add/{id}")
     public String showAddForm(@PathVariable("id") Long id, Model model) {
         Schedule schedule = new Schedule();
         schedule.setFilm(filmService.getFilmById(id).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + id)));
@@ -73,6 +73,7 @@ public class AdminScheduleController {
         model.addAttribute("schedule", schedule);
         model.addAttribute("films", filmService.getAllFilms());
         model.addAttribute("rooms", roomService.getAllRooms());
+        model.addAttribute("cinemas", cinemaService.getAllCinemas());
         return "/admin/schedule/schedule-edit";
     }
 
@@ -82,11 +83,17 @@ public class AdminScheduleController {
         if (result.hasErrors()) {
             model.addAttribute("films", filmService.getAllFilms());
             model.addAttribute("rooms", roomService.getAllRooms());
+            model.addAttribute("cinemas", cinemaService.getAllCinemas());
             return "/admin/schedule/schedule-edit";
         }
         Film film = filmService.getFilmById(filmId).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + filmId));
         schedule.setFilm(film);
-        scheduleService.updateSchedule(schedule);
+        Schedule existingSchedule = scheduleService.getScheduleById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
+
+        existingSchedule.setCinema(schedule.getCinema());
+        existingSchedule.setRoom(schedule.getRoom());
+        scheduleService.updateSchedule(existingSchedule);
         return "redirect:/admin/schedules";
     }
 

@@ -50,6 +50,9 @@
                 <div class="section-header-3">
                     <span class="cate">BA ANH EM XIN CHÀO</span>
                     <h2 class="title">chào mừng trở lại</h2>
+                    <div th:if="${message}" style="text-align:center; font-size:20px; color:green; font-weight:bold">
+                        <span th:text="${message}"></span>
+                    </div>
                 </div>
 
                 <form class="account-form" th:action="@{/login}" method="post">

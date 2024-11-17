@@ -103,7 +103,6 @@ public class SeatController {
             model.addAttribute("cinemaName", cinemaName);
             model.addAttribute("cinemaAddress", cinemaAddress);
             model.addAttribute("roomName", roomName);
-
             return "/seat/seat-choose"; // chuyển đến trang chọn ghế
         } else {
             return "redirect:/404"; // Redirect nếu không tìm thấy lịch chiếu
