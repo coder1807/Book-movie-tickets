@@ -211,41 +211,13 @@
                         <div class="widget-1-body">
                             <h6 class="subtitle"> Đa dạng thể loại </h6>
                             <div class="check-area">
-                                <div class="form-group">
-                                    <label>Kinh
-                                        dị</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Khoa
-                                        học viễn tưởng </label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Chính
-                                        kịch</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Tình
-                                        cảm, lãng mạn</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hành
-                                        động</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hài
-                                        hước</label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Phiêu
-                                        lưu</label>
-                                </div>
-                                <div class="form-group">
-                                    <label
-                                    >Hoạt hình</label>
-                                </div>
+                                <li style="list-style-type:none;"
+                                    th:each="category : ${categories}">
+                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                                </li>
                             </div>
                             <div class="add-check-area">
-                                <a href="#0">view more <i class="plus"></i></a>
+                                <a th:href="@{/films}">view more <i class="plus"></i></a>
                             </div>
                         </div>
                     </div>
