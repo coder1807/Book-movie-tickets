@@ -6,7 +6,7 @@
     <title>Lịch sử mua vé</title>
 </head>
 <body>
-<section layout:fragment="content" th:object="${purchase}">
+<section layout:fragment="content" th:object="${cardstudent}">
     <!-- Overlay và vòng loading -->
     <div class="overlay" id="loadingOverlay">
         <h4>Đang xử lý thông tin ảnh</h4>
@@ -23,62 +23,65 @@
         </div>
     </div>
     <!-- ==========Preloader========== -->
-    <section class="details-banner hero-area bg_img seat-plan-banner" th:attr="data-background=${poster}"
-             style="background-image: url(&quot;/assets/img/banner/banner04.jpg&quot;);">
+    <section class="main-page-header speaker-banner bg_img" data-background="/assets/img/banner/banner07.jpg"
+             style="background-image: url(&quot;/assets/img/banner/banner07.jpg&quot;);">
         <div class="container">
-            <div class="details-banner-wrapper">
-                <div class="details-banner-content style-two">
-                    <h3 class="title" th:text="${filmTitle}"></h3>
-                    <div class="tags">
-                        <a href="#0" th:text="${category}"></a>
-                    </div>
-                </div>
+            <div class="speaker-banner-content">
+                <h2 class="title">3AE STUDENT</h2>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/profile"> Trang cá nhân </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/profile/detectStudent/{userId}(userId=${userId})}"> Xác minh thẻ sinh viên</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
-
 
     <div class="movie-facility padding-bottom padding-top">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
                     <div class="checkout-widget checkout-contact">
-                        <h5 class="title" style="display: flex; justify-content: center"> Thông tin sinh viên </h5>
-                        <form class="checkout-contact-form">
+                        <h5 class="title" style="display: flex; justify-content: center; color: #31d7a9;"> THÔNG TIN
+                            SINH VIÊN </h5>
+                        <form th:action="@{/profile/saveStudentData/{userId}(userId=${userId})}"
+                              class="checkout-contact-form" id="studentForm"
+                              style="display: flex; align-items: center;" method="post">
                             <div class="form-group">Trường đại học</div>
                             <div class="form-group">
-                                <input type="text" id="university" readonly>
+                                <input type="text" id="university" th:field="*{schoolName}" readonly>
                             </div>
 
                             <div class="form-group">Họ tên</div>
                             <div class="form-group">
-                                <input type="text" id="fullname" readonly>
+                                <input type="text" id="fullname" th:field="*{fullName}" readonly>
                             </div>
 
                             <div class="form-group">Mã số sinh viên</div>
                             <div class="form-group">
-                                <input type="text" id="code" readonly>
+                                <input type="text" id="code" th:field="*{studentId}" readonly>
                             </div>
 
                             <div class="form-group">Ngày sinh</div>
                             <div class="form-group">
-                                <input type="text" id="birthday" readonly>
+                                <input type="text" id="birthday" th:field="*{birthDay}" readonly>
                             </div>
 
                             <div class="form-group">Khóa</div>
                             <div class="form-group">
-                                <input type="text" id="schoolyear" readonly>
+                                <input type="text" id="schoolyear" th:field="*{schoolYear}" readonly>
                             </div>
-                            <!--                            <div class="form-group">-->
-                            <!--                                <input type="submit" value="Xác nhận" class="custom-button">-->
-                            <!--                            </div>-->
+                            <button type="submit" value="Xác nhận" class="custom-button mt-5 mb-5"> Xác nhận</button>
                         </form>
                     </div>
                 </div>
 
                 <div class="col-lg-5">
                     <div class="booking-summery bg-one">
-                        <h4 class="title">Ảnh thẻ sinh viên</h4>
+                        <h4 style="color: #31d7a9;" class="title">Ảnh thẻ sinh viên</h4>
                         <div id="error" style="text-align: center; color: #ff4343;"></div>
                         <div class="form__img">
                             <label for="form__img-upload">Tải ảnh lên</label>
@@ -229,7 +232,7 @@
 
                     showLoading();
 
-                    // Gửi yêu cầu tới API bằng phương thức POST
+                    // fetch API để nhận thông tin
                     fetch("https://card-ai-api.phatnef.me/predict", {
                         method: "POST",
                         body: formData
@@ -254,6 +257,40 @@
                             console.error("Lỗi khi gọi API:", error);
                             hideLoading();
                         });
+
+                    // submit form và gửi dữ liệu đến controller
+                    document.getElementById("studentForm").addEventListener("submit", function (event) {
+                        event.preventDefault();
+
+                        // Tạo FormData từ form
+                        const formData = new FormData(this);
+
+                        // Lấy file ảnh nếu có
+                        const fileInput = document.getElementById("form__img-upload");
+                        if (fileInput.files.length > 0) {
+                            formData.append("imageCard", fileInput.files[0]);
+                        }
+
+                        // Gửi formData lên controller của bạn
+                        fetch(this.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Nếu lưu thành công, chuyển hướng về profile
+                                    window.location.href = "/profile";
+                                } else {
+                                    // Nếu có lỗi, hiển thị thông báo
+                                    document.getElementById("error").textContent = data.error || "Có lỗi xảy ra. Vui lòng thử lại.";
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi gửi dữ liệu:", error);
+                                document.getElementById("error").textContent = "Có lỗi xảy ra. Vui lòng thử lại.";
+                            });
+                    });
                 };
             }
         });

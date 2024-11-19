@@ -9,10 +9,12 @@ import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.auditing.AuditableBeanWrapper;
 import org.springframework.data.auditing.AuditableBeanWrapperFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -42,6 +44,12 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
     @Column(name = "password", length = 250)
     @NotBlank(message = "Password is required")
     private String password;
+
+    @Column(name = "birthday")
+    @NotNull(message = "Date of birth is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)  // Chỉ lưu ngày tháng năm, không có giờ phút giây
+    private LocalDate birthday;
 
     @Column(name = "email", length = 50, unique = true)
     @NotBlank(message = "Email is required")

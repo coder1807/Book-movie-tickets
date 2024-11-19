@@ -86,7 +86,7 @@
                         <form class="contact-form" id="form_submit_profile" th:action="@{/profile/update}" method="POST"
                               enctype="application/x-www-form-urlencoded;charset=UTF-8" accept-charset="UTF-8">
                             <div class="form-group">
-                                <label for="full_name">Họ tên <span>*</span></label>
+                                <label for="full_name">Họ tên</label>
                                 <input type="text" name="full_name" id="full_name" th:value="${user.fullname}"
                                        required/>
                             </div>
@@ -95,7 +95,11 @@
                                 <input type="email" name="email" id="email" th:value="${user.email}" disabled/>
                             </div>
                             <div class="form-group">
-                                <label for="phone">SDT <span>*</span></label>
+                                <label for="email">Ngày sinh <span>*</span></label>
+                                <input type="text" name="birthday" id="birthday" th:value="${user.birthday}" disabled/>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Số điện thoại</label>
                                 <input type="text" name="phone" id="phone" th:value="${user.phone}" required/>
                             </div>
                             <div class="form-group">
@@ -110,9 +114,15 @@
                         </form>
                     </div>
                     <div class="col-md-5 col-lg-6">
+                        <div class="section-header-3 left-style" th:if="${isStudentUni}">
+                            <span class="cate">Bạn là sinh viên?</span>
+                            <a th:href="@{/profile/detectStudent/{userId}(userId=${user.id})}" style="font-size: 20px">Cập nhật ảnh thẻ sinh viên của bạn tại đây.</a>
+                        </div>
+
                         <div class="section-header-3 left-style">
                             <span class="cate">Đổi mật khẩu</span>
                         </div>
+
                         <form class="contact-form" id="form_submit_password" th:action="@{/profile/change-password}" method="POST">
 
                             <div class="form-group">
