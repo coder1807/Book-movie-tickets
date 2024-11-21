@@ -33,7 +33,7 @@
                         <a href="/profile"> Trang cá nhân </a>
                     </li>
                     <li>
-                        <a th:href="@{/profile/detectStudent/{userId}(userId=${userId})}"> Xác minh thẻ sinh viên</a>
+                        <a href="#">Sinh viên</a>
                     </li>
                 </ul>
             </div>
@@ -74,7 +74,17 @@
                             <div class="form-group">
                                 <input type="text" id="schoolyear" th:field="*{schoolYear}" readonly>
                             </div>
-                            <button type="submit" value="Xác nhận" class="custom-button mt-5 mb-5"> Xác nhận</button>
+                            <div th:if="${isVerified}" class="mt-4 mb-4" style="text-align: center">
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Hệ thống xác nhận bạn là sinh viên thuộc trường: ' + ${school}"></div>
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Mã số sinh viên của bạn là: ' + ${cardstudent.getStudentId()}"></div>
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Ngày tạo thẻ và xác thực: ' + ${cardstudent.getCreatedDate()}"></div>
+                            </div>
+                            <button th:if="${(isVerified ?: false) == false}" type="submit" value="Xác nhận"
+                                    class="custom-button mt-5 mb-5"> Xác nhận
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -83,16 +93,31 @@
                     <div class="booking-summery bg-one">
                         <h4 style="color: #31d7a9;" class="title">Ảnh thẻ sinh viên</h4>
                         <div id="error" style="text-align: center; color: #ff4343;"></div>
+                        <h6 class="subtitle" style="display: flex;justify-content: center;" th:if="${isVerified}">
+                            <span style="color: #0adb0a;">Ảnh thẻ đã được xác minh </span><span
+                                class="totalCheckout"></span>
+                            <img style="width: 25px; margin-left: 10px" src="/assets/img/icons/check_icon.png"
+                                 alt="icon_check"/>
+                        </h6>
                         <div class="form__img">
-                            <label for="form__img-upload">Tải ảnh lên</label>
-                            <input id="form__img-upload" name="poster" type="file" accept=".png, .jpg, .jpeg">
-                            <img id="form__img" src="" alt=" ">
+                            <!-- Nếu chưa có ảnh trong DB thì cho phép upload -->
+                            <div th:unless="${hasImage}">
+                                <label for="form__img-upload">Tải ảnh lên</label>
+                                <input id="form__img-upload" name="poster" type="file" accept=".png, .jpg, .jpeg">
+                            </div>
+                            <!-- Hiển thị ảnh nếu đã có trong DB và cập nhật ảnh động -->
+                            <img id="form__img"
+                                 th:src="${imagePath} + '?t=' + ${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}"
+                                 alt="">
                         </div>
                     </div>
                     <div class="proceed-area text-center">
-                        <h6 class="subtitle">
-                            <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
-                        </h6>
+                        <!--                        <h6 class="subtitle" style="display: flex;justify-content: center;" th:if="${isVerified}">-->
+                        <!--                            <span style="color: #0adb0a;">Ảnh thẻ đã được xác minh </span><span-->
+                        <!--                                class="totalCheckout"></span>-->
+                        <!--                            <img style="width: 25px; margin-left: 10px" src="/assets/img/icons/check_icon.png"-->
+                        <!--                                 alt="icon_check"/>-->
+                        <!--                        </h6>-->
                         <!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
                     </div>
                 </div>

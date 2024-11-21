@@ -2,6 +2,7 @@ package com.example.movietickets.demo.controller;
 
 import com.example.movietickets.demo.exception.UserAlreadyExistException;
 import com.example.movietickets.demo.model.*;
+import com.example.movietickets.demo.repository.CardStudentRepository;
 import com.example.movietickets.demo.repository.UserRepository;
 import com.example.movietickets.demo.service.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,6 +53,8 @@ public class ProfileController {
     private UserRepository userRepository;
     @Autowired
     private CardStudentService cardStudentService;
+    @Autowired
+    private CardStudentRepository cardStudentRepository;
 
 
     @PreAuthorize("isAuthenticated()")
@@ -73,8 +76,25 @@ public class ProfileController {
         model.addAttribute("user", currentUser);
         model.addAttribute("bookingCount", bookingCount);
         model.addAttribute("totalPrice", totalPrice);
+
         // Gọi hàm tính tuổi và truyền vào model
         model.addAttribute("isStudentUni", getAge(currentUser));
+
+        // Nếu user hiện tại đã xác thực ảnh thẻ
+        if (cardStudentRepository.isVerified(currentUser.getId()) != null) {
+            model.addAttribute("isVerified", true);
+            Optional<Long> cardStudentIdOpt = cardStudentService.getCardStudentByUserId(currentUser.getId());
+            if (cardStudentIdOpt.isPresent()) {
+                Long cardStudentId = cardStudentIdOpt.get();
+                // Lấy CardStudent từ cardStudentId
+                CardStudent cardStudent = cardStudentService.getCardStudentById(cardStudentId)
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid Card Student Id:" + cardStudentId));
+                model.addAttribute("hrefUrl", "/profile/showDataStudent/" + cardStudent.getId());
+            }
+            if (cardStudentIdOpt.isEmpty()) {
+                return "redirect:error/404";
+            }
+        }
 
         return "/profile/profile";
     }
@@ -191,6 +211,7 @@ public class ProfileController {
         return "/profile/nearest";
     }
 
+    // Hàm nhận diện thẻ sinh viên
     @GetMapping("/profile/detectStudent/{userId}")
     public String getInfoStudentUni(@PathVariable("userId") Long userId, Model model) {
         User currentUser = userService.getCurrentUser();
@@ -204,25 +225,35 @@ public class ProfileController {
         }
         model.addAttribute("userId", userId);
         model.addAttribute("cardstudent", new CardStudent());
-        return "/Profile/detect-card-uni";
+        return "/profile/detect-card-uni";
     }
 
-//    @PostMapping("/profile/saveStudentData/{userId}")
-//    public String saveStudentData(@PathVariable("userId") Long userId, @ModelAttribute CardStudent cardStudent) {
-//        User currentUser = userService.getCurrentUser();
-//        if (currentUser == null || !currentUser.getId().equals(userId)) {
-//            return "redirect:/error/404";
-//        }
-//        cardStudent.setUserId(currentUser);
-//        cardStudent.setCreatedDate(LocalDate.now());
-//        try {
-//            cardStudentService.save(cardStudent);
-//            return "redirect:/profile";
-//        } catch (Exception e) {
-//            return "redirect:/error/404";
-//        }
-//    }
+    // Hàm hiển thị dữ liệu thẻ sinh viên của người dùng đã xác thực
+    @GetMapping("/profile/showDataStudent/{cardStudentId}")
+    public String showDataStudentUni(Model model) {
+        User currentUser = userService.getCurrentUser();
+        Optional<Long> cardStudentIdOpt = cardStudentService.getCardStudentByUserId(currentUser.getId());
+        Long cardStudentId = cardStudentIdOpt.get();
+        // Lấy CardStudent từ cardStudentId
+        CardStudent cardStudent = cardStudentService.getCardStudentById(cardStudentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Card Student Id:" + cardStudentId));
+        model.addAttribute("cardstudent", cardStudent);
 
+        // Kiểm tra ảnh đã tồn tại chưa
+        Boolean hasImage = cardStudent.getImageCard() != null;
+        model.addAttribute("hasImage", hasImage);
+
+        // Hiển thị ảnh
+        String imagePath = "/assets/img/Card_Student_Image/" + cardStudent.getImageCard();
+        model.addAttribute("imagePath", hasImage ? imagePath : null);
+
+        // Hiển thị các thông tin xác thực và ẩn button ko cần thiết
+        model.addAttribute("isVerified", cardStudent.isVerified());
+        model.addAttribute("school", cardStudent.getSchoolName().equals("hutech") ? "Đại học Công Nghệ TP. HCM" : "");
+        return "/profile/detect-card-uni";
+    }
+
+    // Hàm lưu thông tin từ thẻ sinh viên vào db
     @PostMapping("/profile/saveStudentData/{userId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> saveStudentData(@PathVariable("userId") Long userId,
@@ -237,25 +268,14 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Thiết lập thông tin cho CardStudent
-//        cardStudent.setUserId(currentUser);
-//        cardStudent.setCreatedDate(LocalDate.now());
-//        cardStudent.setVerified(true);
-
         try {
-            // Lưu ảnh vào thư mục và lấy tên ảnh
-//            String imageName = saveImage(imageCard);
-//            cardStudent.setImageCard(imageName); // Lưu tên ảnh vào CardStudent
-
-            // Lưu CardStudent vào cơ sở dữ liệu
-//            cardStudentService.save(cardStudent);
-
-            // Đặt timeout phòng khi mạng yếu
+            // Đặt timeout gọi API phòng khi mạng yếu
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .build();
+
             MediaType mediaType = MediaType.parse("text/plain");
             okhttp3.RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("img", imageCard.getOriginalFilename(),
@@ -272,11 +292,6 @@ public class ProfileController {
 
             // xu ly thong tin xem anh hop le khong
             //...
-
-
-            // hop le
-//            String imageName = saveImage(imageCard);
-//            cardStudent.setImageCard(imageName); // Lưu tên ảnh vào CardStudent
 
             // Chuyển đổi JSON phản hồi từ API thành JsonNode
             ObjectMapper objectMapper = new ObjectMapper();
@@ -319,10 +334,15 @@ public class ProfileController {
             throw new IOException("Không có ảnh nào được chọn");
         }
 
-        // Lưu ảnh và trả về tên file ảnh
-        File uploadDir = new File("D:\\Python Project\\image_recognition\\img");
+        // Lấy đường dẫn thực tế đến thư mục trong dự án
+        String uploadDirPath = new File("src/main/resources/static/assets/img/Card_Student_Image").getAbsolutePath();
+        File uploadDir = new File(uploadDirPath);
+
+        // Tạo thư mục nếu chưa tồn tại
         if (!uploadDir.exists()) {
-            uploadDir.mkdir();
+            if (!uploadDir.mkdirs()) {
+                throw new IOException("Không thể tạo thư mục lưu trữ ảnh tại: " + uploadDirPath);
+            }
         }
 
         String fileName = UUID.randomUUID().toString() + "_" + imageCard.getOriginalFilename();

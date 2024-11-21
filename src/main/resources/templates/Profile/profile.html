@@ -47,25 +47,6 @@
         </div>
     </section>
 
-<!--    <section class="loyalty-points-section padding-top">-->
-<!--        <div class="container">-->
-<!--            <div class="row justify-content-center">-->
-<!--                <div class="col-lg-12 text-center">-->
-<!--                    <div class="points-text">-->
-<!--                        <span class="cate">Tích điểm 3AE MEMBER</span>-->
-<!--                    </div>-->
-<!--                    <div class="progress-container">-->
-<!--                        <div class="progress2 progress-moved">-->
-<!--                            <div class="progress-bar2"-->
-<!--                                 th:style="${'width:' + (userPoint / (userType == 'STANDARD' ? 2000 : 5000) * 100) + '%'}"></div>-->
-<!--                        </div>-->
-<!--                        <span class="points-text"-->
-<!--                              th:text="${userPoint} + '/' + (${userType} == 'STANDARD' ? 2000 : 5000)"></span></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
-
     <!-- ==========Contact-Section========== -->
 
     <section class="contact-section padding-top">
@@ -114,9 +95,17 @@
                         </form>
                     </div>
                     <div class="col-md-5 col-lg-6">
-                        <div class="section-header-3 left-style" th:if="${isStudentUni}">
-                            <span class="cate">Bạn là sinh viên?</span>
-                            <a th:href="@{/profile/detectStudent/{userId}(userId=${user.id})}" style="font-size: 20px">Cập nhật ảnh thẻ sinh viên của bạn tại đây.</a>
+                        <div class="section-header-3 left-style" th:if="${isVerified}">
+                            <span class="cate" style="display: flex;align-items: center;">Đã cập nhật ảnh thẻ sinh viên
+                                <img src="/assets/img/icons/check_icon.png" style="margin-left: 15px; width: 30px;">
+                            </span>
+                            <a th:href="${hrefUrl}" style="font-size: 20px">Xem thông tin ảnh thẻ sinh viên của bạn.</a>
+                        </div>
+                        <div th:unless="${isVerified}">
+                            <div class="section-header-3 left-style" th:if="${isStudentUni}">
+                                <span class="cate">Bạn là sinh viên?</span>
+                                <a th:href="@{/profile/detectStudent/{userId}(userId=${user.id})}" style="font-size: 20px">Cập nhật ảnh thẻ sinh viên của bạn tại đây.</a>
+                            </div>
                         </div>
 
                         <div class="section-header-3 left-style">
