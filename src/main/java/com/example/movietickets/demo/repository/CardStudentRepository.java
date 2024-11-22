@@ -13,4 +13,8 @@ public interface CardStudentRepository extends JpaRepository<CardStudent, Long> 
 
     @Query("select c.id from CardStudent c where c.userId.id = :userId")
     Optional<Long> findIdByUserId(@Param("userId") Long userId);
+
+    // Kiểm tra thông tin thẻ sinh viên đã tồn tại chưa.
+    @Query("SELECT c FROM CardStudent c WHERE c.schoolName = :cardValue AND c.studentId = :mssv")
+    Optional<CardStudent> findByCardValueAndMssv(@Param("cardValue") String cardValue, @Param("mssv") String mssv);
 }

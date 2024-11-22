@@ -249,7 +249,7 @@ public class ProfileController {
 
         // Hiển thị các thông tin xác thực và ẩn button ko cần thiết
         model.addAttribute("isVerified", cardStudent.isVerified());
-        model.addAttribute("school", cardStudent.getSchoolName().equals("hutech") ? "Đại học Công Nghệ TP. HCM" : "");
+        model.addAttribute("school", cardStudent.getSchoolName().equals("hutech") ? "Đại học Công Nghệ TP. HCM" : "Đại học Văn Lang");
         return "/profile/detect-card-uni";
     }
 
@@ -297,11 +297,42 @@ public class ProfileController {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonResponse = objectMapper.readTree(res.body().string());
 
-            String cardValue = jsonResponse.get("card").get("value").asText();
-            String ngaysinhValue = jsonResponse.get("ngaysinh").get("value").asText();
-            String hotenValue = jsonResponse.get("hoten").get("value").asText();
-            String mssvValue = jsonResponse.get("mssv").get("value").asText();
-            String khoahocValue = jsonResponse.get("khoahoc").get("value").asText();
+            String cardValue = jsonResponse.has("card") && jsonResponse.get("card").has("value")
+                    ? jsonResponse.get("card").get("value").asText()
+                    : null;
+
+            String mssvValue = jsonResponse.has("mssv") && jsonResponse.get("mssv").has("value")
+                    ? jsonResponse.get("mssv").get("value").asText()
+                    : null;
+
+            // Kiểm tra các giá trị bắt buộc
+            if (cardValue == null || cardValue.isEmpty()) {
+                throw new IllegalArgumentException("Thông tin trường học không được để trống.");
+            }
+            if (mssvValue == null || mssvValue.isEmpty()) {
+                throw new IllegalArgumentException("Thông tin mssv không được để trống.");
+            }
+
+            // được phép null
+            String ngaysinhValue = jsonResponse.has("ngaysinh") && jsonResponse.get("ngaysinh").has("value")
+                    ? jsonResponse.get("ngaysinh").get("value").asText()
+                    : null;
+
+            String hotenValue = jsonResponse.has("hoten") && jsonResponse.get("hoten").has("value")
+                    ? jsonResponse.get("hoten").get("value").asText()
+                    : null;
+
+            String khoahocValue = jsonResponse.has("khoahoc") && jsonResponse.get("khoahoc").has("value")
+                    ? jsonResponse.get("khoahoc").get("value").asText()
+                    : null;
+
+            // Kiểm tra thông tin thẻ sinh viên đã tồn tại trong db chưa
+            Optional<CardStudent> existingCard = cardStudentService.findByCardValueAndMssv(cardValue, mssvValue);
+            if (existingCard.isPresent()) {
+                response.put("success", false);
+                response.put("error", "Thẻ sinh viên này đã tồn tại trong hệ thống. Vui lòng cập nhật ảnh thẻ sinh viên của bạn !!!");
+                return ResponseEntity.badRequest().body(response);
+            }
 
             // Lưu vào cơ sở dữ liệu
             CardStudent cardStudent = new CardStudent();

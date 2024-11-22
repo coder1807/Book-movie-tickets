@@ -27,4 +27,8 @@ public class CardStudentService {
     public Optional<Long> getCardStudentByUserId(Long userId) {
         return cardStudentRepository.findIdByUserId(userId);
     }
+
+    public Optional<CardStudent> findByCardValueAndMssv(String cardValue, String mssv) {
+        return cardStudentRepository.findByCardValueAndMssv(cardValue, mssv);
+    }
 }
