@@ -78,7 +78,7 @@ public class ProfileController {
         model.addAttribute("totalPrice", totalPrice);
 
         // Gọi hàm tính tuổi và truyền vào model
-        model.addAttribute("isStudentUni", getAge(currentUser));
+        model.addAttribute("isStudentUni", userService.getAge(currentUser));
 
         // Nếu user hiện tại đã xác thực ảnh thẻ
         if (cardStudentRepository.isVerified(currentUser.getId()) != null) {
@@ -219,8 +219,13 @@ public class ProfileController {
         if (currentUser == null || !currentUser.getId().equals(userId)) {
             return "redirect:/error/404";
         }
-        // Kiểm tra xem nếu tuổi không phù hợp
-        if (!getAge(currentUser)) {
+        // Kiểm tra xem nếu tuổi của user không phù hợp thì trả về lỗi
+        if (!userService.getAge(currentUser)) {
+            return "redirect:/error/404";
+        }
+        // Nếu user hện tại đã xác thực thẻ sinh viên nhưng vẫn truy cập vào trang detect thì trả về lỗi
+        Boolean isVerified = cardStudentRepository.isVerified(currentUser.getId());
+        if (isVerified != null && isVerified) {
             return "redirect:/error/404";
         }
         model.addAttribute("userId", userId);
@@ -381,20 +386,6 @@ public class ProfileController {
         imageCard.transferTo(file);
 
         return fileName;
-    }
-
-    private boolean getAge(User currentUser) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Optional<User> user = userRepository.findByUsername(authentication.getName());
-            if (user.isPresent()) {
-                int currentYear = Year.now().getValue(); // Lấy năm hiện tại
-                int birthYear = user.get().getBirthday().getYear(); // Lấy năm sinh của user
-                int age = currentYear - birthYear;
-                return age >= 18 && age <= 22;
-            }
-        }
-        return false;
     }
 
 }

@@ -28,6 +28,10 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <!-- Truyền biến is_student vào JavaScript -->
+    <script th:inline="javascript">
+        var isStudent = /*[[${is_student}]]*/;
+    </script>
     <!-- ==========Preloader========== -->
     <div class="preloader">
         <div class="preloader-inner">
@@ -77,6 +81,29 @@
     </section>
 
     <div class="seat-plan-section padding-bottom">
+        <section class="content-section" th:if="${is_student}">
+            <div class="container">
+                <div class="info_box mt30 pr30" style="background:#50219a; padding: 20px;">
+
+                    <ul style="
+    text-align: center;
+">
+                        <li class="title_membership"><b>Chúc mừng bạn nhận được ưu đãi</b></li>
+                        <li style="text-align:center"><span style="color:greenyellow; display: grid;">
+                            <b>1 Vé Thường = 45,000 VNĐ</b>
+                            <b>Hoặc 1 Vé Vip = 55,000 VNĐ</b>
+                        </span>
+                        </li>
+                        <li><b>Lưu ý:</b></li>
+                        <li>&nbsp;&nbsp;&nbsp;- Ưu đãi sinh viên chỉ được áp dụng cho mỗi lần đặt 1 vé Thường / Vip.
+                            Không thể đặt được nhiều ghế hoặc ghế đôi !
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;- Giá vé trên chưa bao gồm bắp nước và phụ thu thêm thuế !</li>
+                        <li><b>XIN CẢM ƠN</b></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
         <div class="container">
             <div class="screen-area">
                 <h4 class="screen">Màn hình</h4>
@@ -92,7 +119,7 @@
                                     <ul>
                                         <li class="single-seat seat-free" th:each="seat : ${seatsByType['regular']}">
                                             <img class="seat-img" alt="seat"
-                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/regularchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
+                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/regularchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${is_student} ? 45000 : ${seat.seattype.price}"
                                                  th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
                                             >
                                             <span class="sit-num" th:text="${seat.symbol}"></span>
@@ -114,7 +141,7 @@
                                     <ul>
                                         <li class="single-seat seat-free" th:each="seat : ${seatsByType['VIP']}">
                                             <img class="seat-img" alt="seat"
-                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/VIPchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
+                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/VIPchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${is_student} ? 55000 : ${seat.seattype.price}"
                                                  th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
 
                                             >
@@ -136,8 +163,7 @@
                                         <li class="single-seat seat-free-two" th:each="seat : ${seatsByType['couple']}">
                                             <img class="seat-img" alt="seat"
                                                  th:attr="src=${seat.image}, data-src2='/assets/img/seat/couplechoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
-                                                 th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
-
+                                                 th:classappend="${seat.status == 'booked' or (is_student) ? ' disabled' : ''}"
                                             >
                                             <span class="sit-num" th:text="${seat.symbol}"></span>
                                         </li>
