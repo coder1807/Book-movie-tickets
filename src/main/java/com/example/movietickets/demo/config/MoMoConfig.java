@@ -16,16 +16,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class MoMoConfig {
-    public static  String ACCESS_KEY = "F8BBA842ECF85";
-    public static  String SECRET_KEY = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
-    public static  String PARTNER_CODE = "MOMO";
-    public static  String REDIRECT_URL = "http://localhost:8080/purchase/history";
-    public static  String IPN_URL = "https://a5a3-58-186-75-18.ngrok-free.app/callback";
-    public static  String ORDER_INFO = "pay with MoMo";
-    public static  String REQUEST_TYPE = "payWithMethod";
-    public static  String LANG = "vi";
-    public static  boolean AUTO_CAPTURE = true;
-    public static  String EXTRA_DATA = "";
+    public static String ACCESS_KEY = "F8BBA842ECF85";
+    public static String SECRET_KEY = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+    public static String PARTNER_CODE = "MOMO";
+    public static String REDIRECT_URL = "http://localhost:8080/api/payment/handlePayment";
+    public static String IPN_URL = "https://a5a3-58-186-75-18.ngrok-free.app/callback";
+    public static String ORDER_INFO = "pay with MoMo";
+    public static String REQUEST_TYPE = "payWithMethod";
+    public static String LANG = "vi";
+    public static boolean AUTO_CAPTURE = true;
+    public static String EXTRA_DATA = "";
+
     public static String hmacSHA256(String data, String key) throws Exception {
         Mac sha256Hmac = Mac.getInstance("HmacSHA256");
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
@@ -41,6 +42,7 @@ public class MoMoConfig {
         }
         return hexString.toString();
     }
+
     public static String sendHttpPost(String url, String jsonBody) throws Exception {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost(url);

@@ -45,6 +45,7 @@ public class DefaultEmailService implements EmailService {
 
         emailSender.send(message);
     }
+
     public void sendSimpleMessage(String to, User user, Booking booking) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message,
@@ -55,15 +56,20 @@ public class DefaultEmailService implements EmailService {
         String posterName = posterPath[posterPath.length - 1];
         context.setVariable("userName", user.getFullname());
         context.setVariable("movieName", booking.getFilmName());
-        String content = String.format("Thời gian chiếu phim vào lúc %s ghế %s tại %s của địa chỉ %s ", formatDateTime(booking.getStartTime()), booking.getSeatName(), booking.getCinemaName(), booking.getCinemaAddress());
-        context.setVariable("infoMovie", content);
+        context.setVariable("id", booking.getId());
+        context.setVariable("time", formatDateTime(booking.getStartTime()));
+        context.setVariable("room", booking.getRoomName());
+        context.setVariable("cinema", booking.getCinemaName());
+        context.setVariable("seat", booking.getSeatName());
+        context.setVariable("price", booking.getPrice());
+        context.setVariable("payment", booking.getPayment());
         String emailContent = templateEngine.process("mailing/paymentSuccess", context);
         messageHelper.setTo(to);
-        messageHelper.setSubject("Your Payment was Successful");
+        messageHelper.setSubject("Thông tin đặt vé xem phim - Mã Thanh toán " + booking.getId());
         messageHelper.setText(emailContent, true);
         emailSender.send(message);
-        emailSender.send(message);
     }
+
     public String formatDateTime(Date dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime localDateTime = dateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();

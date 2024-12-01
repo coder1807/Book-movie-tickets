@@ -6,7 +6,7 @@
     <title>Lịch sử mua vé</title>
 </head>
 <body>
-<section layout:fragment="content" th:object="${purchase}">
+<section layout:fragment="content" th:object="${cardstudent}">
     <!-- Overlay và vòng loading -->
     <div class="overlay" id="loadingOverlay">
         <h4>Đang xử lý thông tin ảnh</h4>
@@ -23,73 +23,132 @@
         </div>
     </div>
     <!-- ==========Preloader========== -->
-    <section class="details-banner hero-area bg_img seat-plan-banner" th:attr="data-background=${poster}"
-             style="background-image: url(&quot;/assets/img/banner/banner04.jpg&quot;);">
+    <section class="main-page-header speaker-banner bg_img" data-background="/assets/img/banner/banner07.jpg"
+             style="background-image: url(&quot;/assets/img/banner/banner07.jpg&quot;);">
         <div class="container">
-            <div class="details-banner-wrapper">
-                <div class="details-banner-content style-two">
-                    <h3 class="title" th:text="${filmTitle}"></h3>
-                    <div class="tags">
-                        <a href="#0" th:text="${category}"></a>
-                    </div>
-                </div>
+            <div class="speaker-banner-content">
+                <h2 class="title">3AE STUDENT</h2>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/profile"> Trang cá nhân </a>
+                    </li>
+                    <li>
+                        <a href="#">Sinh viên</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 
+    <div class="movie-facility padding-bottom">
+        <section class="content-section">
+            <div class="container">
+                <div class="info_box mt30 pr30" style="background:#333; padding: 20px;">
 
-    <div class="movie-facility padding-bottom padding-top">
+                    <ul style="
+    text-align: center;
+">
+                        <li class="title_membership"><b>THÀNH VIÊN 3AE STUDENT THÂN MẾN</b></li>
+                        <li>Tại nền tảng trang web của chúng tôi hiện nay chỉ đang áp dụng chương trình này cho các sinh
+                            viên trên toàn quốc có độ tuổi từ 18 đến 22 tuổi và được ữu đãi giảm đồng giá vé ( Chưa bao
+                            gồm bắp, nước )
+                        </li>
+                        <li style="text-align:center"><span style="color:greenyellow; display: grid;">
+                            <b>1 Vé Thường = 45,000 VNĐ</b>
+                            <b>Hoặc 1 Vé Vip = 55,000 VNĐ</b>
+                        </span>
+                        </li>
+                        <li><b>Lưu ý:</b></li>
+                        <li>&nbsp;&nbsp;&nbsp;- Ưu đãi sinh viên chỉ được áp dụng cho mỗi lần đặt 1 vé Thường / Vip.
+                            Không thể đặt được nhiều ghế hoặc ghế đôi !
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;- Giá vé trên chưa bao gồm bắp nước và phụ thu thêm thuế !</li>
+                        <li>&nbsp;&nbsp;&nbsp;- Ảnh thẻ sinh viên của bạn sau khi được cập nhật sẽ gắn liền với tài
+                            khoản cho đến ngày hết hạn và không thể đổi mới !
+                        </li>
+                        <li><b>XIN CẢM ƠN</b></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
                     <div class="checkout-widget checkout-contact">
-                        <h5 class="title" style="display: flex; justify-content: center"> Thông tin sinh viên </h5>
-                        <form class="checkout-contact-form">
+                        <h5 class="title" style="display: flex; justify-content: center; color: #31d7a9;"> THÔNG TIN
+                            SINH VIÊN </h5>
+                        <form th:action="@{/profile/saveStudentData/{userId}(userId=${userId})}"
+                              class="checkout-contact-form" id="studentForm"
+                              style="display: flex; align-items: center;" method="post">
                             <div class="form-group">Trường đại học</div>
                             <div class="form-group">
-                                <input type="text" id="university" readonly>
+                                <input type="text" id="university" th:field="*{schoolName}" readonly>
                             </div>
 
                             <div class="form-group">Họ tên</div>
                             <div class="form-group">
-                                <input type="text" id="fullname" readonly>
+                                <input type="text" id="fullname" th:field="*{fullName}" readonly>
                             </div>
 
                             <div class="form-group">Mã số sinh viên</div>
                             <div class="form-group">
-                                <input type="text" id="code" readonly>
+                                <input type="text" id="code" th:field="*{studentId}" readonly>
                             </div>
 
                             <div class="form-group">Ngày sinh</div>
                             <div class="form-group">
-                                <input type="text" id="birthday" readonly>
+                                <input type="text" id="birthday" th:field="*{birthDay}" readonly>
                             </div>
 
                             <div class="form-group">Khóa</div>
                             <div class="form-group">
-                                <input type="text" id="schoolyear" readonly>
+                                <input type="text" id="schoolyear" th:field="*{schoolYear}" readonly>
                             </div>
-                            <!--                            <div class="form-group">-->
-                            <!--                                <input type="submit" value="Xác nhận" class="custom-button">-->
-                            <!--                            </div>-->
+                            <div th:if="${isVerified}" class="mt-4 mb-4" style="text-align: center">
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Hệ thống xác nhận bạn là sinh viên thuộc trường: ' + ${school}"></div>
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Mã số sinh viên của bạn là: ' + ${cardstudent.getStudentId()}"></div>
+                                <div style="color: #0adb0a; font-size: 20px"
+                                     th:text="'Ngày tạo thẻ và xác thực: ' + ${cardstudent.getCreatedDate()}"></div>
+                            </div>
+                            <button th:if="${(isVerified ?: false) == false}" type="submit" value="Xác nhận"
+                                    class="custom-button mt-5 mb-5"> Xác nhận
+                            </button>
                         </form>
                     </div>
                 </div>
 
                 <div class="col-lg-5">
                     <div class="booking-summery bg-one">
-                        <h4 class="title">Ảnh thẻ sinh viên</h4>
+                        <h4 style="color: #31d7a9;" class="title">Ảnh thẻ sinh viên</h4>
                         <div id="error" style="text-align: center; color: #ff4343;"></div>
+                        <h6 class="subtitle mb-3 " style="display: flex;justify-content: center;"
+                            th:if="${isVerified}">
+                            <span style="color: #0adb0a;">Ảnh thẻ đã được xác minh </span><span
+                                class="totalCheckout"></span>
+                            <img style="width: 25px; margin-left: 10px" src="/assets/img/icons/check_icon.png"
+                                 alt="icon_check"/>
+                        </h6>
                         <div class="form__img">
-                            <label for="form__img-upload">Tải ảnh lên</label>
-                            <input id="form__img-upload" name="poster" type="file" accept=".png, .jpg, .jpeg">
-                            <img id="form__img" src="" alt=" ">
+                            <!-- Nếu chưa có ảnh trong DB thì cho phép upload -->
+                            <div th:unless="${hasImage}">
+                                <label for="form__img-upload">Tải ảnh lên</label>
+                                <input id="form__img-upload" name="poster" type="file" accept=".png, .jpg, .jpeg">
+                            </div>
+                            <!-- Hiển thị ảnh nếu đã có trong DB và cập nhật ảnh động -->
+                            <img id="form__img"
+                                 th:src="${imagePath} + '?t=' + ${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}"
+                                 alt="">
                         </div>
                     </div>
                     <div class="proceed-area text-center">
-                        <h6 class="subtitle">
-                            <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
-                        </h6>
+                        <!--                        <h6 class="subtitle" style="display: flex;justify-content: center;" th:if="${isVerified}">-->
+                        <!--                            <span style="color: #0adb0a;">Ảnh thẻ đã được xác minh </span><span-->
+                        <!--                                class="totalCheckout"></span>-->
+                        <!--                            <img style="width: 25px; margin-left: 10px" src="/assets/img/icons/check_icon.png"-->
+                        <!--                                 alt="icon_check"/>-->
+                        <!--                        </h6>-->
                         <!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
                     </div>
                 </div>
@@ -229,7 +288,7 @@
 
                     showLoading();
 
-                    // Gửi yêu cầu tới API bằng phương thức POST
+                    // fetch API để nhận thông tin
                     fetch("https://card-ai-api.phatnef.me/predict", {
                         method: "POST",
                         body: formData
@@ -254,6 +313,40 @@
                             console.error("Lỗi khi gọi API:", error);
                             hideLoading();
                         });
+
+                    // submit form và gửi dữ liệu đến controller
+                    document.getElementById("studentForm").addEventListener("submit", function (event) {
+                        event.preventDefault();
+
+                        // Tạo FormData từ form
+                        const formData = new FormData(this);
+
+                        // Lấy file ảnh nếu có
+                        const fileInput = document.getElementById("form__img-upload");
+                        if (fileInput.files.length > 0) {
+                            formData.append("imageCard", fileInput.files[0]);
+                        }
+
+                        // Gửi formData lên controller của bạn
+                        fetch(this.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Nếu lưu thành công, chuyển hướng về profile
+                                    window.location.href = "/profile";
+                                } else {
+                                    // Nếu có lỗi, hiển thị thông báo
+                                    document.getElementById("error").textContent = data.error || "Có lỗi xảy ra. Vui lòng thử lại.";
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi gửi dữ liệu:", error);
+                                document.getElementById("error").textContent = "Có lỗi xảy ra. Vui lòng thử lại.";
+                            });
+                    });
                 };
             }
         });

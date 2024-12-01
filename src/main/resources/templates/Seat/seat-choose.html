@@ -28,6 +28,10 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <!-- Truyền biến is_student vào JavaScript -->
+    <script th:inline="javascript">
+        var isStudent = /*[[${is_student}]]*/;
+    </script>
     <!-- ==========Preloader========== -->
     <div class="preloader">
         <div class="preloader-inner">
@@ -77,69 +81,29 @@
     </section>
 
     <div class="seat-plan-section padding-bottom">
-
-        <!-- Kiểm tra thông tin sinh viên  -->
-        <h4 class="screen">Xác minh sinh viên</h4>
-        <div class="movie-facility padding-bottom">
+        <section class="content-section" th:if="${is_student}">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <div class="checkout-widget checkout-contact">
-                            <h5 class="title" style="display: flex; justify-content: center"> Thông tin sinh viên </h5>
-                            <form class="checkout-contact-form">
-                                <div class="form-group">Trường đại học</div>
-                                <div class="form-group">
-                                    <input type="text" id="university" readonly>
-                                </div>
+                <div class="info_box mt30 pr30" style="background:#50219a; padding: 20px;">
 
-                                <div class="form-group">Họ tên</div>
-                                <div class="form-group">
-                                    <input type="text" id="fullname" readonly>
-                                </div>
-
-                                <div class="form-group">Mã số sinh viên</div>
-                                <div class="form-group">
-                                    <input type="text" id="code" readonly>
-                                </div>
-
-                                <div class="form-group">Ngày sinh</div>
-                                <div class="form-group">
-                                    <input type="text" id="birthday" readonly>
-                                </div>
-
-                                <div class="form-group">Khóa</div>
-                                <div class="form-group">
-                                    <input type="text" id="schoolyear" readonly>
-                                </div>
-                                <!--                            <div class="form-group">-->
-                                <!--                                <input type="submit" value="Xác nhận" class="custom-button">-->
-                                <!--                            </div>-->
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-5">
-                        <div class="booking-summery bg-one">
-                            <h4 class="title">Ảnh thẻ sinh viên</h4>
-                            <div id="error" style="text-align: center; color: #ff4343;"></div>
-                            <div class="form__img">
-                                <label for="form__img-upload">Tải ảnh lên</label>
-                                <input id="form__img-upload" name="poster" type="file" accept=".png, .jpg, .jpeg">
-                                <img id="form__img" src="" alt=" ">
-                            </div>
-                        </div>
-                        <div class="proceed-area text-center">
-                            <h6 class="subtitle">
-                                <span>Tổng Cộng</span><span class="totalCheckout" th:text="${totalPrice}"></span>
-                            </h6>
-                            <!--                        <a href="#0" class="custom-button back-button">Thanh toán</a>-->
-                        </div>
-                    </div>
+                    <ul style="
+    text-align: center;
+">
+                        <li class="title_membership"><b>Chúc mừng bạn nhận được ưu đãi</b></li>
+                        <li style="text-align:center"><span style="color:greenyellow; display: grid;">
+                            <b>1 Vé Thường = 45,000 VNĐ</b>
+                            <b>Hoặc 1 Vé Vip = 55,000 VNĐ</b>
+                        </span>
+                        </li>
+                        <li><b>Lưu ý:</b></li>
+                        <li>&nbsp;&nbsp;&nbsp;- Ưu đãi sinh viên chỉ được áp dụng cho mỗi lần đặt 1 vé Thường / Vip.
+                            Không thể đặt được nhiều ghế hoặc ghế đôi !
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;- Giá vé trên chưa bao gồm bắp nước và phụ thu thêm thuế !</li>
+                        <li><b>XIN CẢM ƠN</b></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-
-
+        </section>
         <div class="container">
             <div class="screen-area">
                 <h4 class="screen">Màn hình</h4>
@@ -155,7 +119,7 @@
                                     <ul>
                                         <li class="single-seat seat-free" th:each="seat : ${seatsByType['regular']}">
                                             <img class="seat-img" alt="seat"
-                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/regularchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
+                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/regularchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${is_student} ? 45000 : ${seat.seattype.price}"
                                                  th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
                                             >
                                             <span class="sit-num" th:text="${seat.symbol}"></span>
@@ -177,7 +141,7 @@
                                     <ul>
                                         <li class="single-seat seat-free" th:each="seat : ${seatsByType['VIP']}">
                                             <img class="seat-img" alt="seat"
-                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/VIPchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
+                                                 th:attr="src=${seat.image}, data-src2='/assets/img/seat/VIPchoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${is_student} ? 55000 : ${seat.seattype.price}"
                                                  th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
 
                                             >
@@ -199,8 +163,7 @@
                                         <li class="single-seat seat-free-two" th:each="seat : ${seatsByType['couple']}">
                                             <img class="seat-img" alt="seat"
                                                  th:attr="src=${seat.image}, data-src2='/assets/img/seat/couplechoose.png', data-src=${seat.image}, data-id=${seat.id}, data-symbol=${seat.symbol}, data-price=${seat.seattype.price}"
-                                                 th:classappend="${seat.status == 'booked'} ? ' disabled' : ''"
-
+                                                 th:classappend="${seat.status == 'booked' or (is_student) ? ' disabled' : ''}"
                                             >
                                             <span class="sit-num" th:text="${seat.symbol}"></span>
                                         </li>
@@ -250,167 +213,6 @@
             </div>
         </div>
     </div>
-    <style>
-        /* Overlay để làm mờ trang */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-            display: none; /* Mặc định là ẩn */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; /* Đảm bảo overlay luôn ở trên cùng */
-        }
-
-        /* Định nghĩa vòng loading */
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite; /* Safari */
-            animation: spin 2s linear infinite;
-        }
-
-        /* Hiệu ứng quay cho vòng loading */
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Đảm bảo nội dung chính không bị ảnh hưởng khi overlay xuất hiện */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .form__img {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            background-color: #2b2b31;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-
-        .form__img label {
-            position: absolute;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 2;
-            cursor: pointer;
-            margin: 0;
-            font-weight: normal;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.5);
-            transition: 0.4s ease;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .form__img input {
-            position: absolute;
-            left: -9999px;
-            opacity: 0;
-        }
-
-        .form__img img {
-            position: absolute;
-            z-index: 1;
-            top: -100px;
-            right: -100px;
-            bottom: -100px;
-            left: -100px;
-            margin: auto;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-    </style>
-    <script>
-        function showLoading() {
-            document.getElementById("loadingOverlay").style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById("loadingOverlay").style.display = 'none';
-        }
-
-        document.getElementById("form__img-upload").addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            const imgElement = document.getElementById("form__img");
-
-            if (file) {
-                // Hiển thị ảnh đã chọn lên giao diện
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imgElement.src = e.target.result; // Cập nhật src của <img> để hiển thị ảnh
-                };
-                reader.readAsDataURL(file); // Đọc file ảnh dưới dạng URL để hiển thị
-
-                // Sau khi hiển thị ảnh, gửi ảnh đến API
-                reader.onloadend = function () {
-                    // Tạo form-data để gửi file ảnh
-                    const formData = new FormData();
-                    formData.append("img", file); // Thêm file vào form-data với key là "img"
-
-                    showLoading();
-
-                    // Gửi yêu cầu tới API bằng phương thức POST
-                    fetch("https://card-ai-api.phatnef.me/predict", {
-                        method: "POST",
-                        body: formData
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.hasOwnProperty("error")) {
-                                document.getElementById("error").innerText = "Hệ thống không nhận diện được thẻ sinh viên của bạn. " +
-                                    "Vui lòng tải lên hình ảnh có đầy đủ độ sáng và rõ nét để hệ thống hoạt động được tốt nhất."
-                                hideLoading();
-                            } else {
-                                document.getElementById("error").innerText = ""
-                                document.getElementById("university").value = `${data.card.value}`;
-                                document.getElementById("fullname").value = `${data?.hoten ? data.hoten.value : "Không tìm thấy thông tin họ tên !"}`;
-                                document.getElementById("code").value = `${data?.mssv ? data.mssv.value : "Không tìm thấy thông tin mã số sinh viên !"}`;
-                                document.getElementById("birthday").value = `${data?.ngaysinh ? data.ngaysinh.value : "Không tìm thấy thông tin ngày sinh !"}`;
-                                document.getElementById("schoolyear").value = `${data?.khoahoc ? data.khoahoc.value : "Không tìm thấy thông tin khóa học !"}`;
-                                hideLoading();
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Lỗi khi gọi API:", error);
-                            hideLoading();
-                        });
-                };
-            }
-        });
-    </script>
 </section>
 </body>
 </html>
