@@ -1,10 +1,12 @@
 package com.example.movietickets.demo.controller;
 
+import com.example.movietickets.demo.mailing.DefaultEmailService;
 import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.repository.RoomRepository;
 import com.example.movietickets.demo.repository.SeatRepository;
 import com.example.movietickets.demo.repository.UserRepository;
 import com.example.movietickets.demo.service.*;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,9 @@ public class PurchaseController {
     @Autowired
     private SeatTypeService seatTypeService;
 
+    @Autowired
+    private DefaultEmailService emailService;
+
     @GetMapping
     public String showPurchase(Model model, @RequestParam(required = false) Long scheduleId) {
         if (purchaseService.IsExist()) {
@@ -109,6 +114,11 @@ public class PurchaseController {
         return "redirect:/purchase";
     }
 
+    @GetMapping("/email")
+    public String email() {
+        return "/mailing/paymentSuccess";
+    }
+
     @PostMapping("/add")
     public String addPurchase(
             @RequestParam("seatSymbol") String seatSymbols,
@@ -129,17 +139,27 @@ public class PurchaseController {
         return "redirect:/purchase?scheduleId=" + scheduleId;
     }
 
-    @GetMapping("/detect")
-    public String detectStudentCard(Model model) {
-        return "purchase/detect-card-uni";
-    }
-
     @GetMapping("/history")
-    public String showPurchaseHistory(Model model) {
+    public String showPurchaseHistory(@RequestParam(required = false) Map<String, String> params, Model model) {
+        // Kiểm tra nếu request có tham số từ VNPAY trả về
+        if (params.containsKey("vnp_ResponseCode")) {
+            String vnp_ResponseCode = params.get("vnp_ResponseCode");
+            String vnp_TxnRef = params.get("vnp_TxnRef");
+            System.out.println("vnp_ResponseCode: " + vnp_ResponseCode);
+            // Xử lý kết quả từ VNPAY
+            if ("00".equals(vnp_ResponseCode)) {
+                // Thanh toán thành công
+                model.addAttribute("paymentMessage", "Thanh toán thành công cho mã giao dịch: " + vnp_TxnRef);
+            } else {
+                // Thanh toán thất bại
+                model.addAttribute("paymentMessage", "Thanh toán thất bại, mã lỗi: " + vnp_ResponseCode);
+            }
+        }
+
         User currentUser = userService.getCurrentUser();
         List<Booking> bookings = bookingService.getBookingsByUser(currentUser.getId()); // phương thức này để lấy các
-                                                                                        // booking của người dùng hiện
-                                                                                        // tại
+        // booking của người dùng hiện
+        // tại
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("bookings", bookings);
@@ -155,17 +175,6 @@ public class PurchaseController {
             RedirectAttributes redirectAttributes) {
         if (purchaseService.IsExist()) {
             Purchase purchase = purchaseService.Get();
-            List<String> seatSymbols = new ArrayList<>();
-            for (Purchase.Seat2 seat : purchase.getSeatsList()) {
-                seatSymbols.add(seat.getSymbol());
-            }
-
-            Room room = roomRepository.findByName(purchase.getRoomName());
-            List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
-
-            // Lấy schedule từ scheduleId
-            Schedule schedule = scheduleService.getScheduleById(scheduleId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
 
             // Tách comboId và comboPrice từ giá trị của request parameter
             Long comboFoodId = null;
@@ -177,28 +186,10 @@ public class PurchaseController {
             }
 
             Booking booking = new Booking();
-            booking.setFilmName(purchase.getFilmTitle());
-            booking.setPoster(purchase.getPoster());
-            booking.setCinemaName(purchase.getCinemaName());
-            booking.setCinemaAddress(purchase.getCinemaAddress());
-            booking.setStartTime(parseDate(purchase.getStartTime()));
-            booking.setSeatName(purchase.getSeats());
-            booking.setRoomName(purchase.getRoomName());
-            booking.setPayment(payment);
-            booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
-            booking.setCreateAt(new Date());
             booking.setPrice(purchase.getTotalPrice() + comboPrice - discountAmount); // cộng thêm giá từ food
-
-            if (comboFoodId != null) {
-                ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId)
-                        .orElseThrow(() -> new EntityNotFoundException("Combo not found"));
-                booking.setComboFood(comboFood);
-            }
 
             // Kiểm tra phương thức thanh toán
             if ("vnpay".equalsIgnoreCase(payment)) {
-                // return "redirect:/api/payment/create_payment?amount=" +
-                // purchase.getTotalPrice();
                 return "redirect:/api/payment/create_payment?scheduleId=" + scheduleId + "&amount=" + booking.getPrice()
                         + "&comboId=" + comboId;
             }
@@ -212,12 +203,7 @@ public class PurchaseController {
                 return "redirect:/api/payment/create_momo?scheduleId=" + scheduleId + "&amount=" + booking.getPrice()
                         + "&comboId=" + comboId;
             }
-            // Lấy thông tin người dùng hiện tại
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = getUserFromAuthentication(authentication);
-            booking.setUser(user);
-            bookingService.saveBooking(booking, seats, schedule);
-            System.out.println("Thành công");
+
             redirectAttributes.addFlashAttribute("message", "Đặt vé thành công!");
         } else {
             redirectAttributes.addFlashAttribute("message", "Không có thông tin đặt vé.");

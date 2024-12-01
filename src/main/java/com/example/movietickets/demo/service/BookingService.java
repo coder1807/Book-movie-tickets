@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,24 @@ public class BookingService {
 
     @Autowired
     private SeatRepository seatRepository;
+
+    @Autowired
+    private PurchaseService purchaseService;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private BookingService bookingService;
+
+    @Autowired
+    private ScheduleServiceImpl scheduleService;
+
+    @Autowired
+    private ComboFoodService comboFoodService;
+
+    @Autowired
+    private UserService userService;
 
     private final ComboFoodRepository comboFoodRepository;
 
@@ -81,40 +101,6 @@ public class BookingService {
         return bookingRepository.findByUser(user_id);
     }
 
-//    public List<Booking> getBookingsByCurrentUser() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication instanceof OAuth2AuthenticationToken) { //log in voi Oauth2
-//            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-//            String email = null;
-//
-//            Object principal = oauthToken.getPrincipal();
-//            if (principal instanceof DefaultOidcUser) {
-//                email = ((DefaultOidcUser) principal).getEmail();
-//            } else if (principal instanceof DefaultOAuth2User) {
-//                email = ((DefaultOAuth2User) principal).getAttribute("email");
-//            }
-//
-//            if (email != null) {
-//                User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
-//                return bookingRepository.findByUser(user);
-//            }
-//        } else if (authentication instanceof UsernamePasswordAuthenticationToken) { //login binh thuong
-//            String username = authentication.getName();
-//            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
-//            return bookingRepository.findByUser(user);
-//        }
-//
-//        throw new UsernameNotFoundException("Không tìm thấy User");
-//    }
-
-
-//    public List<Booking> getBookingsByCurrentUser() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
-//        return bookingRepository.findByUser(user);
-//    }
 
     public Booking saveBookingWithCombo(Long userId, Long comboFoodId, Booking booking) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -127,6 +113,53 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
+    public Booking saveBooking_Detail(String comboId, Long scheduleId, String payment) {
+        Purchase purchase = purchaseService.Get();
+        List<String> seatSymbols = new ArrayList<>();
+        for (Purchase.Seat2 seat : purchase.getSeatsList()) {
+            seatSymbols.add(seat.getSymbol());
+        }
+
+        Room room = roomRepository.findByName(purchase.getRoomName());
+        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
+
+        Schedule schedule = scheduleService.getScheduleById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
+
+        Long comboFoodId = null;
+        Long comboPrice = 0L;
+        if (!comboId.equals("0-0")) {
+            String[] comboDetails = comboId.split("-");
+            comboFoodId = Long.parseLong(comboDetails[0]);
+            comboPrice = Long.parseLong(comboDetails[1]);
+        }
+
+        Booking booking = new Booking();
+        booking.setFilmName(purchase.getFilmTitle());
+        booking.setPoster(purchase.getPoster());
+        booking.setCinemaName(purchase.getCinemaName());
+        booking.setCinemaAddress(purchase.getCinemaAddress());
+        booking.setStartTime(parseDate(purchase.getStartTime()));
+        booking.setSeatName(purchase.getSeats());
+        booking.setRoomName(purchase.getRoomName());
+        booking.setPayment(payment);
+        booking.setStatus(true);
+        booking.setCreateAt(new Date());
+        booking.setPrice(purchase.getTotalPrice() + comboPrice);
+
+        if (comboFoodId != null) {
+            ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId)
+                    .orElseThrow(() -> new EntityNotFoundException("Combo not found"));
+            booking.setComboFood(comboFood);
+        }
+
+        User user = userService.getCurrentUser();
+        booking.setUser(user);
+
+        bookingService.saveBooking(booking, seats, schedule);
+
+        return booking;
+    }
 
     @Transactional
     public void saveBooking(Booking booking, List<Seat> seats, Schedule schedule) {
@@ -143,6 +176,16 @@ public class BookingService {
         for (Seat seat : seats) {
             seat.setStatus("booked");
             seatRepository.save(seat);
+        }
+    }
+
+    private Date parseDate(String dateStr) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return dateFormat.parse(dateStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
