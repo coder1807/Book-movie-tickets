@@ -183,71 +183,19 @@ public class PaymentController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-//    @GetMapping("create_paypal")
-//    public ResponseEntity<?> createPaymentPaypal(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException, PayPalRESTException {
-//
-//
-//        Payment payment = paypalService.createPayment(amount, "USD", "paypal", "sale", "Payment Description", scheduleId, "http://localhost:8080/purchase/history");
-//
-//        Purchase purchase = purchaseService.Get();
-//        List<String> seatSymbols = new ArrayList<>();
-//        for (Purchase.Seat2 seat : purchase.getSeatsList()) {
-//            seatSymbols.add(seat.getSymbol());
-//        }
-//
-//        Room room = roomRepository.findByName(purchase.getRoomName());
-//        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
-//
-//        // Lấy schedule từ scheduleId
-//        Schedule schedule = scheduleService.getScheduleById(scheduleId).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
-//        // Tách comboId và comboPrice từ giá trị của request parameter
-//        Long comboFoodId = null;
-//        Long comboPrice = 0L;
-//        if (!comboId.equals("0-0")) { // Kiểm tra xem có chọn combo hay không
-//            String[] comboDetails = comboId.split("-");
-//            comboFoodId = Long.parseLong(comboDetails[0]);
-//            comboPrice = Long.parseLong(comboDetails[1]);
-//        }
-//
-//
-//        Booking booking = new Booking();
-//        booking.setFilmName(purchase.getFilmTitle());
-//        booking.setPoster(purchase.getPoster());
-//        booking.setCinemaName(purchase.getCinemaName());
-//        booking.setCinemaAddress(purchase.getCinemaAddress());
-//        booking.setStartTime(parseDate(purchase.getStartTime()));
-//        booking.setSeatName(purchase.getSeats());
-//        booking.setRoomName(purchase.getRoomName());
-//        booking.setPayment("paypal");
-//        booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
-//        booking.setCreateAt(new Date());
-//        booking.setPrice(purchase.getTotalPrice() + comboPrice); //cộng thêm giá từ food
-//
-//        if (comboFoodId != null) {
-//            ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
-//            booking.setComboFood(comboFood);
-//        }
-//
-//
-//        // Lấy thông tin người dùng hiện tại
-//        // Lấy thông tin người dùng hiện tại
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = getUserFromAuthentication(authentication);
-//        booking.setUser(user);
-//
-//
-//        bookingService.saveBooking(booking, seats, schedule);
-//
-//        for (Links links : payment.getLinks()) {
-//            if (links.getRel().equals("approval_url")) {
-//                HttpHeaders headers = new HttpHeaders();
-//                headers.setLocation(URI.create(links.getHref()));
-//                return new ResponseEntity<>(headers, HttpStatus.FOUND);
-//            }
-//        }
-//
-//        return ResponseEntity.ok(payment);
-//    }
+    @GetMapping("create_paypal")
+    public ResponseEntity<?> createPaymentPaypal(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException, PayPalRESTException {
+        Payment payment = paypalService.createPayment(amount, "USD", "paypal", "sale", "Payment Description", scheduleId, "http://localhost:8080/api/payment/paypal_success"
+        );
+        for (Links links : payment.getLinks()) {
+            if (links.getRel().equals("approval_url")) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setLocation(URI.create(links.getHref()));
+                return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            }
+        }
+        return ResponseEntity.ok(payment);
+    }
 
     @GetMapping("create_momo")
     public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount,
@@ -300,6 +248,31 @@ public class PaymentController {
             return ResponseEntity.status(400).body("Transaction failed with resultCode: " + resultCode);
         }
     }
+    @GetMapping("/paypal_success")
+    public RedirectView handlePaypalSuccess(@RequestParam("paymentId") String paymentId,
+                                            @RequestParam("PayerID") String payerId,
+                                            HttpSession session,
+                                            RedirectAttributes redirectAttributes) {
+        try {
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if ("approved".equals(payment.getState())) {
+                String comboId = (String) session.getAttribute("comboId");
+                Long scheduleId = (Long) session.getAttribute("scheduleId");
+                User currentUser = userService.getCurrentUser();
+                Booking savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "PAYPAL");
+                emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
+                redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+                return new RedirectView("/purchase/history");
+            }
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi trong quá trình xử lý thanh toán PayPal.");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return new RedirectView("/purchase/history");
+    }
+
 
     @GetMapping("/handlePayment")
     public RedirectView handlePayment(
@@ -308,21 +281,15 @@ public class PaymentController {
             RedirectAttributes redirectAttributes) {
         User currentUser = userService.getCurrentUser();
         Booking savedBooking;
-
-        // Lấy comboId và scheduleId từ session
         HttpSession session = request.getSession();
         String comboId = (String) session.getAttribute("comboId");
         Long scheduleId = (Long) session.getAttribute("scheduleId");
-
-        // Kiểm tra nếu comboId hoặc scheduleId bị thiếu
         if (comboId == null || scheduleId == null) {
             redirectAttributes.addFlashAttribute("error", "Thông tin giao dịch không hợp lệ.");
             return new RedirectView("/purchase/history");
         }
-
-        String vnp_ResponseCode = requestParams.get("vnp_ResponseCode"); // Mã phản hồi từ returnUrl của VNPAY
-        String momo_resultCode = requestParams.get("resultCode"); // Mã phản hồi từ momo
-
+        String vnp_ResponseCode = requestParams.get("vnp_ResponseCode");
+        String momo_resultCode = requestParams.get("resultCode");
         if ("00".equals(vnp_ResponseCode)) {
             savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "VNPAY");
             try {
