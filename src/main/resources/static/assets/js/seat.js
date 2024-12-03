@@ -1,12 +1,14 @@
 let selectedSeats = [];
 let totalPrice = 0;
+var checkoutButton = document.querySelector("#checkout-button");
 window.onload = function () {
+    updateCheckoutButton();
     var pTags = document.querySelectorAll(".chonViTri");
     var getLinks = document.querySelectorAll(".seatPlanButton");
     for (var i = 0; i < pTags.length; i++) {
         pTags[i].addEventListener('click', function () {
             var link = this.getAttribute('data-id');
-
+            localStorage.setItem("data-id", this.getAttribute('data-id')); // Lưu id vào localStorage
             getLinks.forEach(getLink => {
                 getLink.addEventListener('click', function (event) {
                     event.preventDefault();
@@ -51,7 +53,7 @@ window.onload = function () {
             }
         });
 
-        seatImages[i].addEventListener('dblclick', function () {
+        seatImages[i].addEventListener('click', function () {
             const seatId = this.getAttribute('data-id');
             const seatSymbol = this.getAttribute('data-symbol');
             const seatPrice = parseInt(this.getAttribute('data-price'));
@@ -82,6 +84,13 @@ window.onload = function () {
                     this.src = this.getAttribute('data-src2');
                     selectedSeats.push({id: seatId, symbol: seatSymbol, price: seatPrice});
                     totalPrice += seatPrice;
+
+                    // Thời gian giữ vé
+                    timeInSeconds = 5 * 60;
+                    localStorage.setItem("timeInSeconds", timeInSeconds);
+                    clearInterval(countdownInterval);
+                    countdownInterval = setInterval(updateCountdown, 1000);
+
                     hienThiThongBao("Bạn đã chọn ghế thành công", 2000, 'bg-success');
 
                     // Hide error message if any
@@ -94,9 +103,15 @@ window.onload = function () {
                 selectedSeats = selectedSeats.filter(seat => seat.id !== seatId);
                 totalPrice -= seatPrice;
 
+                // Nếu không còn ghế nào được chọn, dừng đếm ngược và xóa thời gian lưu
+                clearInterval(countdownInterval);
+                localStorage.removeItem("timeInSeconds");
+
                 // Hide error message if any
                 document.querySelector('.error-message').style.display = 'none';
             }
+
+            updateCheckoutButton();
 
             // Update the UI
             updateUI();
@@ -108,20 +123,22 @@ window.onload = function () {
         document.querySelector('.selected-seats').textContent = selectedSeatSymbols;
         document.querySelector('.total-price').textContent = totalPrice.toLocaleString('vi-VN', {
             style: 'currency',
-            currency: 'VND'
+            currency: 'VND',
         });
     }
 
-    document.querySelector('#checkout-button').addEventListener('click', function () {
-        const selectedSeatSymbols = selectedSeats.map(seat => ({
-            id: seat.id,
-            symbol: seat.symbol,
-            price: seat.price
-        }));
-        document.getElementById('selectedSeatsInput').value = JSON.stringify(selectedSeatSymbols);
-        document.getElementById('totalPriceInput').value = totalPrice;
-        document.getElementById('checkout-form').submit();
-    });
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function () {
+            const selectedSeatSymbols = selectedSeats.map(seat => ({
+                id: seat.id,
+                symbol: seat.symbol,
+                price: seat.price
+            }));
+            document.getElementById('selectedSeatsInput').value = JSON.stringify(selectedSeatSymbols);
+            document.getElementById('totalPriceInput').value = totalPrice;
+            document.getElementById('checkout-form').submit();
+        });
+    }
 
 //  document.querySelector(".tongTien").textContent = totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
@@ -148,7 +165,65 @@ window.onload = function () {
         }).showToast();
     }
 
+    // Đặt thời gian bắt đầu là 5 phút (300 giây)
+    let timeInSeconds = localStorage.getItem("timeInSeconds") ? parseInt(localStorage.getItem("timeInSeconds")) : 0;
+    let countdownInterval; // lưu id của setInterval
+    let timeout = false;
 
+    // Nếu có thời gian được lưu và thời gian chưa hết, tiếp tục đếm ngược
+    if (timeInSeconds > 0) {
+        countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    // Hàm để cập nhật thời gian mỗi giây
+    function updateCountdown() {
+        // Lấy phần tử hiển thị thời gian
+        var timeElement = document.querySelector('.time');
+
+        var minutes = Math.floor(timeInSeconds / 60);
+        var seconds = timeInSeconds % 60;
+
+        // Đảm bảo luôn hiển thị 2 chữ số cho phút và giây
+        if (timeElement) {
+            timeElement.textContent =
+                (minutes < 10 ? '0' : '') + minutes + ':' +
+                (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        // Nếu thời gian còn lại lớn hơn 0, tiếp tục đếm ngược
+        if (timeInSeconds > 0) {
+            localStorage.setItem("timeInSeconds", timeInSeconds);
+            timeInSeconds--;
+        } else {
+            // Thông báo khi hết thời gian và refresh
+            if (!timeout) {
+                hienThiThongBao("Đã hết thời gian giữ vé", 3000, 'bg-warning');
+                timeout = true;
+
+                setTimeout(() => {
+                    if (localStorage.getItem("data-id")) {
+                        const id = parseInt(localStorage.getItem("data-id"));
+                        window.location.href = "/seats/schedules/" + id;
+                    }
+                }, 3000)
+
+                // Dừng bộ đếm và xóa thời gian lưu
+                clearInterval(countdownInterval);
+                localStorage.removeItem("timeInSeconds"); // Xóa timeInSeconds khi hết thời gian
+            }
+
+        }
+    }
+
+    function updateCheckoutButton() {
+        // Kiểm tra nếu tồn tại nút thanh toán và đã chọn ít nhất 1 ghế
+        if (checkoutButton) {
+            if (selectedSeats.length > 0) {
+                checkoutButton.style.display = 'block'; // Hiển thị nút checkout
+            } else {
+                checkoutButton.style.display = 'none'; // Ẩn nút checkout
+            }
+        }
+    }
 }
-
 
