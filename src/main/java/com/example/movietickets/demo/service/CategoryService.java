@@ -2,7 +2,10 @@ package com.example.movietickets.demo.service;
 
 
 import com.example.movietickets.demo.model.Category;
+import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.repository.CategoryRepository;
+import com.example.movietickets.demo.viewmodel.CategoryVM;
+import com.example.movietickets.demo.viewmodel.FilmVM;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,15 @@ import java.util.Optional;
 
 
 public class CategoryService {
-
     private final CategoryRepository categoryRepository;
+    //    API OBJECT CATEGORIES START
+    public  Object getCategoriesAPI(){
+        List<Category> list = categoryRepository.findAllByOrderByIdDesc();
+        return list.stream().map(CategoryVM::from).toList();
+    }
+    //    API OBJECT CATEGORIES END
+
+
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAllByOrderByIdDesc();

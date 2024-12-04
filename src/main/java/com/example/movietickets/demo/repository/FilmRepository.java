@@ -25,6 +25,10 @@ public interface FilmRepository extends PagingAndSortingRepository<Film, Long>, 
     @Query("SELECT f FROM Film f WHERE f.name LIKE %:keyword%")
     List<Film> searchFilmByName(@Param("keyword") String keyword);
 
+
+    @Query("SELECT f FROM Film f WHERE f.id =:filmID")
+    List<Film> findByMovie_Id(Long filmID);
+
     List<Film> findByCountry_Id(Long countryId);
     @Query("SELECT f FROM Film f JOIN f.categories c WHERE c.id = :categoryId")
     List<Film> findByCategoryId(Long categoryId);

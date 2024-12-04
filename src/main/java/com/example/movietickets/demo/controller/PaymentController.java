@@ -59,6 +59,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static org.apache.http.client.utils.DateUtils.parseDate;
+
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
@@ -156,7 +158,6 @@ public class PaymentController {
                 }
             }
         }
-
         String queryUrl = query.toString();
         String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
         vnp_Params.put("vnp_SecureHash", vnp_SecureHash);

@@ -4,6 +4,7 @@ import com.example.movietickets.demo.model.Blog;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Rating;
 import com.example.movietickets.demo.repository.FilmRepository;
+import com.example.movietickets.demo.viewmodel.FilmVM;
 import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,22 @@ import java.util.Optional;
 @Service
 public class FilmService {
     private final FilmRepository filmRepository;
+
+//    API START
+    public Object allMoviesAPI(){
+        List<Film> list = filmRepository.findAllByOrderByIdDesc();
+        return  list.stream().map(FilmVM::from).toList();
+    }
+    public  Object getMovieByNameAPI(String movieName){
+        List<Film> list = filmRepository.searchFilmByName(movieName);
+        return list.stream().map(FilmVM::from).toList();
+    }
+
+    public Object getMovieByIdApi(Long movieID){
+        List<Film> list = filmRepository.findByMovie_Id(movieID);
+        return list.stream().map(FilmVM::from).toList();
+    }
+//    API END
 
     // Retrieve all film from the database
     public List<Film> getAllFilms() {
