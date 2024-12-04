@@ -1,8 +1,11 @@
 package com.example.movietickets.demo.service;
 
+import com.example.movietickets.demo.model.Category;
 import com.example.movietickets.demo.model.ComboFood;
 import com.example.movietickets.demo.model.Country;
 import com.example.movietickets.demo.repository.ComboFoodRepository;
+import com.example.movietickets.demo.viewmodel.CategoryVM;
+import com.example.movietickets.demo.viewmodel.ComboFoodVM;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,14 @@ import java.util.Optional;
 public class ComboFoodService {
 
     private final ComboFoodRepository comboFoodRepository;
+
+    //API OBJECT FOOD START
+    public  Object getFoodsAPI(){
+        List<ComboFood> list = comboFoodRepository.findAllByOrderByIdDesc();
+        return list.stream().map(ComboFoodVM::from).toList();
+    }
+
+    //API OBJECT FOOD END
 
     public List<ComboFood> getAllComboFood() {
         return comboFoodRepository.findAllByOrderByIdDesc();

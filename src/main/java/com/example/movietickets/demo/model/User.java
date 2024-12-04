@@ -48,7 +48,7 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
     @Column(name = "birthday")
     @NotNull(message = "Date of birth is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)  // Chỉ lưu ngày tháng năm, không có giờ phút giây
+    @Temporal(TemporalType.DATE)// Chỉ lưu ngày tháng năm, không có giờ phút giây
     private LocalDate birthday;
 
     @Column(name = "email", length = 50, unique = true)

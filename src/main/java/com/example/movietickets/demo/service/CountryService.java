@@ -4,6 +4,8 @@ package com.example.movietickets.demo.service;
 import com.example.movietickets.demo.model.Category;
 import com.example.movietickets.demo.model.Country;
 import com.example.movietickets.demo.repository.CountryRepository;
+import com.example.movietickets.demo.viewmodel.CategoryVM;
+import com.example.movietickets.demo.viewmodel.CountryVM;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,12 @@ import java.util.Optional;
 public class CountryService {
     private final CountryRepository countryRepository;
 
+    //  API OBJECT COUNTRIES START
+    public  Object getCountriesAPI(){
+        List<Country> list = countryRepository.findAllByOrderByIdDesc();
+        return list.stream().map(CountryVM::from).toList();
+    }
+    //  API OBJECT COUNTRIES END
     public List<Country> getAllCountries() {
         return countryRepository.findAllByOrderByIdDesc();
     }

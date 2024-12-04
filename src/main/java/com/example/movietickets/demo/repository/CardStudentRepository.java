@@ -4,9 +4,10 @@ import com.example.movietickets.demo.model.CardStudent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
+@Repository
 public interface CardStudentRepository extends JpaRepository<CardStudent, Long> {
     @Query("select c.isVerified from CardStudent c where c.userId.id = :userId")
     Boolean isVerified(@Param("userId") Long userId);

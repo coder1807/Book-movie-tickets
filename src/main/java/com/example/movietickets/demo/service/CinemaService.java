@@ -2,6 +2,7 @@ package com.example.movietickets.demo.service;
 
 import com.example.movietickets.demo.model.Cinema;
 import com.example.movietickets.demo.repository.CinemaRepository;
+import com.example.movietickets.demo.viewmodel.CinemaVM;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,16 @@ import java.util.Optional;
 public class CinemaService {
 
     private final CinemaRepository cinemaRepository;
+//    API OBJECT CINEMA API START
+    public  Object getCinemasAPI(){
+        List<Cinema> list = cinemaRepository.findAllByOrderByIdDesc();
+         return list.stream().map(CinemaVM::from).toList();
+    }
+//    API OBJECT CINEMA API END
 
     public List<Cinema> getAllCinemas() {
         return cinemaRepository.findAllByOrderByIdDesc();
     }
-
     public Optional<Cinema> getCinemaById(Long id) {
         return cinemaRepository.findById(id);
     }

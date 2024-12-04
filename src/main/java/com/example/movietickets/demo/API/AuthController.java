@@ -40,7 +40,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginDTO loginData) {
         try {
-            // Xác thực user với AuthenticationManager
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginData.getUsername(), loginData.getPassword()
