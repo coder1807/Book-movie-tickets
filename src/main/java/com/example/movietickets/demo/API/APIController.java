@@ -22,12 +22,14 @@ public class APIController {
     private ComboFoodService comboFoodService;
     @Autowired
     private CinemaService cinemaService;
+
     //   API MOVIES START
     @GetMapping("/movies")
     public ResponseEntity<Object> GetMovies() {
         Object o = filmService.allMoviesAPI();
-        return  ResponseEntity.ok(o);
+        return ResponseEntity.ok(o);
     }
+
     @GetMapping("/movie")
     public ResponseEntity<Object> getMovie(@RequestParam Map<String, String> params) {
         if (params.containsKey("name")) {
@@ -51,7 +53,7 @@ public class APIController {
 
     //   API Categories START
     @GetMapping("/categories")
-    public ResponseEntity<Object> getCategories(){
+    public ResponseEntity<Object> getCategories() {
         Object o = categoryService.getCategoriesAPI();
         return ResponseEntity.ok(o);
     }
@@ -59,7 +61,7 @@ public class APIController {
 
     // API Country START
     @GetMapping("/countries")
-    public ResponseEntity<Object> getCountries(){
+    public ResponseEntity<Object> getCountries() {
         Object o = countryService.getCountriesAPI();
         return ResponseEntity.ok(o);
     }
@@ -67,16 +69,17 @@ public class APIController {
 
     // API Food Start
     @GetMapping("/foods")
-    public ResponseEntity<Object> getFoods(){
+    public ResponseEntity<Object> getFoods() {
         Object o = comboFoodService.getFoodsAPI();
         return ResponseEntity.ok(o);
     }
+
     // API Food End
     // API Cinemas Start
-    @GetMapping("/foods")
-    public  ResponseEntity<Object> getCinemas(){
+    @GetMapping("/cinemas")
+    public ResponseEntity<Object> getCinemas() {
         Object o = cinemaService.getCinemasAPI();
         return ResponseEntity.ok(o);
     }
     //
-    }
+}
