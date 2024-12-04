@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -130,7 +132,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Kiểm tra xem nếu người dùng đã xác thực tài khoản thì mới cho phép đăng nhập
@@ -203,17 +205,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    // public void saveOauthUser(String email, String username) {
-    // if (userRepository.findByUsername(username).isPresent()) return;
-    // var user = new User();
-    // user.setUsername(username);
-    // user.setEmail(email);
-    // user.setPassword(new BCryptPasswordEncoder().encode(username));
-    // user.setProvider(Provider.GOOGLE.value);
-    // user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
-    // userRepository.save(user);
-    // }
-
     public Long getPointUser(Long user_id) {
         Long points = userRepository.getPointUser(user_id);
         return points != null ? points : 0L;
@@ -226,6 +217,20 @@ public class UserService implements UserDetailsService {
         else if (point >= 2000)
             return "FRIEND";
         return "STANDARD";
+    }
+
+    public boolean getAge(User currentUser) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Optional<User> user = userRepository.findByUsername(authentication.getName());
+            if (user.isPresent()) {
+                int currentYear = Year.now().getValue(); // Lấy năm hiện tại
+                int birthYear = user.get().getBirthday().getYear(); // Lấy năm sinh của user
+                int age = currentYear - birthYear;
+                return age >= 18 && age <= 22;
+            }
+        }
+        return false;
     }
 
 }

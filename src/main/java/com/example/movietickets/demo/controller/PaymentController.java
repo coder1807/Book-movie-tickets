@@ -29,8 +29,13 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,6 +58,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static org.apache.http.client.utils.DateUtils.parseDate;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -84,23 +91,20 @@ public class PaymentController {
     private CategoryService categoryService;
 
     @Autowired
-    private  PaypalService paypalService;
+    private PaypalService paypalService;
 
     @Autowired
     private DefaultEmailService emailService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("create_payment")
-    public ResponseEntity<?> createPayment(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException {
-
-        // Kiểm tra giá trị amount
-        System.out.println("Amount received: " + amount);
-
-        //String orderType = "other";
-        //long amount = Integer.parseInt(req.getParameter("amount"))*100;
-        //String bankCode = req.getParameter("bankCode");
-
-        //long amount = 10000;
-        String amountValue = String.valueOf(amount*100);
+    public ResponseEntity<?> createPayment(@RequestParam("amount") long amount,
+                                           @RequestParam("scheduleId") Long scheduleId,
+                                           @RequestParam("comboId") String comboId,
+                                           HttpServletRequest request)
+            throws UnsupportedEncodingException {
+        String amountValue = String.valueOf(amount * 100);
         String vnp_TxnRef = Config.getRandomNumber(8);
         //String vnp_IpAddr = Config.getIpAddress(req);
         String vnp_TmnCode = Config.vnp_TmnCode;
@@ -118,9 +122,8 @@ public class PaymentController {
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
-        vnp_Params.put("vnp_OrderType", "other" );
+        vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
-
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
 
@@ -155,7 +158,6 @@ public class PaymentController {
                 }
             }
         }
-
         String queryUrl = query.toString();
         String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
         vnp_Params.put("vnp_SecureHash", vnp_SecureHash);
@@ -167,144 +169,39 @@ public class PaymentController {
         paymentResDTO.setMessage("Successfully");
         paymentResDTO.setUrl(paymentUrl);
 
-        Purchase purchase = purchaseService.Get();
-        List<String> seatSymbols = new ArrayList<>();
-        for (Purchase.Seat2 seat : purchase.getSeatsList()) {
-            seatSymbols.add(seat.getSymbol());
-        }
-
-        Room room = roomRepository.findByName(purchase.getRoomName());
-        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
-
-        // Lấy schedule từ scheduleId
-        Schedule schedule = scheduleService.getScheduleById(scheduleId).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
-            // Tách comboId và comboPrice từ giá trị của request parameter
-            Long comboFoodId = null;
-            Long comboPrice = 0L;
-            if (!comboId.equals("0-0")) { // Kiểm tra xem có chọn combo hay không
-                String[] comboDetails = comboId.split("-");
-                comboFoodId = Long.parseLong(comboDetails[0]);
-                comboPrice = Long.parseLong(comboDetails[1]);
-            }
-
-
-        Booking booking = new Booking();
-        booking.setFilmName(purchase.getFilmTitle());
-        booking.setPoster(purchase.getPoster());
-        booking.setCinemaName(purchase.getCinemaName());
-        booking.setCinemaAddress(purchase.getCinemaAddress());
-        booking.setStartTime(parseDate(purchase.getStartTime()));
-        booking.setSeatName(purchase.getSeats());
-        booking.setRoomName(purchase.getRoomName());
-        booking.setPayment("vnpay");
-        booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
-        booking.setCreateAt(new Date());
-        booking.setPrice(purchase.getTotalPrice()+ comboPrice); //cộng thêm giá từ food
-
-        if (comboFoodId != null) {
-            ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
-            booking.setComboFood(comboFood);
-        }
-
-
-        // Lấy thông tin người dùng hiện tại
-        // Lấy thông tin người dùng hiện tại
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = getUserFromAuthentication(authentication);
-        booking.setUser(user);
-
-
-        bookingService.saveBooking(booking, seats, schedule);
-
         // Trả về trang HTML tự động chuyển hướng
         String htmlResponse = "<html><body>"
                 + "<form id='paymentForm' action='" + paymentUrl + "' method='GET'></form>"
                 + "<script type='text/javascript'>document.getElementById('paymentForm').submit();</script>"
                 + "</body></html>";
 
-        // return ResponseEntity.status(HttpStatus.OK).body(htmlResponse);
-
-        //return ResponseEntity.status(HttpStatus.OK).body(paymentResDTO);
+        HttpSession session = (HttpSession) request.getSession();
+        session.setAttribute("comboId", comboId);
+        session.setAttribute("scheduleId", scheduleId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(paymentUrl));
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
-
-        //return paymentUrl;
-
     }
 
     @GetMapping("create_paypal")
     public ResponseEntity<?> createPaymentPaypal(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException, PayPalRESTException {
-
-
-        Payment payment =  paypalService.createPayment(amount,"USD", "paypal", "sale", "Payment Description", scheduleId, "http://localhost:8080/purchase/history");
-
-        Purchase purchase = purchaseService.Get();
-        List<String> seatSymbols = new ArrayList<>();
-        for (Purchase.Seat2 seat : purchase.getSeatsList()) {
-            seatSymbols.add(seat.getSymbol());
+        Payment payment = paypalService.createPayment(amount, "USD", "paypal", "sale", "Payment Description", scheduleId, "http://localhost:8080/api/payment/paypal_success"
+        );
+        for (Links links : payment.getLinks()) {
+            if (links.getRel().equals("approval_url")) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setLocation(URI.create(links.getHref()));
+                return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            }
         }
-
-        Room room = roomRepository.findByName(purchase.getRoomName());
-        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
-
-        // Lấy schedule từ scheduleId
-        Schedule schedule = scheduleService.getScheduleById(scheduleId).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
-        // Tách comboId và comboPrice từ giá trị của request parameter
-        Long comboFoodId = null;
-        Long comboPrice = 0L;
-        if (!comboId.equals("0-0")) { // Kiểm tra xem có chọn combo hay không
-            String[] comboDetails = comboId.split("-");
-            comboFoodId = Long.parseLong(comboDetails[0]);
-            comboPrice = Long.parseLong(comboDetails[1]);
-        }
-
-
-        Booking booking = new Booking();
-        booking.setFilmName(purchase.getFilmTitle());
-        booking.setPoster(purchase.getPoster());
-        booking.setCinemaName(purchase.getCinemaName());
-        booking.setCinemaAddress(purchase.getCinemaAddress());
-        booking.setStartTime(parseDate(purchase.getStartTime()));
-        booking.setSeatName(purchase.getSeats());
-        booking.setRoomName(purchase.getRoomName());
-        booking.setPayment("paypal");
-        booking.setStatus(true); // Hoặc giá trị khác tùy vào logic của bạn
-        booking.setCreateAt(new Date());
-        booking.setPrice(purchase.getTotalPrice()+ comboPrice); //cộng thêm giá từ food
-
-        if (comboFoodId != null) {
-            ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
-            booking.setComboFood(comboFood);
-        }
-
-
-        // Lấy thông tin người dùng hiện tại
-        // Lấy thông tin người dùng hiện tại
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = getUserFromAuthentication(authentication);
-        booking.setUser(user);
-
-
-        bookingService.saveBooking(booking, seats, schedule);
-
-        for(Links links: payment.getLinks()){
-                    if(links.getRel().equals("approval_url")) {
-                        HttpHeaders headers = new HttpHeaders();
-                        headers.setLocation(URI.create(links.getHref()));
-                        return new ResponseEntity<>(headers, HttpStatus.FOUND);
-                    }
-        }
-
         return ResponseEntity.ok(payment);
-
     }
+
     @GetMapping("create_momo")
-    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws Exception {
-        System.out.println(amount);
-        System.out.println(scheduleId);
-        System.out.println(comboId);
+    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount,
+                                               @RequestParam("scheduleId") Long scheduleId,
+                                               @RequestParam("comboId") String comboId) throws Exception {
         String amountStr = String.valueOf(amount);
         String orderId = MoMoConfig.PARTNER_CODE + new Date().getTime();
         String requestId = orderId;
@@ -315,7 +212,6 @@ public class PaymentController {
         );
 
         String signature = MoMoConfig.hmacSHA256(rawSignature, MoMoConfig.SECRET_KEY);
-
 
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("partnerCode", MoMoConfig.PARTNER_CODE);
@@ -334,67 +230,10 @@ public class PaymentController {
         String result = MoMoConfig.sendHttpPost("https://test-payment.momo.vn/v2/gateway/api/create", requestBody.toString());
         JsonObject responseJson = new Gson().fromJson(result, JsonObject.class);
 
-        Purchase purchase = purchaseService.Get();
-        List<String> seatSymbols = new ArrayList<>();
-        for (Purchase.Seat2 seat : purchase.getSeatsList()) {
-            seatSymbols.add(seat.getSymbol());
-        }
-
-        Room room = roomRepository.findByName(purchase.getRoomName());
-        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
-
-
-        Schedule schedule = scheduleService.getScheduleById(scheduleId).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
-
-
-        Long comboFoodId = null;
-        Long comboPrice = 0L;
-        if (!comboId.equals("0-0")) {
-            String[] comboDetails = comboId.split("-");
-            comboFoodId = Long.parseLong(comboDetails[0]);
-            comboPrice = Long.parseLong(comboDetails[1]);
-        }
-
-        Booking booking = new Booking();
-        booking.setFilmName(purchase.getFilmTitle());
-        booking.setPoster(purchase.getPoster());
-        booking.setCinemaName(purchase.getCinemaName());
-        booking.setCinemaAddress(purchase.getCinemaAddress());
-        booking.setStartTime(parseDate(purchase.getStartTime()));
-        booking.setSeatName(purchase.getSeats());
-        booking.setRoomName(purchase.getRoomName());
-        booking.setPayment("momo");
-        booking.setStatus(true);
-        booking.setCreateAt(new Date());
-        booking.setPrice(purchase.getTotalPrice() + comboPrice);
-
-        if (comboFoodId != null) {
-            ComboFood comboFood = comboFoodService.getComboFoodById(comboFoodId).orElseThrow(() -> new EntityNotFoundException("Combo not found"));
-            booking.setComboFood(comboFood);
-        }
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = getUserFromAuthentication(authentication);
-        booking.setUser(user);
-
-         String userMail = user.getEmail();
-
-        bookingService.saveBooking(booking, seats, schedule);
-
-
         if (responseJson.has("payUrl")) {
             String payUrl = responseJson.get("payUrl").getAsString();
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(payUrl));
-            String userEmail = user.getEmail();
-            scheduleEmailSending(() -> {
-                try {
-                    emailService.sendSimpleMessage(userEmail, user, booking);
-                } catch (MessagingException e) {
-                    throw new RuntimeException(e);
-                }
-            }, 30);
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
         return ResponseEntity.ok(responseJson);
@@ -410,29 +249,69 @@ public class PaymentController {
             return ResponseEntity.status(400).body("Transaction failed with resultCode: " + resultCode);
         }
     }
-    private Date parseDate(String dateStr) {
+    @GetMapping("/paypal_success")
+    public RedirectView handlePaypalSuccess(@RequestParam("paymentId") String paymentId,
+                                            @RequestParam("PayerID") String payerId,
+                                            HttpSession session,
+                                            RedirectAttributes redirectAttributes) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return dateFormat.parse(dateStr);
-        } catch (Exception e) {
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if ("approved".equals(payment.getState())) {
+                String comboId = (String) session.getAttribute("comboId");
+                Long scheduleId = (Long) session.getAttribute("scheduleId");
+                User currentUser = userService.getCurrentUser();
+                Booking savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "PAYPAL");
+                emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
+                redirectAttributes.addFlashAttribute("success", "Thanh toán thành công!");
+                return new RedirectView("/purchase/history");
+            }
+        } catch (PayPalRESTException e) {
             e.printStackTrace();
-            return null;
+            redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi trong quá trình xử lý thanh toán PayPal.");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
+        return new RedirectView("/purchase/history");
     }
-    private User getUserFromAuthentication(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            // Trường hợp đăng nhập thông thường
-            String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
-            return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        } else if (authentication.getPrincipal() instanceof DefaultOAuth2User) {
-            // Trường hợp đăng nhập bằng OAuth2 (Facebook, Google)
-            String email = ((DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
-            return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+
+    @GetMapping("/handlePayment")
+    public RedirectView handlePayment(
+            @RequestParam Map<String, String> requestParams,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = userService.getCurrentUser();
+        Booking savedBooking;
+        HttpSession session = request.getSession();
+        String comboId = (String) session.getAttribute("comboId");
+        Long scheduleId = (Long) session.getAttribute("scheduleId");
+        if (comboId == null || scheduleId == null) {
+            redirectAttributes.addFlashAttribute("error", "Thông tin giao dịch không hợp lệ.");
+            return new RedirectView("/purchase/history");
         }
-        throw new UsernameNotFoundException("User not found");
-    }
-    public void scheduleEmailSending(Runnable task, long delayInSeconds) {
-        scheduler.schedule(task, delayInSeconds, TimeUnit.SECONDS);
+        String vnp_ResponseCode = requestParams.get("vnp_ResponseCode");
+        String momo_resultCode = requestParams.get("resultCode");
+        if ("00".equals(vnp_ResponseCode)) {
+            savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "VNPAY");
+            try {
+                emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
+                return new RedirectView("/purchase/history");
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if ("0".equals(momo_resultCode)) {
+            savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "MOMO");
+            try {
+                emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
+                return new RedirectView("/purchase/history");
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return new RedirectView("/purchase/history");
     }
 
     private String loadHtmlTemplate(String path) throws IOException {

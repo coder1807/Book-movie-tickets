@@ -113,7 +113,6 @@
                                     <label for="payment">Phương thức thanh toán:</label>
                                     <select class="form-control" name="payment" id="payment">
                                         <option value="">Chọn phương thức</option>
-                                        <option value="Cash">Trả tiền tại quầy</option>
                                         <option value="momo">MOMO</option>
                                         <option value="paypal">Paypal</option>
                                         <option value="vnpay">VNPay</option>
@@ -141,6 +140,13 @@
                     <div class="col-lg-5">
                         <div class="booking-summery bg-one">
                             <h4 class="title">Chi tiết vé</h4>
+                            <div class="Time_CountDown" style="text-align: center">
+                                <div>Thời gian giữ vé:
+                                </div>
+                                <div class="time">
+                                    05:00
+                                </div>
+                            </div>
                             <ul>
                                 <li>
                                     <h5 class="subtitle" th:text="${filmTitle}"></h5>

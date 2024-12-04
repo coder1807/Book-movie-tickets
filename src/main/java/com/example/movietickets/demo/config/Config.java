@@ -12,12 +12,11 @@ import java.util.Map;
 import java.util.Random;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
 
 public class Config {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/purchase/history";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment/handlePayment";
     public static String vnp_TmnCode = "BAJBKYGS";
 
     public static String vnp_Version = "2.1.0";
@@ -107,18 +106,18 @@ public class Config {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
-        try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
-            }
-        } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
-        }
-        return ipAdress;
-    }
+//    public static String getIpAddress(HttpServletRequest request) {
+//        String ipAdress;
+//        try {
+//            ipAdress = request.getHeader("X-FORWARDED-FOR");
+//            if (ipAdress == null) {
+//                ipAdress = request.getRemoteAddr();
+//            }
+//        } catch (Exception e) {
+//            ipAdress = "Invalid IP:" + e.getMessage();
+//        }
+//        return ipAdress;
+//    }
 
     public static String getRandomNumber(int len) {
         Random rnd = new Random();

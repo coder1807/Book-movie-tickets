@@ -22,6 +22,7 @@ import org.thymeleaf.util.StringUtils;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+
     private static final String REDIRECT_LOGIN = "redirect:/login";
 
     @Autowired
