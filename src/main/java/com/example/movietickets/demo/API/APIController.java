@@ -41,12 +41,12 @@ public class APIController {
         }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
-    @PostMapping("movie")
-    public  ResponseEntity<Object> addMovie()
-    {
-
-        return ResponseEntity.ok(o);
-    }
+//    @PostMapping("movie")
+//    public  ResponseEntity<Object> addMovie()
+//    {
+//
+//        return ResponseEntity.ok(o);
+//    }
     //   API MOVIES END
 
     //   API Categories START
