@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +38,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -96,7 +103,7 @@ public class SecurityConfig {
                         .successHandler(((request, response, authentication) -> {
                             User currentUser = userService.getCurrentUser();
                             if (currentUser != null) {
-                                String fullname = currentUser.getFullname();
+                                String fullname = (currentUser.getFullname() != null)? currentUser.getFullname(): currentUser.getUsername();
                                 request.getSession().setAttribute("fullname", fullname);
                             }
                             response.sendRedirect("/");
@@ -155,6 +162,7 @@ public class SecurityConfig {
                         .expiredUrl("/login"))
                 .httpBasic(httpBasic -> httpBasic
                         .realmName("3anhem"))
+                .csrf(csrf->csrf.disable())
                 .build();
     }
 

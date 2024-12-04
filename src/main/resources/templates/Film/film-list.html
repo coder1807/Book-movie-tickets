@@ -151,7 +151,7 @@
         </div>
     </section>
 
-    <section class="movie-section padding-top padding-bottom" th:object="${film}">
+    <section class="movie-section padding-top padding-bottom">
         <div class="container">
             <div class="row flex-wrap-reverse justify-content-center">
                 <div class="col-sm-10 col-md-8 col-lg-3">
@@ -208,12 +208,13 @@
                         <div class="widget-1-body">
                             <h6 class="subtitle"> Đa dạng thể loại </h6>
                             <div class="check-area">
-                                <div th:each="categories : ${categories}" class="form-group">
-                                    <a th:href="@{/films/by-category/{id}(id=${categories.id})}" th:value="${categories.id}" th:text="${categories.name}"></a>
-                                </div>
+                                <li style="list-style-type:none;"
+                                    th:each="category : ${categories}">
+                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                                </li>
                             </div>
                             <div class="add-check-area">
-                                <a href="#0">view more <i class="plus"></i></a>
+                                <a th:href="@{/films}">view more <i class="plus"></i></a>
                             </div>
                         </div>
                     </div>

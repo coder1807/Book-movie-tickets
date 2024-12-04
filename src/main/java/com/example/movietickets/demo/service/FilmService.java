@@ -85,6 +85,7 @@ public class FilmService {
 
     // tìm theo id category
     public List<Film> getFilmsByCategoryId(Long categoryId) {
+        
         return filmRepository.findByCategoryId(categoryId);
     }
 
