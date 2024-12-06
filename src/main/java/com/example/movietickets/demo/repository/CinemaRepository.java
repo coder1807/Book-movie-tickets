@@ -13,4 +13,6 @@ import java.util.List;
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
     @Query("SELECT cf FROM Cinema cf ORDER BY cf.id DESC")
     List<Cinema> findAllByOrderByIdDesc();
+    @Query("SELECT c FROM Cinema c WHERE c.id =:cinemaId")
+    List<Cinema> findCinemaByIdQuery(Long cinemaId);
 }
