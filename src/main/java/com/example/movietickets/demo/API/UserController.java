@@ -1,5 +1,6 @@
 package com.example.movietickets.demo.API;
 
+import com.example.movietickets.demo.DTO.ChangePasswordDTO;
 import com.example.movietickets.demo.DTO.UserDTO;
 import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -23,7 +25,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateUserInfo(
             @PathVariable Long id,
             @RequestBody UserDTO updateUserDTO) {
@@ -41,7 +43,6 @@ public class UserController {
             if (updateUserDTO.getBirthday() != null){
                 user.setBirthday(updateUserDTO.getBirthday());
             }
-
             userService.saveWithoutPass(user);
             UserDTO responseDTO = new UserDTO(
                     user.getId(),
@@ -59,4 +60,24 @@ public class UserController {
                     .body(new RestResponse("ERROR", "Đã xảy ra lỗi", Map.of("error", ex)));
         }
     }
+    @PutMapping("/change-password/{id}")
+    public ResponseEntity<Object> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordDTO passwordDTO) {
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            User user = userRepository.findById(id).orElseThrow();
+            if (!encoder.matches(passwordDTO.getOldPassword(), user.getPassword())){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new RestResponse("ERROR", "Mật khẩu cũ không chính xác", null));
+            }
+            user.setPassword(new BCryptPasswordEncoder().encode(passwordDTO.getNewPassword()));
+            userRepository.save(user);
+            return ResponseEntity.ok(new RestResponse("SUCCESS", "Thay đổi mật khẩu thành công", null));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new RestResponse("ERROR", "Đã xảy ra lỗi", Map.of("error", ex)));
+        }
+    }
+
 }

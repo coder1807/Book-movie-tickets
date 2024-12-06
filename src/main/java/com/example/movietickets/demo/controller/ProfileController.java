@@ -57,6 +57,7 @@ public class ProfileController {
     private CardStudentRepository cardStudentRepository;
 
 
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String home(Model model) {
@@ -159,12 +160,8 @@ public class ProfileController {
         }
 
         // Cập nhật mật khẩu mới cho người dùng
-        currentUser.setPassword(newPassword);
-        try {
-            userService.save(currentUser);
-        } catch (UserAlreadyExistException e) {
-            throw new RuntimeException(e);
-        }
+        currentUser.setPassword(new BCryptPasswordEncoder().encode(currentUser.getPassword()));
+            userRepository.save(currentUser);
 
         // Thêm thông báo thành công
         redirectAttributes.addFlashAttribute("success", "Thay đổi mật khẩu thành công!");
