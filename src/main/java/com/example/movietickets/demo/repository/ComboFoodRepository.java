@@ -11,4 +11,7 @@ import java.util.List;
 public interface ComboFoodRepository extends JpaRepository<ComboFood, Long> {
     @Query("SELECT cf FROM ComboFood cf ORDER BY cf.id DESC")
     List<ComboFood> findAllByOrderByIdDesc();
+
+    @Query("SELECT cf FROM ComboFood cf WHERE cf.id =:foodId")
+    List<ComboFood> findFoodByIdQuery(Long foodId);
 }
