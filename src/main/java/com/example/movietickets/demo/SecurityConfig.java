@@ -20,6 +20,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration // Đánh dấu lớp này là một lớp cấu hình cho Spring Context.
 @EnableWebSecurity // Kích hoạt tính năng bảo mật web của Spring Security.
@@ -103,7 +105,7 @@ public class SecurityConfig {
                         .successHandler(((request, response, authentication) -> {
                             User currentUser = userService.getCurrentUser();
                             if (currentUser != null) {
-                                String fullname = (currentUser.getFullname() != null)? currentUser.getFullname(): currentUser.getUsername();
+                                String fullname = (currentUser.getFullname() != null) ? currentUser.getFullname() : currentUser.getUsername();
                                 request.getSession().setAttribute("fullname", fullname);
                             }
                             response.sendRedirect("/");
@@ -162,8 +164,21 @@ public class SecurityConfig {
                         .expiredUrl("/login"))
                 .httpBasic(httpBasic -> httpBasic
                         .realmName("3anhem"))
-                .csrf(csrf->csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowedOrigins("*");
+            }
+        };
     }
 
 }
