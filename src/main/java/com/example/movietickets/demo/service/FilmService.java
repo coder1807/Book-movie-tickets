@@ -4,6 +4,7 @@ import com.example.movietickets.demo.model.Blog;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Rating;
 import com.example.movietickets.demo.repository.FilmRepository;
+import com.example.movietickets.demo.repository.RatingRepository;
 import com.example.movietickets.demo.viewmodel.FilmVM;
 import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Service
 public class FilmService {
     private final FilmRepository filmRepository;
+    private final RatingRepository ratingRepository;
 
 //    API START
     public Object allMoviesAPI(){
@@ -34,6 +36,7 @@ public class FilmService {
 
     public Object getMovieByIdApi(Long movieID){
         List<Film> list = filmRepository.findByMovie_Id(movieID);
+        List<Rating> listRating = ratingRepository.findRatingByFilmId(movieID);
         return list.stream().map(FilmVM::from).toList();
     }
 //    API END

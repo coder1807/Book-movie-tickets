@@ -1,6 +1,9 @@
 package com.example.movietickets.demo.API;
 
+import com.example.movietickets.demo.DTO.BookingDTO;
+import com.example.movietickets.demo.DTO.RatingDTO;
 import com.example.movietickets.demo.service.*;
+import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,12 @@ public class APIController {
     private ComboFoodService comboFoodService;
     @Autowired
     private CinemaService cinemaService;
+    @Autowired
+    private RatingService ratingService;
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
+    private BlogService blogService;
 
     @Autowired
     private  SeatService seatService;
@@ -44,12 +53,6 @@ public class APIController {
         }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
-//    @PostMapping("movie")
-//    public  ResponseEntity<Object> addMovie()
-//    {
-//
-//        return ResponseEntity.ok(o);
-//    }
     //   API MOVIES END
 
     //   API Categories START
@@ -102,11 +105,25 @@ public class APIController {
         Object o = seatService.getSeatsByRoomIdAPI(roomId);
         return ResponseEntity.ok(o);
     }
-    // API Cinemas End
-    // API Schedule Start
-//    @GetMapping("/schedules")
-//    public ResponseEntity<Object> getSchedules(@RequestParam Map<String, String> params){
-//        Long cina
-//    }
-    // API Schedule End
+    // API Seat End
+    @PostMapping("/rating")
+    public ResponseEntity<Object> addRating(@RequestBody RatingDTO request){
+        Object o = ratingService.addRatingAPI(request);
+        return ResponseEntity.ok(o);
+    }
+    // API Booking Start
+    @PostMapping("/booking")
+    public  ResponseEntity<Object> addBooking(@RequestBody BookingDTO request){
+        Object o = bookingService.addBookingDetailAPI(request);
+        return ResponseEntity.ok(o);
+    }
+    // API Booking End
+
+    //API Blog Start
+    @GetMapping("blogs")
+    public  ResponseEntity<Object> getBlogs(){
+        Object o = blogService.getAllBlogsAPI();
+        return ResponseEntity.ok(o);
+    }
+    //API Blog End
     }

@@ -1,5 +1,6 @@
 package com.example.movietickets.demo.service;
 
+import com.example.movietickets.demo.DTO.BookingDTO;
 import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @SessionScope
@@ -49,6 +51,11 @@ public class BookingService {
 
     @Autowired
     private ComboFoodService comboFoodService;
+    @Autowired
+    private FilmRepository filmRepository;
+    @Autowired
+    private CinemaRepository cinemaRepository;
+
 
     @Autowired
     private UserService userService;
@@ -56,6 +63,9 @@ public class BookingService {
     private final ComboFoodRepository comboFoodRepository;
 
     private final UserRepository userRepository;
+
+
+
 
     public BookingService(BookingRepository bookingRepository, ComboFoodRepository comboFoodRepository, UserRepository userRepository) {
         this.bookingRepository = bookingRepository;
@@ -88,12 +98,16 @@ public class BookingService {
         return totalPrice != null ? totalPrice : 0;
     }
 
-    public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {
+     public List<Seat> getSeatsFromSymbolsAndRoom(List<String> seatSymbols, Room room) {
         return seatRepository.findBySymbolInAndRoom(seatSymbols, room);
     }
 
+    public List<Seat> getSeatsFromSymbolsAndRoom2(List<Long> seatSymbols) {
+        return seatRepository.findBySymbolIn(seatSymbols);
+    }
+
+
     public List<Booking> getAllBookings() {
-        // Thay đổi phương thức để lấy các booking của người dùng hiện tại
         return bookingRepository.findAll();
     }
 
@@ -108,9 +122,45 @@ public class BookingService {
 
         booking.setUser(user);
         booking.setComboFood(comboFood);
-        booking.setPrice(booking.getPrice() + comboFood.getPrice()); // Tính tổng giá mới
+        booking.setPrice(booking.getPrice() + comboFood.getPrice());
 
         return bookingRepository.save(booking);
+    }
+    public String addBookingDetailAPI(BookingDTO request){
+        List<String> seatSymbols = new ArrayList<>();
+        for (String seat : request.getSeatSymbols()) {
+            seatSymbols.add(seat);
+        }
+        Room room = roomRepository.findRoomByScheduleId(request.getScheduleID());
+        List<Seat> seats = bookingService.getSeatsFromSymbolsAndRoom(seatSymbols, room);
+
+        Schedule schedule = scheduleService.getScheduleById(request.getScheduleID())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id"));
+
+        Booking booking = new Booking();
+        Film f = filmRepository.findFilmByScheduleId(request.getScheduleID());
+        Cinema c = cinemaRepository.findCinemaByRoomId(room.getId());
+        booking.setFilmName(f.getName());
+        booking.setPoster(f.getPoster());
+        booking.setCinemaName(c.getName());
+        booking.setCinemaAddress(c.getAddress());
+        booking.setStartTime(parseDate(schedule.getStartTime().toString()));
+        booking.setSeatName(seats.stream().map(Seat::getSymbol).collect(Collectors.joining(",")));
+        booking.setRoomName(room.getName());
+        booking.setPayment(request.getMethodPayment());
+        booking.setStatus(true);
+        booking.setCreateAt(new Date());
+        booking.setPrice(request.getTotalPrice());
+        if (request.getFoodID() != null) {
+            ComboFood comboFood = comboFoodService.getComboFoodById(request.getFoodID())
+                    .orElseThrow(() -> new EntityNotFoundException("Combo not found"));
+            booking.setComboFood(comboFood);
+        }
+        User user = userService.getUserById(request.getUserID())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));;
+        booking.setUser(user);
+        bookingService.saveBooking(booking, seats, schedule);
+        return "Booking Successful";
     }
 
     public Booking saveBooking_Detail(String comboId, Long scheduleId, String payment) {
@@ -172,7 +222,6 @@ public class BookingService {
             bookingDetail.setSchedule(schedule);
             bookingDetailRepository.save(bookingDetail);
         }
-        //cập nhật trạng thái ghé đã đặt
         for (Seat seat : seats) {
             seat.setStatus("booked");
             seatRepository.save(seat);

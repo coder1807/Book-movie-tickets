@@ -1,7 +1,10 @@
 package com.example.movietickets.demo.service;
 
 import com.example.movietickets.demo.model.Blog;
+import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.repository.BlogRepository;
+import com.example.movietickets.demo.viewmodel.BlogVM;
+import com.example.movietickets.demo.viewmodel.FilmVM;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,14 @@ import java.util.Optional;
 public class BlogService {
     @Autowired
     private BlogRepository blogRepository;
+
+
+    //    API Blog Start
+    public Object getAllBlogsAPI(){
+        List<Blog> list = blogRepository.findAll();
+        return  list.stream().map(BlogVM::from).toList();
+    }
+    //    API Blog End
 
     public Page<Blog> getAllPostsForUser(Integer pageNo, Integer pageSize, String sortBy) {
         return blogRepository.findAllBlogForUser(pageNo, pageSize, sortBy);
