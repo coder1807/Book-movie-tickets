@@ -58,7 +58,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterDTO registerData) {
         try {
             if (userService.existsByUsername(registerData.getUsername())) {

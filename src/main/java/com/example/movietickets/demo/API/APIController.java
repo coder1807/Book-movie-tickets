@@ -110,25 +110,27 @@ public class APIController {
         Object o = seatService.getSeatsByRoomIdAPI(roomId);
         return ResponseEntity.ok(o);
     }
+
     // API Seat End
     @PostMapping("/rating")
-    public ResponseEntity<Object> addRating(@RequestBody RatingDTO request){
+    public ResponseEntity<Object> addRating(@RequestBody RatingDTO request) {
         Object o = ratingService.addRatingAPI(request);
         return ResponseEntity.ok(o);
     }
+
     // API Booking Start
     @PostMapping("/booking")
-    public  ResponseEntity<Object> addBooking(@RequestBody BookingDTO request){
+    public ResponseEntity<Object> addBooking(@RequestBody BookingDTO request) {
         Object o = bookingService.addBookingDetailAPI(request);
         return ResponseEntity.ok(o);
     }
     // API Booking End
 
     //API Blog Start
-    @GetMapping("blogs")
-    public  ResponseEntity<Object> getBlogs(){
+    @GetMapping("/blogs")
+    public ResponseEntity<Object> getBlogs() {
         Object o = blogService.getAllBlogsAPI();
         return ResponseEntity.ok(o);
     }
     //API Blog End
-    }
+}
