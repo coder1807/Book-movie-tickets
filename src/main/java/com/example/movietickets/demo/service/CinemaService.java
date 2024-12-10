@@ -20,6 +20,11 @@ public class CinemaService {
         List<Cinema> list = cinemaRepository.findAllByOrderByIdDesc();
          return list.stream().map(CinemaVM::from).toList();
     }
+
+    public Object getCinemaByIdAPI(Long cinemaID) {
+        List<Cinema> list = cinemaRepository.findCinemaByIdQuery(cinemaID);
+        return list.stream().map(CinemaVM::from).toList();
+    }
 //    API OBJECT CINEMA API END
 
     public List<Cinema> getAllCinemas() {
@@ -48,4 +53,6 @@ public class CinemaService {
         }
         cinemaRepository.deleteById(id);
     }
+
+
 }

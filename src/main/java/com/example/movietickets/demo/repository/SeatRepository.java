@@ -15,6 +15,8 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     List<Seat> findBySymbolInAndRoom(List<String> symbols, Room room);
 
+    List<Seat> findBySymbolIn(List<Long> symbols);
+
     List<Seat> findByRoomId(Long roomId);
 
     List<Seat> findByRoom(Room room);

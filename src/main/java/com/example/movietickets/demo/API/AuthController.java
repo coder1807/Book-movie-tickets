@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = "application/json; charset=UTF-8")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -47,20 +47,20 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = userService.findByUsername(loginData.getUsername()).orElseThrow();
-            UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress());
-            return ResponseEntity.ok(new RestResponse("SUCCESS", "Đăng nhập thành công", Map.of("user",userDTO)));
+            UserDTO userDTO = new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress());
+            return ResponseEntity.ok(new RestResponse("SUCCESS", "Đăng nhập thành công", Map.of("user", userDTO)));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new RestResponse("ERROR", "Sai tài khoản hoặc mật khẩu", Map.of("error", ex)));
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new RestResponse("ERROR", "Đã xảy ra lỗi hệ thống! Vui lòng đăng nhập lại", Map.of("error", ex)));
         }
     }
-    @PostMapping("register")
-    public ResponseEntity<Object> register(@RequestBody RegisterDTO registerData){
-        try{
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestBody RegisterDTO registerData) {
+        try {
             if (userService.existsByUsername(registerData.getUsername())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new RestResponse("ERROR", "Username đã tồn tại", null));
@@ -75,13 +75,14 @@ public class AuthController {
             newUser.setEmail(registerData.getEmail());
             userService.save(newUser);
             userService.setDefaultRole(newUser.getUsername());
-            UserDTO userDTO = new UserDTO(newUser.getId(),newUser.getUsername(), newUser.getEmail(), newUser.getFullname(), newUser.getPhone(), newUser.getAddress());
+            UserDTO userDTO = new UserDTO(newUser.getId(), newUser.getUsername(), newUser.getEmail(), newUser.getFullname(), newUser.getPhone(), newUser.getAddress());
 
-            return ResponseEntity.ok(new RestResponse("SUCCESS", "Bạn đã đăng ký tài khoản thành công! Hãy kiểm tra email để chúng tôi hoàn tất xác thực đăng ký tài khoản của bạn.",Map.of("user",userDTO)));
+            return ResponseEntity.ok(new RestResponse("SUCCESS", "Bạn đã đăng ký tài khoản thành công! Hãy kiểm tra email để chúng tôi hoàn tất xác thực đăng ký tài khoản của bạn.", Map.of("user", userDTO)));
         } catch (UserAlreadyExistException e) {
             throw new RuntimeException(e);
         }
     }
+
     @PostMapping("/logout")
     public ResponseEntity<RestResponse> logout(HttpServletRequest request) {
         try {
