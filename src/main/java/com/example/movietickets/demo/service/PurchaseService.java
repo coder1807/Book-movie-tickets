@@ -33,7 +33,6 @@ public class PurchaseService {
 
     public void addToBuy(String seats, String filmTitle, String poster, String category,
                          Long totalPrice, String cinemaName, String cinemaAddress, String startTime, String roomName) {
-        System.out.println("seats: " + seats); // Debugging line
         purchase = new Purchase(seats, filmTitle, poster, category, totalPrice, cinemaName, cinemaAddress, startTime, roomName);
     }
 

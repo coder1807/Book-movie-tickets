@@ -71,6 +71,7 @@ public class Purchase {
         return seats.stream().map(Seat2::getSymbol).collect(Collectors.joining(","));
     }
 
+
     public List<Seat2> getSeatsList() {
         return seats;
     }
