@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = "application/json; charset=UTF-8")
 public class APIController {
     @Autowired
     private FilmService filmService;
@@ -22,6 +22,9 @@ public class APIController {
     private ComboFoodService comboFoodService;
     @Autowired
     private CinemaService cinemaService;
+
+    @Autowired
+    private SeatService seatService;
 
     //   API MOVIES START
     @GetMapping("/movies")
@@ -74,6 +77,13 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
 
+    @GetMapping("/food")
+    public ResponseEntity<Object> getFood(@RequestParam Map<String, String> params) {
+        Long foodID = Long.parseLong(params.get("foodId"));
+        Object o = comboFoodService.getFoodByIdApi(foodID);
+        return ResponseEntity.ok(o);
+    }
+
     // API Food End
     // API Cinemas Start
     @GetMapping("/cinemas")
@@ -81,5 +91,27 @@ public class APIController {
         Object o = cinemaService.getCinemasAPI();
         return ResponseEntity.ok(o);
     }
-    //
+
+    @GetMapping("/cinema")
+    public ResponseEntity<Object> getCinema(@RequestParam Map<String, String> params) {
+        Long cinemaID = Long.parseLong(params.get("cinemaId"));
+        Object o = cinemaService.getCinemaByIdAPI(cinemaID);
+        return ResponseEntity.ok(o);
+    }
+    // API Cinemas End
+
+    // API Seat Start
+    @GetMapping("/seats")
+    public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params) {
+        Long roomId = Long.parseLong(params.get("roomId"));
+        Object o = seatService.getSeatsByRoomIdAPI(roomId);
+        return ResponseEntity.ok(o);
+    }
+    // API Cinemas End
+    // API Schedule Start
+//    @GetMapping("/schedules")
+//    public ResponseEntity<Object> getSchedules(@RequestParam Map<String, String> params){
+//        Long cina
+//    }
+    // API Schedule End
 }
