@@ -4,6 +4,7 @@ import com.example.movietickets.demo.model.Category;
 import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.repository.CategoryRepository;
 import com.example.movietickets.demo.repository.RoomRepository;
+import com.example.movietickets.demo.viewmodel.RoomVM;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,11 @@ public class RoomService {
             throw new IllegalStateException("Room with ID " + id + " does not exist.");
         }
         roomRepository.deleteById(id);
+    }
+
+
+    public Object getRoomsByCinemaIdAPI(Long id) {
+        List<Room> roomsByCinemaId = roomRepository.findRoomsByCinemaId(id);
+        return roomsByCinemaId.stream().map(RoomVM::from).toList();
     }
 }
