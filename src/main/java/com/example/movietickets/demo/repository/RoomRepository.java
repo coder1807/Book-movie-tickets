@@ -15,6 +15,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("SELECT cf FROM Room cf ORDER BY cf.id DESC")
     List<Room> findAllByOrderByIdDesc();
 
+
+    @Query("SELECT r FROM Schedule s JOIN s.room r WHERE s.id = :scheduleId")
+    Room findRoomByScheduleId (Long scheduleId);
+
     Room findByName(String name);
 
     List<Room> findRoomsByCinemaId(Long cinemaId);

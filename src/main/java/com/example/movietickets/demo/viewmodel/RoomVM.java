@@ -1,23 +1,17 @@
 package com.example.movietickets.demo.viewmodel;
 
 import com.example.movietickets.demo.model.Room;
-import com.example.movietickets.demo.model.Schedule;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public record RoomVM(Long id, String name, String description, Long cinemaId, List<ScheduleVM> schedules) {
-    public static RoomVM from(Room room) {
+public record RoomVM(Long id, String roomName, List<ScheduleVM.detail> schedules) {
 
-        List<ScheduleVM> schedules =  room.getSchedules().stream().map(ScheduleVM::from).toList();
-
+    public static  RoomVM from (Room r) {
+        List<ScheduleVM.detail> schedules = r.getSchedules().stream().map(ScheduleVM.detail::from).toList();
         return new RoomVM(
-                room.getId(),
-                room.getName(),
-                room.getDescription(),
-                room.getCinema().getId(),
+                r.getId(),
+                r.getName(),
                 schedules
         );
     }
-//    private record Room(List<ScheduleVM> schedules) {}
 }

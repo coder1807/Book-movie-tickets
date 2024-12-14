@@ -1,12 +1,18 @@
 package com.example.movietickets.demo.API;
 
+import com.example.movietickets.demo.DTO.BookingDTO;
+import com.example.movietickets.demo.DTO.RatingDTO;
+import com.example.movietickets.demo.model.Film;
+import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.service.*;
+import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -23,6 +29,12 @@ public class APIController {
     private ComboFoodService comboFoodService;
     @Autowired
     private CinemaService cinemaService;
+    @Autowired
+    private RatingService ratingService;
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
+    private BlogService blogService;
 
     @Autowired
     private SeatService seatService;
@@ -137,6 +149,30 @@ public class APIController {
     public ResponseEntity<Object> getSchedules(@PathVariable Long id) {
         Object o = scheduleServiceImpl.getSchedulesByCinemaIdAPI(id);
         return ResponseEntity.ok(o);
+    }
+    @GetMapping("/seats")
+    public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params){
+        Long roomId = Long.parseLong(params.get("roomId"));
+        Object o = seatService.getSeatsByRoomIdAPI(roomId);
+        return ResponseEntity.ok(o);
+    }
+    // API Seat End
+    @PostMapping("/rating")
+    public ResponseEntity<Object> addRating(@RequestBody RatingDTO request){
+        Object o = ratingService.addRatingAPI(request);
+        return ResponseEntity.ok(o);
+    }
+    // API Booking Start
+
+    // API Booking End
+
+    //API Blog Start
+    @GetMapping("blogs")
+    public  ResponseEntity<Object> getBlogs(){
+        Object o = blogService.getAllBlogsAPI();
+        return ResponseEntity.ok(o);
+    }
+    //API Blog End
     }
     // API Schedule End
 
