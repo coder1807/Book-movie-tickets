@@ -46,6 +46,9 @@ public class Booking {
     @Column(name = "PAYMENT")
     private String payment;
 
+    @Column(name = "transaction_id")
+    private String transactionId;
+
     @Column(name = "STATUS")
     private boolean status;
 

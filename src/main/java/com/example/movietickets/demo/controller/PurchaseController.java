@@ -210,29 +210,4 @@ public class PurchaseController {
         }
         return "redirect:/purchase/history"; // Chuyển hướng đến trang lịch sử mua vé
     }
-
-    private User getUserFromAuthentication(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            // Trường hợp đăng nhập thông thường
-            String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal())
-                    .getUsername();
-            return userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        } else if (authentication.getPrincipal() instanceof DefaultOAuth2User) {
-            // Trường hợp đăng nhập bằng OAuth2 (Facebook, Google)
-            String email = ((DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
-            return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        }
-        throw new UsernameNotFoundException("User not found");
-    }
-
-    private Date parseDate(String dateStr) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return dateFormat.parse(dateStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
