@@ -111,10 +111,12 @@ public class ProfileController {
         User currentUser = userService.getCurrentUser();
         Long userPoint = userService.getPointUser(currentUser.getId());
         String userType = userService.getUserType(currentUser.getId());
-
         String oldFullname = currentUser.getFullname();
         String oldPhone = currentUser.getPhone();
-        String oldAddress = currentUser.getAddress();
+        String oldAddress = "";
+        if (currentUser.getAddress() != null){
+            oldAddress = currentUser.getAddress();
+        };
 
         String message = "Thay đổi thông tin thành công";
         if (!oldFullname.equals(fullName)) {
@@ -160,8 +162,8 @@ public class ProfileController {
         }
 
         // Cập nhật mật khẩu mới cho người dùng
-        currentUser.setPassword(new BCryptPasswordEncoder().encode(currentUser.getPassword()));
-            userRepository.save(currentUser);
+        currentUser.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        userRepository.save(currentUser);
 
         // Thêm thông báo thành công
         redirectAttributes.addFlashAttribute("success", "Thay đổi mật khẩu thành công!");

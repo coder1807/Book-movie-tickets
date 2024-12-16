@@ -185,7 +185,10 @@ public class PaymentController {
     }
 
     @GetMapping("create_paypal")
-    public ResponseEntity<?> createPaymentPaypal(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId) throws UnsupportedEncodingException, PayPalRESTException {
+    public ResponseEntity<?> createPaymentPaypal(@RequestParam("amount") long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId,HttpServletRequest request) throws UnsupportedEncodingException, PayPalRESTException {
+        HttpSession session = (HttpSession) request.getSession();
+        session.setAttribute("scheduleId", scheduleId);
+        session.setAttribute("comboId", comboId);
         Payment payment = paypalService.createPayment(amount, "USD", "paypal", "sale", "Payment Description", scheduleId, "http://localhost:8080/api/payment/paypal_success"
         );
         for (Links links : payment.getLinks()) {

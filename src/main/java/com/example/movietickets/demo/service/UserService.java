@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Objects;
@@ -191,11 +193,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void saveOauthUser(String email, String username, String fullname, String provider) {
+    public void saveOauthUser(String email, String username, String fullname, String provider, LocalDate dateofBirth) {
         if (username == null || userRepository.findByUsername(username).isPresent())
             return;
         var user = new User();
         user.setUsername(username);
+        user.setBirthday(dateofBirth);
         user.setFullname(fullname);
         user.setEmail(email != null ? email : username + "@example.com");
         user.setFullname(fullname);
