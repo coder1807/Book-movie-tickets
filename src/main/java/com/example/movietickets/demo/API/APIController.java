@@ -173,8 +173,6 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
     //API Blog End
-    }
-    // API Schedule End
 
     //API For Room -start
     @GetMapping("/rooms/{id}")
@@ -182,5 +180,8 @@ public class APIController {
         Object o = roomService.getRoomsByCinemaIdAPI(id);
         return ResponseEntity.ok(o);
     }
-
 }
+    // API Schedule End
+
+
+

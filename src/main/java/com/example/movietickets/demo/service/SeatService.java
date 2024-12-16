@@ -6,6 +6,7 @@ import com.example.movietickets.demo.repository.ScheduleRepository;
 import com.example.movietickets.demo.repository.SeatRepository;
 import com.example.movietickets.demo.viewmodel.FilmVM;
 //import com.example.movietickets.demo.viewmodel.SeatVM;
+import com.example.movietickets.demo.viewmodel.SeatVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,11 @@ public class SeatService {
     public List<Seat> getSeatsByRoomId(Long roomId) {
         return seatRepository.findByRoomId(roomId);
     }
-//
-//    public Object getSeatsByRoomIdAPI(Long roomId) {
-//       List<Seat> list  =  seatRepository.findByRoomId(roomId);
-//        return list.stream().map(SeatVM::from).toList();
-//    }
+
+    public Object getSeatsByRoomIdAPI(Long roomId) {
+       List<Seat> list  =  seatRepository.findByRoomId(roomId);
+        return list.stream().map(SeatVM::from).toList();
+    }
 
     // SeatService.java
     public List<Seat> getSeatsByRoomIdDistinct(Long roomId) {
