@@ -150,10 +150,10 @@ public class FilmService {
             infoCard.put("type", "info");
 
             StringBuilder info = new StringBuilder();
-            info.append("🎬 *").append(film.getName()).append("*\n");
+            info.append(film.getName()).append("\n");
 
             if (film.getCategories() != null && !film.getCategories().isEmpty()) {
-                info.append("🎭 Thể loại: ");
+                info.append("Thể loại: ");
                 String categories = film.getCategories().stream()
                         .map(Category::getName)
                         .collect(Collectors.joining(", "));
@@ -161,11 +161,11 @@ public class FilmService {
             }
 
             if (film.getDuration() > 0) {
-                info.append("⏱️ Thời lượng: ").append(film.getDuration()).append(" phút\n");
+                info.append("Thời lượng: ").append(film.getDuration()).append(" phút\n");
             }
 
             if (film.getDescription() != null && !film.getDescription().isEmpty()) {
-                info.append("📝 Tóm tắt: ").append(film.getDescription()).append("\n");
+                info.append("Tóm tắt: ").append(film.getDescription()).append("\n");
             }
 
             infoCard.put("title", info.toString());
