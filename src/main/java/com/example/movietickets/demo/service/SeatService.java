@@ -5,6 +5,7 @@ import com.example.movietickets.demo.model.Seat;
 import com.example.movietickets.demo.repository.ScheduleRepository;
 import com.example.movietickets.demo.repository.SeatRepository;
 import com.example.movietickets.demo.viewmodel.FilmVM;
+//import com.example.movietickets.demo.viewmodel.SeatVM;
 import com.example.movietickets.demo.viewmodel.SeatVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

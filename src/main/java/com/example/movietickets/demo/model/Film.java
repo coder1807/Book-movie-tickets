@@ -45,7 +45,7 @@ public class Film {
 
     @Column(name = "OPENING_DAY")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date openingday;
+    private LocalDate openingday;
 
     @Column(name = "SUBTITLE")
     private String subtitle;
