@@ -2,6 +2,8 @@ package com.example.movietickets.demo.API;
 
 import com.example.movietickets.demo.DTO.BookingDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
+import com.example.movietickets.demo.model.Film;
+import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.service.*;
 import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
