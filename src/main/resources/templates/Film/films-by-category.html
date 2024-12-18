@@ -7,41 +7,41 @@
     <title>Lọc phim theo loại</title>
 
     <style>
-        .search-nothing{
-            padding:30px;
+        .search-nothing {
+            padding: 30px;
         }
 
-        .flex-form{
+        .flex-form {
             display: flex;
             justify-content: start;
             align-items: center;
             gap: 50px;
         }
 
-        .flex-center{
+        .flex-center {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 0;
-            gap:5px;
+            gap: 5px;
 
         }
 
-        .type-country{
-           margin-right: 20px;
-           color: #31d7a9;
-           z-index: 1;
+        .type-country {
+            margin-right: 20px;
+            color: #31d7a9;
+            z-index: 1;
         }
 
-        .list{
-            color:black;
+        .list {
+            color: black;
         }
 
-        .current{
-            color:black;
+        .current {
+            color: black;
         }
 
-        .thumb-country{
+        .thumb-country {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -49,11 +49,11 @@
             margin-right: 10px;
             -webkit-box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
-             z-index:1;
+            z-index: 1;
         }
 
         .thumb-country img {
-            width:100%;
+            width: 100%;
 
         }
     </style>
@@ -213,7 +213,8 @@
                             <div class="check-area">
                                 <li style="list-style-type:none;"
                                     th:each="category : ${categories}">
-                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}"
+                                       th:text="${category.name}"></a>
                                 </li>
                             </div>
                             <div class="add-check-area">
@@ -326,7 +327,7 @@
                                             <div class="release">
                                                 <span>Ngày khởi chiếu : </span>
                                                 <a href="#0"
-                                                   th:text="@{${film.openingday != null ? #dates.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
+                                                   th:text="@{${film.openingday != null ? #temporals.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
                                                 </a
                                                 >
                                             </div>

@@ -190,7 +190,7 @@
                                     <!--                                    </a>-->
 
                                     <p class="item chonViTri" th:attr="data-id = ${schedule.id}"
-                                       th:text="${#dates.format(schedule.startTime, 'HH:mm')}"></p>
+                                       th:text="${#temporals.format(schedule.startTime, 'HH:mm')}"></p>
 
 
                                 </div>

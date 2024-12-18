@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,14 +24,14 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "ROOM_ID")
     private Room room;
-    
+
     @ManyToOne
     @JoinColumn(name = "CINEMA_ID")
     private Cinema cinema;
 
     @Column(name = "START_TIME")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<SeatReservation> seatReservations;

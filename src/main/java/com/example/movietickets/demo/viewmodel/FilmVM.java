@@ -1,17 +1,22 @@
 package com.example.movietickets.demo.viewmodel;
 
 import com.example.movietickets.demo.model.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public record FilmVM(Long id, String name, String trailer, String description, String poster, String director, String actor, Date openingay, String subtitle, int duration, String limit_age, String quanlity, String countryName,Double ratingAvg ,List<Category> categories,List<RatingVM> ratings, List<CinemaWithRooms> cinemas ) {
-    public static FilmVM from (Film f){
+public record FilmVM(Long id, String name, String trailer, String description, String poster, String director,
+                     String actor, LocalDate openingay, String subtitle, int duration, String limit_age,
+                     String quanlity, String countryName, Double ratingAvg, List<Category> categories,
+                     List<RatingVM> ratings, List<CinemaWithRooms> cinemas) {
+    public static FilmVM from(Film f) {
         List<Category> categories = f.getCategories()
                 .stream()
-                .map(c ->  new Category(
-                        c.getName()
+                .map(c -> new Category(
+                                c.getName()
                         )
                 ).toList();
         List<RatingVM> ratings = f.getRatings().stream().map(RatingVM::from).toList();
@@ -57,13 +62,20 @@ public record FilmVM(Long id, String name, String trailer, String description, S
                 cinemas
         );
     }
-    private record Category(String categoryName) {}
-    public record CinemaWithRooms(Long id, String name, String address, List<RoomVM> rooms) {}
-    public record filmCinema(Long id, String name, String poster, String director, String actor, Date openingDay, String subtitle, int duration, String limit_age, String quanlity, String countryName, List<Category> categories, List<ScheduleVM.detail> schedules){
-        public static filmCinema from (Film f){
+
+    private record Category(String categoryName) {
+    }
+
+    public record CinemaWithRooms(Long id, String name, String address, List<RoomVM> rooms) {
+    }
+
+    public record filmCinema(Long id, String name, String poster, String director, String actor, LocalDate openingDay,
+                             String subtitle, int duration, String limit_age, String quanlity, String countryName,
+                             List<Category> categories, List<ScheduleVM.detail> schedules) {
+        public static filmCinema from(Film f) {
             List<Category> categories = f.getCategories()
                     .stream()
-                    .map(c ->  new Category(
+                    .map(c -> new Category(
                                     c.getName()
                             )
                     ).toList();

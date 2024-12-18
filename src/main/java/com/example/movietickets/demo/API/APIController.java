@@ -35,6 +35,8 @@ public class APIController {
     private BookingService bookingService;
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private BookingDetailService bookingDetailService;
 
     @Autowired
     private SeatService seatService;
@@ -118,11 +120,13 @@ public class APIController {
         Object o = cinemaService.getCinemasAPI();
         return ResponseEntity.ok(o);
     }
+
     @GetMapping("/cinema/{id}")
     public ResponseEntity<Object> getCinemas(@PathVariable Long id) {
         Object o = cinemaService.getCinemaByIdAPI(id);
         return ResponseEntity.ok(o);
     }
+
     @GetMapping("/cinema")
     public ResponseEntity<Object> getCinema(@RequestParam Map<String, String> params) {
         Long cinemaID = Long.parseLong(params.get("cinemaId"));
@@ -150,12 +154,20 @@ public class APIController {
         Object o = scheduleServiceImpl.getSchedulesByCinemaIdAPI(id);
         return ResponseEntity.ok(o);
     }
+
     @GetMapping("/seats")
-    public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params){
+    public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params) {
         Long roomId = Long.parseLong(params.get("roomId"));
         Object o = seatService.getSeatsByRoomIdAPI(roomId);
         return ResponseEntity.ok(o);
     }
+
+    @GetMapping("/seats/{schedulesId}")
+    public ResponseEntity<Object> getSeatsBookedIdByScheduleId(@PathVariable Long schedulesId) {
+        Object o = bookingDetailService.getSeatBookedIdsByScheduleId(schedulesId);
+        return ResponseEntity.ok(o);
+    }
+
     // API Seat End
     @PostMapping("/rating")
     public ResponseEntity<Object> addRating(@RequestBody RatingDTO request) {
@@ -186,7 +198,7 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
 }
-    // API Schedule End
+// API Schedule End
 
 
 
