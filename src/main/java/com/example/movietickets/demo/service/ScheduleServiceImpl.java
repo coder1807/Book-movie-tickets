@@ -23,7 +23,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Optional<Schedule> getScheduleById(Long id) {
         return scheduleRepository.findById(id);
     }
-
     public void addSchedule(Schedule schedule) {
         scheduleRepository.save(schedule);
     }

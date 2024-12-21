@@ -47,7 +47,8 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = userService.findByUsername(loginData.getUsername()).orElseThrow();
-            UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress(),user.getBirthday());
+            String type = userService.getUserType(user.getId());
+            UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress(),user.getBirthday(),type);
             return ResponseEntity.ok(new RestResponse("SUCCESS", "Đăng nhập thành công", Map.of("user",userDTO)));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -76,7 +77,7 @@ public class AuthController {
             newUser.setBirthday(registerData.getBirthday());
             userService.save(newUser);
             userService.setDefaultRole(newUser.getUsername());
-            UserDTO userDTO = new UserDTO(newUser.getId(),newUser.getUsername(), newUser.getEmail(), newUser.getFullname(), newUser.getPhone(), newUser.getAddress(),newUser.getBirthday());
+            UserDTO userDTO = new UserDTO(newUser.getId(),newUser.getUsername(), newUser.getEmail(), newUser.getFullname(), newUser.getPhone(), newUser.getAddress(),newUser.getBirthday(),"STANDARD");
 
             return ResponseEntity.ok(new RestResponse("SUCCESS", "Bạn đã đăng ký tài khoản thành công! Hãy kiểm tra email để chúng tôi hoàn tất xác thực đăng ký tài khoản của bạn.",Map.of("user",userDTO)));
         } catch (UserAlreadyExistException e) {

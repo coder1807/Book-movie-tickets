@@ -37,6 +37,8 @@ public class APIController {
     private BlogService blogService;
     @Autowired
     private BookingDetailService bookingDetailService;
+    @Autowired
+    private SeatTypeService seatTypeService;
 
     @Autowired
     private SeatService seatService;
@@ -67,14 +69,20 @@ public class APIController {
             Object o = filmService.getMovieByIdApi(movieID);
             return ResponseEntity.ok(o);
         }
+        else if (params.containsKey("scheduleId")) {
+            Long scheduleId = Long.parseLong(params.get("scheduleId"));
+            Object o = filmService.getMovieByScheduleIdApi(scheduleId);
+            return ResponseEntity.ok(o);
+        }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<Object> getMovieByScheduleId(@PathVariable Long id) {
+    public ResponseEntity<Object> getMovieById(@PathVariable Long id) {
         Object o = filmService.getMovieByIdApi(id);
         return ResponseEntity.ok(o);
     }
+
 //    @PostMapping("movie")
 //    public  ResponseEntity<Object> addMovie()
 //    {
@@ -129,10 +137,18 @@ public class APIController {
 
     @GetMapping("/cinema")
     public ResponseEntity<Object> getCinema(@RequestParam Map<String, String> params) {
+        if (params.containsKey("cinemaId")){
         Long cinemaID = Long.parseLong(params.get("cinemaId"));
         Object o = cinemaService.getCinemaByIdAPI(cinemaID);
-        return ResponseEntity.ok(o);
+        return ResponseEntity.ok(o);}
+        else if (params.containsKey("scheduleId")){
+            Long scheduleId = Long.parseLong(params.get("scheduleId"));
+            Object o = cinemaService.getCinemaByScheduleId(scheduleId);
+            return ResponseEntity.ok(o);
+        }
+        return ResponseEntity.badRequest().body("Invalid parameters");
     }
+
     // API Cinemas End
 
     // API Seat Start
@@ -154,6 +170,11 @@ public class APIController {
         Object o = scheduleServiceImpl.getSchedulesByCinemaIdAPI(id);
         return ResponseEntity.ok(o);
     }
+    @GetMapping("/schedule/{id}")
+    public ResponseEntity<Object> getSchedule(@PathVariable Long id) {
+        Object o = scheduleServiceImpl.getScheduleById(id);
+        return ResponseEntity.ok(o);
+    }
 
     @GetMapping("/seats")
     public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params) {
@@ -167,6 +188,7 @@ public class APIController {
         Object o = bookingDetailService.getSeatBookedIdsByScheduleId(schedulesId);
         return ResponseEntity.ok(o);
     }
+
 
     // API Seat End
     @PostMapping("/rating")

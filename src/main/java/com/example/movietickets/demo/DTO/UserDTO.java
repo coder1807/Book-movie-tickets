@@ -18,8 +18,9 @@ public class UserDTO {
     private String phone;
     private String address;
     private LocalDate birthday;
+    private String type;
 
-    public UserDTO(Long id, String username, String email, String fullname, String phone, String address, LocalDate birthday) {
+    public UserDTO(Long id, String username, String email, String fullname, String phone, String address, LocalDate birthday, String type) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -27,6 +28,7 @@ public class UserDTO {
         this.phone = phone;
         this.address = address;
         this.birthday = birthday;
+        this.type = type;
     }
 
 

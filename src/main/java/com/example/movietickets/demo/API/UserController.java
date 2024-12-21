@@ -51,7 +51,8 @@ public class UserController {
                     user.getFullname(),
                     user.getPhone(),
                     user.getAddress(),
-                    user.getBirthday()
+                    user.getBirthday(),
+                    userService.getUserType(user.getId())
             );
             return ResponseEntity.ok(new RestResponse("SUCCESS","Cập nhật thông tin thành công", Map.of("user", responseDTO)));
         }
