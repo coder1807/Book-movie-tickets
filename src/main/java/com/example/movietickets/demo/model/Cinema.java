@@ -9,13 +9,13 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Cinema")
+@Table(name = "cinema")
 
 public class Cinema {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CINEMA_ID")
+    @Column(name = "cinema_id")
     private Long id;
 
     @Column(name = "CINEMA_NAME", nullable = false)
@@ -30,4 +30,8 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema")
     private List<Room> rooms;
 
+    @Override
+    public String toString() {
+        return "Cinema{id=" + id + ", name='" + name + "'}";
+    }
 }

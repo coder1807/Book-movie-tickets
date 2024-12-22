@@ -44,7 +44,7 @@ public class Film {
     private String actor;
 
     @Column(name = "OPENING_DAY")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate openingday;
 
     @Column(name = "SUBTITLE")

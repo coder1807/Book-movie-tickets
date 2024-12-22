@@ -2,6 +2,7 @@ package com.example.movietickets.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -32,7 +33,8 @@ public class Booking {
     private String cinemaAddress;
 
     @Column(name = "LICH_CHIEU")
-    private Date startTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startTime;
 
     @Column(name = "CREAT_AT")
     private Date createAt;

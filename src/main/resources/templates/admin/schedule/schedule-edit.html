@@ -52,8 +52,8 @@
                                 <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                                     <div class="profile__group">
                                         <label class="profile__label" for="room">Phòng</label>
-                                        <select class="js-example-basic-single" id="room" th:field="*{room.id}"
-                                                name="room_id">
+                                        <select class="js-example-basic-single" id="room"
+                                                name="room.id">
                                             <option th:each="item: ${rooms}" th:value="${item.id}"
                                                     th:text="${item.name}"></option>
                                         </select>

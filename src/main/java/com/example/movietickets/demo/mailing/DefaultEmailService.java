@@ -57,7 +57,7 @@ public class DefaultEmailService implements EmailService {
         context.setVariable("userName", user.getFullname());
         context.setVariable("movieName", booking.getFilmName());
         context.setVariable("id", booking.getId());
-        context.setVariable("time", formatDateTime(booking.getStartTime()));
+        context.setVariable("time", booking.getStartTime());
         context.setVariable("room", booking.getRoomName());
         context.setVariable("cinema", booking.getCinemaName());
         context.setVariable("seat", booking.getSeatName());
