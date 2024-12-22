@@ -196,6 +196,11 @@ public class APIController {
         Object o = ratingService.addRatingAPI(request);
         return ResponseEntity.ok(o);
     }
+    @GetMapping("/rating/{movieId}")
+    public ResponseEntity<Object> getRatingByMovies(@PathVariable Long movieId){
+        Object o = ratingService.getRatingByFilmIdApi(movieId);
+        return ResponseEntity.ok(o);
+    }
 
     // API Booking Start
     @PostMapping("/booking")
