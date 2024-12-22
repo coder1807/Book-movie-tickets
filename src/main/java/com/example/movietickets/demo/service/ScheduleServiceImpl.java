@@ -51,4 +51,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> schedulesByRoom = scheduleRepository.findSchedulesByCinemaId(cinemaId);
        return schedulesByRoom.stream().map(ScheduleVM::from).toList();
     }
+    public Object getSchedulesByCinemaIdAndMovieIdAPI(Long cinemaId, Long movieId) {
+        List<Schedule> schedulesByRoom = scheduleRepository.findSchedulesByCinemaIdAndMovieId(cinemaId, movieId);
+        return schedulesByRoom.stream().map(ScheduleVM::from).toList();
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -145,6 +146,10 @@ public class APIController {
             Long scheduleId = Long.parseLong(params.get("scheduleId"));
             Object o = cinemaService.getCinemaByScheduleId(scheduleId);
             return ResponseEntity.ok(o);
+        } else if (params.containsKey("movieId")) {
+            Long movieId = Long.parseLong(params.get("movieId"));
+            Object o = cinemaService.getCinemaByMovieId(movieId);
+            return ResponseEntity.ok(o);
         }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
@@ -173,6 +178,14 @@ public class APIController {
     @GetMapping("/schedule/{id}")
     public ResponseEntity<Object> getSchedule(@PathVariable Long id) {
         Object o = scheduleServiceImpl.getScheduleById(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("schedule")
+    public ResponseEntity<Object> getScheduleByMovieAndCinema(@RequestParam Map<String, String> params){
+        Long cinemaId = Long.parseLong(params.get("cinemaId"));
+        Long movieId = Long.parseLong(params.get("movieId"));
+        Object o = scheduleServiceImpl.getSchedulesByCinemaIdAndMovieIdAPI(cinemaId,movieId);
         return ResponseEntity.ok(o);
     }
 
