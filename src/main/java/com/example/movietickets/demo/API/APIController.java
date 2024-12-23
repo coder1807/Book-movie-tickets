@@ -4,6 +4,7 @@ import com.example.movietickets.demo.DTO.BookingDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
+import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.service.*;
 import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -48,6 +51,8 @@ public class APIController {
 
     @Autowired
     private ScheduleServiceImpl scheduleServiceImpl;
+    @Autowired
+    private UserService userService;
 
     //   API MOVIES START
     @GetMapping("/movies")
@@ -195,6 +200,12 @@ public class APIController {
     @GetMapping("/rooms/{id}")
     public ResponseEntity<Object> getRoomsByCinemaId(@PathVariable Long id) {
         Object o = roomService.getRoomsByCinemaIdAPI(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Object> getUserById(@PathVariable Long id) {
+        Object o = userService.getUserByIdAPI(id);
         return ResponseEntity.ok(o);
     }
 }

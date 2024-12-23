@@ -6,11 +6,14 @@ import com.example.movietickets.demo.exception.InvalidTokenException;
 import com.example.movietickets.demo.exception.UserAlreadyExistException;
 import com.example.movietickets.demo.mailing.AccountVerificationEmailContext;
 import com.example.movietickets.demo.mailing.EmailService;
+import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.model.SecureToken;
 import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.repository.IRoleRepository;
 import com.example.movietickets.demo.repository.IUserRepository;
 import com.example.movietickets.demo.repository.UserRepository;
+import com.example.movietickets.demo.viewmodel.RoomVM;
+import com.example.movietickets.demo.viewmodel.UserVM;
 import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Objects;
@@ -231,6 +235,13 @@ public class UserService implements UserDetailsService {
             }
         }
         return false;
+    }
+
+    // API
+    public Object getUserByIdAPI(Long id) {
+        Optional<User> getUser = userRepository.findById(id);
+        List<UserVM> Users = getUser.stream().map(UserVM::from).toList();
+        return !Users.isEmpty() ? Users.getFirst() : "{}";
     }
 
 }

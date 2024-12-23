@@ -200,11 +200,12 @@ public class PaymentController {
         return ResponseEntity.ok(payment);
     }
 
+
     @GetMapping("create_momo")
-    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId, HttpSession session) throws Exception {
+    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId,@RequestParam(value = "isMobile", defaultValue = "false") boolean isMobile, HttpSession session) throws Exception {
         String amountStr = String.valueOf(amount);
         String orderId = MoMoConfig.PARTNER_CODE + new Date().getTime();
-        session.setAttribute("orderId", orderId);
+        session.setAttribute("orderId", orderId); // doi sang get params
         session.setAttribute("scheduleId", scheduleId);
         session.setAttribute("comboId", comboId);
         // save booking & orderId to db
@@ -237,9 +238,19 @@ public class PaymentController {
 
         if (responseJson.has("payUrl")) {
             String payUrl = responseJson.get("payUrl").getAsString();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create(payUrl));
-            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            if (isMobile) {
+                // Tạo JsonObject riêng biệt
+                JsonObject response = new JsonObject();
+                response.addProperty("payUrl", payUrl);
+                return ResponseEntity.ok(response.toString());
+            }
+            else {
+                // Redirect cho web
+                HttpHeaders headers = new HttpHeaders();
+                headers.setLocation(URI.create(payUrl));
+                return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            }
+
         }
 
         return ResponseEntity.ok(responseJson);
@@ -296,10 +307,12 @@ public class PaymentController {
         return response.getBody();
     }
 
+    // ...?...&json=true
     @GetMapping("/handlePayment")
     public RedirectView handlePayment(@RequestParam Map<String, String> requestParams, HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
         String homeURL = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String transaction_id = requestParams.get("transaction_id"); // mã giao dịch momoId
+//        ...
 
         User currentUser = userService.getCurrentUser();
         Booking savedBooking;
@@ -323,27 +336,44 @@ public class PaymentController {
             }
         }
 
-        if (transaction_id != null && transaction_id != "") {
+        if (transaction_id != null && !transaction_id.isEmpty()) {
             if ("0".equals(momo_resultCode)) {
                 savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "MOMO");
                 try {
                     emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
-                    return new RedirectView(homeURL + "/purchase/history");
+
+                    // Kiểm tra User-Agent để xác định có phải mobile không
+                    String userAgent = request.getHeader("User-Agent");
+                    if (userAgent != null && (userAgent.contains("Mobile") || userAgent.contains("Android") || userAgent.contains("iPhone"))) {
+                        // Nếu là mobile, trả về app link
+                        return new RedirectView("movieapp://com.example.movie_app/");
+                    } else {
+                        // Nếu không phải mobile, trả về trang lịch sử
+                        return new RedirectView(homeURL + "/purchase/history");
+                    }
                 } catch (MessagingException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                // call tới api check giao dịch, nếu thanh toán thành công thì làm gì đó...
-                // code bên dưới để tạm chớ chưa xử lý ngoại lệ (giao dịch thất bại, đang chờ xử lý)
                 savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "MOMO");
                 try {
                     emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
-                    return new RedirectView(homeURL + "/purchase/history");
+
+                    // Kiểm tra User-Agent để xác định có phải mobile không
+                    String userAgent = request.getHeader("User-Agent");
+                    if (userAgent != null && (userAgent.contains("Mobile") || userAgent.contains("Android") || userAgent.contains("iPhone"))) {
+                        // Nếu là mobile, trả về app link
+                        return new RedirectView("movieapp://com.example.movie_app/");
+                    } else {
+                        // Nếu không phải mobile, trả về trang lịch sử
+                        return new RedirectView(homeURL + "/purchase/history");
+                    }
                 } catch (MessagingException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
+
         return new RedirectView(homeURL + "/purchase/history");
     }
 
