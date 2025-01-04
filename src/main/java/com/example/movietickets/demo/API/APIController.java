@@ -1,6 +1,7 @@
 package com.example.movietickets.demo.API;
 
 import com.example.movietickets.demo.DTO.BookingDTO;
+import com.example.movietickets.demo.DTO.CommentDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
@@ -35,6 +36,8 @@ public class APIController {
     private CinemaService cinemaService;
     @Autowired
     private RatingService ratingService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -234,6 +237,12 @@ public class APIController {
         Object o = blogService.getAllBlogsAPI();
         return ResponseEntity.ok(o);
     }
+
+    @PostMapping("/comment")
+    public ResponseEntity<Object> addComment(@RequestBody CommentDTO request) {
+        Object o = commentService.addCommentAPI(request);
+        return ResponseEntity.ok(o);
+    }
     //API Blog End
 
     //API For Room -start
@@ -248,6 +257,8 @@ public class APIController {
         Object o = userService.getUserByIdAPI(id);
         return ResponseEntity.ok(o);
     }
+
+
 }
 // API Schedule End
 

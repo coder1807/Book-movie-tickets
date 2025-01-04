@@ -23,4 +23,6 @@ public interface BlogRepository extends PagingAndSortingRepository<Blog, Long>, 
     @Query("SELECT b FROM Blog b WHERE b.title LIKE %:keyword%")
     List<Blog> searchBlogsByTitle(@Param("keyword") String keyword);
 
+    @Query("SELECT f FROM Blog f WHERE f.id =:blogID")
+    Blog getBlog(Long blogID);
 }
