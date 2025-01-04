@@ -5,6 +5,8 @@ import com.example.movietickets.demo.service.OauthService;
 import com.example.movietickets.demo.service.UserService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +22,11 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.time.LocalDate;
 
 @Configuration // Đánh dấu lớp này là một lớp cấu hình cho Spring Context.
 @EnableWebSecurity // Kích hoạt tính năng bảo mật web của Spring Security.
@@ -124,6 +129,7 @@ public class SecurityConfig {
                             String email = null;
                             String username = null;
                             String fullname = null;
+                            LocalDate birthday = LocalDate.parse("1990-01-01");
 
                             if (principal instanceof DefaultOidcUser) {
                                 DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
@@ -146,7 +152,7 @@ public class SecurityConfig {
 
                             String provider = oauthToken.getAuthorizedClientRegistrationId()
                                     .toUpperCase();
-                            userService.saveOauthUser(email, username, fullname, provider);
+                            userService.saveOauthUser(email, username, fullname, provider, birthday);
                             request.getSession().setAttribute("fullname", fullname);
                             response.sendRedirect("/"); // Chuyển hướng đến trang lịch sử
                             // sau khi đăng nhập thành công
@@ -179,6 +185,11 @@ public class SecurityConfig {
                         .allowedOrigins("*");
             }
         };
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 
 }

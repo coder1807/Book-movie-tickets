@@ -7,42 +7,42 @@
     <title>Tìm kiếm phim</title>
 
     <style>
-        .search-nothing{
-            padding:30px;
+        .search-nothing {
+            padding: 30px;
         }
 
-        .flex-form{
+        .flex-form {
             display: flex;
             justify-content: start;
             align-items: center;
             gap: 50px;
         }
 
-        form  .type{
+        form .type {
             color: #31d7a9;
             z-index: 1;
             margin-right: 20px;
         }
 
-        .flex-center{
+        .flex-center {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 0;
-            gap:5px;
+            gap: 5px;
 
         }
 
 
-        .list{
-            color:black;
+        .list {
+            color: black;
         }
 
-        .current{
-            color:black;
+        .current {
+            color: black;
         }
 
-        .thumb-country{
+        .thumb-country {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -54,7 +54,7 @@
         }
 
         .thumb-country img {
-            width:100%;
+            width: 100%;
         }
     </style>
 </head>
@@ -159,13 +159,6 @@
         <div class="container">
             <div class="row flex-wrap-reverse justify-content-center">
                 <div class="col-sm-10 col-md-8 col-lg-3">
-                    <div class="widget-1 widget-banner">
-                        <div class="widget-1-body">
-                            <a href="#0">
-                                <img src="/assets/img/sidebar/banner/banner01.jpg" alt="banner">
-                            </a>
-                        </div>
-                    </div>
                     <div class="widget-1 widget-check">
                         <div class="widget-header">
                             <h5 class="m-title">Ba Anh Em có</h5>
@@ -214,7 +207,8 @@
                             <div class="check-area">
                                 <li style="list-style-type:none;"
                                     th:each="category : ${categories}">
-                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                                    <a style="" th:href="@{/films/by-category/{id}(id=${category.id})}"
+                                       th:text="${category.name}"></a>
                                 </li>
                             </div>
                             <div class="add-check-area">
@@ -328,7 +322,7 @@
                                             <div class="release">
                                                 <span>Ngày khởi chiếu : </span>
                                                 <a href="#0"
-                                                   th:text="@{${film.openingday != null ? #dates.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
+                                                   th:text="@{${film.openingday != null ? #temporals.format(film.openingday,'dd/MM/yyyy') : 'Chưa có ngày chiếu'}}">
                                                 </a
                                                 >
                                             </div>

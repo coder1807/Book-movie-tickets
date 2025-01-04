@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -144,7 +145,7 @@ public class BookingService {
         booking.setPoster(f.getPoster());
         booking.setCinemaName(c.getName());
         booking.setCinemaAddress(c.getAddress());
-        booking.setStartTime(parseDate(schedule.getStartTime().toString()));
+        booking.setStartTime(schedule.getStartTime());
         booking.setSeatName(seats.stream().map(Seat::getSymbol).collect(Collectors.joining(",")));
         booking.setRoomName(room.getName());
         booking.setPayment(request.getMethodPayment());
@@ -189,7 +190,7 @@ public class BookingService {
         booking.setPoster(purchase.getPoster());
         booking.setCinemaName(purchase.getCinemaName());
         booking.setCinemaAddress(purchase.getCinemaAddress());
-        booking.setStartTime(parseDate(purchase.getStartTime()));
+        booking.setStartTime(LocalDateTime.parse(purchase.getStartTime()));
         booking.setSeatName(purchase.getSeats());
         booking.setRoomName(purchase.getRoomName());
         booking.setPayment(payment);

@@ -2,15 +2,13 @@ package com.example.movietickets.demo.service;
 
 
 import com.example.movietickets.demo.DTO.RatingDTO;
-import com.example.movietickets.demo.model.Comment;
-import com.example.movietickets.demo.model.Film;
-import com.example.movietickets.demo.model.Rating;
-import com.example.movietickets.demo.model.User;
+import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.repository.CommentRepository;
 import com.example.movietickets.demo.repository.FilmRepository;
 import com.example.movietickets.demo.repository.RatingRepository;
 import com.example.movietickets.demo.repository.UserRepository;
 import com.example.movietickets.demo.viewmodel.RatingVM;
+import com.example.movietickets.demo.viewmodel.ScheduleVM;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -40,6 +38,11 @@ public class RatingService {
         return "Add Successfully Rating";
     }
 
+    public Object getRatingByFilmIdApi(Long FilmId){
+        List<Rating> ratings = ratingRepository.findAllByFilmId(FilmId);
+        return ratings.stream().map(RatingVM::from).toList();
+    }
+
     // Rating API END
 
     public List<Rating> getAllRatingByFilmId(Long FilmId) {
@@ -64,4 +67,5 @@ public class RatingService {
     public Double getAverageRating(Long filmId) {
         return ratingRepository.findAverageRatingByFilmId(filmId);
     }
+
 }

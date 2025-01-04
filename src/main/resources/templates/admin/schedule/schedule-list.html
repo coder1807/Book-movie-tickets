@@ -48,7 +48,7 @@
                                     <div class="main__table-text" th:text="${item.room.name}"></div>
                                 </td>
                                 <td>
-                                    <div class="main__table-text" th:text="${item.startTime}"></div>
+                                    <div class="main__table-text" th:text="${item.startTime.toString().replace('T', ' ')}"></div>
                                 </td>
                                 <td>
                                     <div class="main__table-btns">

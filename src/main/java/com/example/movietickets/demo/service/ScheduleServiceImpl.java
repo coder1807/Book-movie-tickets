@@ -3,6 +3,7 @@ package com.example.movietickets.demo.service;
 import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.repository.ScheduleRepository;
+import com.example.movietickets.demo.viewmodel.ScheduleVM;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Optional<Schedule> getScheduleById(Long id) {
         return scheduleRepository.findById(id);
     }
-
     public void addSchedule(Schedule schedule) {
         scheduleRepository.save(schedule);
     }
@@ -45,5 +45,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> getSchedulesByFilmId(Long filmId) {
         return scheduleRepository.findByFilmId(filmId);
+    }
+
+    public Object getSchedulesByCinemaIdAPI(Long cinemaId) {
+        List<Schedule> schedulesByRoom = scheduleRepository.findSchedulesByCinemaId(cinemaId);
+       return schedulesByRoom.stream().map(ScheduleVM::from).toList();
+    }
+    public Object getSchedulesByCinemaIdAndMovieIdAPI(Long cinemaId, Long movieId) {
+        List<Schedule> schedulesByRoom = scheduleRepository.findSchedulesByCinemaIdAndMovieId(cinemaId, movieId);
+        return schedulesByRoom.stream().map(ScheduleVM::from).toList();
     }
 }

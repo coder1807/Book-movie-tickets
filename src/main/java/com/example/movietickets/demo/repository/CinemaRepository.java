@@ -19,4 +19,9 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
 
     @Query("SELECT r FROM Room s JOIN s.cinema r WHERE s.id = :roomID")
     Cinema findCinemaByRoomId(Long roomID);
+
+    @Query("SELECT c FROM Schedule s JOIN s.cinema c WHERE s.id = :scheduleId")
+    List<Cinema> findCinemaByScheduleId(Long scheduleId);
+    @Query("SELECT c FROM Schedule s JOIN s.cinema c WHERE s.film.id = :movieId")
+    List<Cinema> findCinemaByMovieId(Long movieId);
 }

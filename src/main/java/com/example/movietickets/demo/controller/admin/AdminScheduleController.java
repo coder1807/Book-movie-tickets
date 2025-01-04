@@ -7,8 +7,10 @@ import com.example.movietickets.demo.service.CinemaService;
 import com.example.movietickets.demo.service.FilmService;
 import com.example.movietickets.demo.service.RoomService;
 import com.example.movietickets.demo.service.ScheduleServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -50,6 +52,7 @@ public class AdminScheduleController {
         model.addAttribute("id", id);
         model.addAttribute("films", filmService.getAllFilms());
         model.addAttribute("rooms", roomService.getAllRooms());
+        model.addAttribute("cinemas", cinemaService.getAllCinemas());
         return "/admin/schedule/schedule-add";
     }
 
@@ -61,6 +64,7 @@ public class AdminScheduleController {
             return "/schedule/schedule-add";
         }
         schedule.setFilm(filmService.getFilmById(id).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + id)));
+        System.out.println("Room id: " + schedule.getRoom().getId());
         scheduleService.addSchedule(schedule);
         return "redirect:/admin/schedules";
     }
@@ -79,7 +83,7 @@ public class AdminScheduleController {
 
     @PostMapping("/schedules/edit/{id}")
     public String updateSchedule(@PathVariable("id") Long id, @Valid Schedule schedule,
-                                 @RequestParam("film_id") Long filmId, BindingResult result, Model model) {
+                                 @RequestParam("film_id") Long filmId, BindingResult result, Model model, @RequestBody String body) {
         if (result.hasErrors()) {
             model.addAttribute("films", filmService.getAllFilms());
             model.addAttribute("rooms", roomService.getAllRooms());
@@ -87,12 +91,14 @@ public class AdminScheduleController {
             return "/admin/schedule/schedule-edit";
         }
         Film film = filmService.getFilmById(filmId).orElseThrow(() -> new IllegalArgumentException("Invalid film Id: " + filmId));
+        System.out.println("Body: " + body);
         schedule.setFilm(film);
         Schedule existingSchedule = scheduleService.getScheduleById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
 
         existingSchedule.setCinema(schedule.getCinema());
         existingSchedule.setRoom(schedule.getRoom());
+        existingSchedule.setStartTime(schedule.getStartTime());
         scheduleService.updateSchedule(existingSchedule);
         return "redirect:/admin/schedules";
     }

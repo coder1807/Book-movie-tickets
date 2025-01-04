@@ -9,5 +9,5 @@ public class RatingDTO {
     private Long filmId;
     private Long userId;
     private String content;
-    private  int ratingNumber;
+    private int ratingNumber;
 }

@@ -7,7 +7,7 @@ import com.example.movietickets.demo.model.Schedule;
 import java.sql.Date;
 import java.util.List;
 
-public record CinemaVM(Long id, String address, String map, String name, List<Room> room) {
+public record CinemaVM(Long id, String address, String map, String name, List<Room> room ) {
     public static CinemaVM from(Cinema c){
 
         List<Room> listRoom = c.getRooms()
@@ -16,7 +16,6 @@ public record CinemaVM(Long id, String address, String map, String name, List<Ro
                         r.getSchedules().stream().map(ScheduleVM::from).toList()
                 )
                 ).toList();
-
         return new CinemaVM(
                 c.getId(),
                 c.getAddress(),
@@ -26,5 +25,14 @@ public record CinemaVM(Long id, String address, String map, String name, List<Ro
         );
     }
     private record Room(List<ScheduleVM> schedules) {}
+    public  record  detail(Long idCinema, String address, String cinemaName){
+        public  static  detail from (Cinema c){
+            return new detail(
+                    c.getId(),
+                    c.getAddress(),
+                    c.getName()
+            );
+        }
+    }
 }
 

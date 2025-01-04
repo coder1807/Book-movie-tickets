@@ -190,7 +190,7 @@
                                     <!--                                    </a>-->
 
                                     <p class="item chonViTri" th:attr="data-id = ${schedule.id}"
-                                       th:text="${#dates.format(schedule.startTime, 'HH:mm')}"></p>
+                                       th:text="${#temporals.format(schedule.startTime, 'HH:mm')}"></p>
 
 
                                 </div>
@@ -198,15 +198,6 @@
                             </div>
                         </li>
                     </ul>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-10">
-                    <div class="widget-1 widget-banner">
-                        <div class="widget-1-body">
-                            <a href="#0">
-                                <img src="/assets/img/sidebar/banner/banner03.jpg" alt="banner">
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
