@@ -23,4 +23,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("SELECT s FROM Schedule s LEFT JOIN FETCH s.film f WHERE s.cinema.id = :cinemaId")
     List<Schedule> findSchedulesByCinemaId(@Param("cinemaId") Long cinemaId);
+    @Query("SELECT s FROM Schedule s LEFT JOIN FETCH s.film f WHERE s.cinema.id = :cinemaId and s.film.id = :movieId")
+    List<Schedule> findSchedulesByCinemaIdAndMovieId(@Param("cinemaId") Long cinemaId,@Param("movieId") Long movieId);
 }

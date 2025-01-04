@@ -129,6 +129,7 @@ public class SecurityConfig {
                             String email = null;
                             String username = null;
                             String fullname = null;
+                            LocalDate birthday = LocalDate.parse("1990-01-01");
 
                             if (principal instanceof DefaultOidcUser) {
                                 DefaultOidcUser oidcUser = (DefaultOidcUser) principal;
@@ -151,7 +152,7 @@ public class SecurityConfig {
 
                             String provider = oauthToken.getAuthorizedClientRegistrationId()
                                     .toUpperCase();
-                            userService.saveOauthUser(email, username, fullname, provider);
+                            userService.saveOauthUser(email, username, fullname, provider, birthday);
                             request.getSession().setAttribute("fullname", fullname);
                             response.sendRedirect("/"); // Chuyển hướng đến trang lịch sử
                             // sau khi đăng nhập thành công
