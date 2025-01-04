@@ -38,6 +38,11 @@ public class FilmService {
         List<Rating> listRating = ratingRepository.findRatingByFilmId(movieID);
         return list.stream().map(FilmVM::from).toList();
     }
+
+    public Film getMovieByScheduleIdApi(Long scheduleId){
+        Film list = filmRepository.findFilmByScheduleId(scheduleId);
+        return list;
+    }
 //    API END
 
     // Retrieve all film from the database

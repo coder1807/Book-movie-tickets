@@ -25,6 +25,16 @@ public class CinemaService {
         List<Cinema> list = cinemaRepository.findCinemaByIdQuery(cinemaID);
         return list.stream().map(CinemaVM::from).toList();
     }
+
+    public Object getCinemaByScheduleId(Long scheduleId){
+        List<Cinema> list = cinemaRepository.findCinemaByScheduleId(scheduleId);
+        return list.stream().map(CinemaVM::from).toList();
+    }
+
+    public Object getCinemaByMovieId(Long movieId){
+        List<Cinema> list = cinemaRepository.findCinemaByMovieId(movieId);
+        return list.stream().map(CinemaVM::from).toList();
+    }
 //    API OBJECT CINEMA API END
 
     public List<Cinema> getAllCinemas() {

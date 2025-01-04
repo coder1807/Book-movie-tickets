@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +40,8 @@ public class APIController {
     private BlogService blogService;
     @Autowired
     private BookingDetailService bookingDetailService;
+    @Autowired
+    private SeatTypeService seatTypeService;
 
     @Autowired
     private SeatService seatService;
@@ -72,14 +74,20 @@ public class APIController {
             Object o = filmService.getMovieByIdApi(movieID);
             return ResponseEntity.ok(o);
         }
+        else if (params.containsKey("scheduleId")) {
+            Long scheduleId = Long.parseLong(params.get("scheduleId"));
+            Object o = filmService.getMovieByScheduleIdApi(scheduleId);
+            return ResponseEntity.ok(o);
+        }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<Object> getMovieByScheduleId(@PathVariable Long id) {
+    public ResponseEntity<Object> getMovieById(@PathVariable Long id) {
         Object o = filmService.getMovieByIdApi(id);
         return ResponseEntity.ok(o);
     }
+
 //    @PostMapping("movie")
 //    public  ResponseEntity<Object> addMovie()
 //    {
@@ -134,10 +142,22 @@ public class APIController {
 
     @GetMapping("/cinema")
     public ResponseEntity<Object> getCinema(@RequestParam Map<String, String> params) {
+        if (params.containsKey("cinemaId")){
         Long cinemaID = Long.parseLong(params.get("cinemaId"));
         Object o = cinemaService.getCinemaByIdAPI(cinemaID);
-        return ResponseEntity.ok(o);
+        return ResponseEntity.ok(o);}
+        else if (params.containsKey("scheduleId")){
+            Long scheduleId = Long.parseLong(params.get("scheduleId"));
+            Object o = cinemaService.getCinemaByScheduleId(scheduleId);
+            return ResponseEntity.ok(o);
+        } else if (params.containsKey("movieId")) {
+            Long movieId = Long.parseLong(params.get("movieId"));
+            Object o = cinemaService.getCinemaByMovieId(movieId);
+            return ResponseEntity.ok(o);
+        }
+        return ResponseEntity.badRequest().body("Invalid parameters");
     }
+
     // API Cinemas End
 
     // API Seat Start
@@ -159,6 +179,19 @@ public class APIController {
         Object o = scheduleServiceImpl.getSchedulesByCinemaIdAPI(id);
         return ResponseEntity.ok(o);
     }
+    @GetMapping("/schedule/{id}")
+    public ResponseEntity<Object> getSchedule(@PathVariable Long id) {
+        Object o = scheduleServiceImpl.getScheduleById(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("schedule")
+    public ResponseEntity<Object> getScheduleByMovieAndCinema(@RequestParam Map<String, String> params){
+        Long cinemaId = Long.parseLong(params.get("cinemaId"));
+        Long movieId = Long.parseLong(params.get("movieId"));
+        Object o = scheduleServiceImpl.getSchedulesByCinemaIdAndMovieIdAPI(cinemaId,movieId);
+        return ResponseEntity.ok(o);
+    }
 
     @GetMapping("/seats")
     public ResponseEntity<Object> getSeats(@RequestParam Map<String, String> params) {
@@ -173,10 +206,16 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
 
+
     // API Seat End
     @PostMapping("/rating")
     public ResponseEntity<Object> addRating(@RequestBody RatingDTO request) {
         Object o = ratingService.addRatingAPI(request);
+        return ResponseEntity.ok(o);
+    }
+    @GetMapping("/rating/{movieId}")
+    public ResponseEntity<Object> getRatingByMovies(@PathVariable Long movieId){
+        Object o = ratingService.getRatingByFilmIdApi(movieId);
         return ResponseEntity.ok(o);
     }
 
