@@ -1,6 +1,7 @@
 package com.example.movietickets.demo.API;
 
 import com.example.movietickets.demo.DTO.BookingDTO;
+import com.example.movietickets.demo.DTO.CommentDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
@@ -35,6 +36,8 @@ public class APIController {
     private CinemaService cinemaService;
     @Autowired
     private RatingService ratingService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -232,6 +235,24 @@ public class APIController {
     @GetMapping("/blogs")
     public ResponseEntity<Object> getBlogs() {
         Object o = blogService.getAllBlogsAPI();
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/blogs/{id}")
+    public ResponseEntity<Object> getBlogById(@PathVariable Long id) {
+        Object o = blogService.getBlogByIdApi(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @PostMapping("/comments")
+    public ResponseEntity<Object> addComment(@RequestBody CommentDTO request) {
+        Object o = commentService.addCommentAPI(request);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/comments/{blogId}")
+    public ResponseEntity<Object> getCommentsByBlog(@PathVariable Long blogId){
+        Object o = commentService.getCommentByBlogIdApi(blogId);
         return ResponseEntity.ok(o);
     }
     //API Blog End
