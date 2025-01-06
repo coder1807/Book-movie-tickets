@@ -2,13 +2,17 @@ package com.example.movietickets.demo.service;
 
 import com.example.movietickets.demo.Provider;
 import com.example.movietickets.demo.Role;
+import com.example.movietickets.demo.exception.BadRequestException;
 import com.example.movietickets.demo.exception.InvalidTokenException;
+import com.example.movietickets.demo.exception.ResourceNotFoundException;
 import com.example.movietickets.demo.exception.UserAlreadyExistException;
 import com.example.movietickets.demo.mailing.AccountVerificationEmailContext;
 import com.example.movietickets.demo.mailing.EmailService;
+import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Room;
 import com.example.movietickets.demo.model.SecureToken;
 import com.example.movietickets.demo.model.User;
+import com.example.movietickets.demo.repository.FilmRepository;
 import com.example.movietickets.demo.repository.IRoleRepository;
 import com.example.movietickets.demo.repository.IUserRepository;
 import com.example.movietickets.demo.repository.UserRepository;
@@ -37,6 +41,7 @@ import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -55,7 +60,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private SecureTokenService secureTokenService;
-
+    @Autowired
+    private FilmRepository filmRepository;
     @Autowired
     private EmailService emailService;
 
@@ -245,5 +251,37 @@ public class UserService implements UserDetailsService {
         List<UserVM> Users = getUser.stream().map(UserVM::from).toList();
         return !Users.isEmpty() ? Users.getFirst() : "{}";
     }
+    public UserVM getUserByIdVM(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return UserVM.from(user);
+    }
 
+    public List<Long> getFavoriteFilmIds(Long userId) {
+        return getUserByIdVM(userId).favoriteFilmIds();
+    }
+
+    public UserVM addFavoriteFilm(Long userId, Long filmId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Film film = filmRepository.findById(filmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Film not found"));
+
+        if (!user.getFavoriteFilms().contains(film)) {
+            user.getFavoriteFilms().add(film);
+            user = userRepository.save(user);
+        }
+        return UserVM.from(user);
+    }
+
+    public UserVM removeFavoriteFilm(Long userId, Long filmId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Film film = filmRepository.findById(filmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Film not found"));
+
+        user.getFavoriteFilms().remove(film);
+        user = userRepository.save(user);
+        return UserVM.from(user);
+    }
 }
