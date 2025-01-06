@@ -4,6 +4,8 @@ import com.example.movietickets.demo.DTO.CommentDTO;
 
 import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.repository.*;
+import com.example.movietickets.demo.viewmodel.CommentVM;
+import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -30,6 +32,12 @@ public class CommentService {
         commentRepository.save(r);
         return "Add Successfully Comment";
     }
+
+    public Object getCommentByBlogIdApi(Long BlogId){
+        List<Comment> comments = commentRepository.findAllByBlogId(BlogId);
+        return comments.stream().map(CommentVM::from).toList();
+    }
+
 
     public List<Comment> getAllCommentsByBlogId(Long BlogId) {
         return commentRepository.findAllByBlogId(BlogId);

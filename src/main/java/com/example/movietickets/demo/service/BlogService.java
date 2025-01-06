@@ -1,7 +1,9 @@
 package com.example.movietickets.demo.service;
 
 import com.example.movietickets.demo.model.Blog;
+import com.example.movietickets.demo.model.Comment;
 import com.example.movietickets.demo.model.Film;
+import com.example.movietickets.demo.model.Rating;
 import com.example.movietickets.demo.repository.BlogRepository;
 import com.example.movietickets.demo.viewmodel.BlogVM;
 import com.example.movietickets.demo.viewmodel.FilmVM;
@@ -24,6 +26,11 @@ public class BlogService {
     public Object getAllBlogsAPI(){
         List<Blog> list = blogRepository.findAll();
         return  list.stream().map(BlogVM::from).toList();
+    }
+
+    public Object getBlogByIdApi(Long blogId) {
+        List<Blog> list = blogRepository.findByBlog_Id(blogId);
+        return list.stream().map(BlogVM::from).toList();
     }
     //    API Blog End
 

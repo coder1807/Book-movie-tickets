@@ -25,4 +25,7 @@ public interface BlogRepository extends PagingAndSortingRepository<Blog, Long>, 
 
     @Query("SELECT f FROM Blog f WHERE f.id =:blogID")
     Blog getBlog(Long blogID);
+
+    @Query("SELECT f FROM Blog f WHERE f.id =:blogID")
+    List<Blog> findByBlog_Id(Long blogID);
 }

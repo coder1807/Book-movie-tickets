@@ -238,9 +238,21 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
 
-    @PostMapping("/comment")
+    @GetMapping("/blogs/{id}")
+    public ResponseEntity<Object> getBlogById(@PathVariable Long id) {
+        Object o = blogService.getBlogByIdApi(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @PostMapping("/comments")
     public ResponseEntity<Object> addComment(@RequestBody CommentDTO request) {
         Object o = commentService.addCommentAPI(request);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/comments/{blogId}")
+    public ResponseEntity<Object> getCommentsByBlog(@PathVariable Long blogId){
+        Object o = commentService.getCommentByBlogIdApi(blogId);
         return ResponseEntity.ok(o);
     }
     //API Blog End
