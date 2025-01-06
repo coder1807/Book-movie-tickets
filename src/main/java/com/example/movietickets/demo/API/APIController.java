@@ -10,6 +10,7 @@ import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -247,8 +248,30 @@ public class APIController {
         Object o = userService.getUserByIdAPI(id);
         return ResponseEntity.ok(o);
     }
+
+    @PostMapping("/user/{id}/favorites/{filmId}")
+    public ResponseEntity<Object> addFavoriteFilm(
+            @PathVariable Long id,
+            @PathVariable Long filmId) {
+        Object o = userService.addFavoriteFilm(id, filmId);
+        return ResponseEntity.ok(o);
+    }
+
+    @DeleteMapping("/user/{userId}/favorites/{filmId}")
+    public ResponseEntity<Object> removeFavoriteFilm(
+            @PathVariable Long userId,
+            @PathVariable Long filmId) {
+        Object o = userService.removeFavoriteFilm(userId, filmId);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/user/{userId}/favorites")
+    public ResponseEntity<Object> getFavoriteFilms(@PathVariable Long userId) {
+        Object favoriteIds = userService.getFavoriteFilmIds(userId);
+        return ResponseEntity.ok(favoriteIds);
+    }
 }
-// API Schedule End
+
 
 
 

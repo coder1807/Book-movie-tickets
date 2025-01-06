@@ -121,12 +121,12 @@ public class AuthController {
     }
 
 
-    @GetMapping("user/{email}")
-    public ResponseEntity<Object> fetchUserByEmail(@PathVariable String email){
-        User user = userService.findByEmail(email).orElseThrow();
-        String type = userService.getUserType(user.getId());
-        UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress(),user.getBirthday(),type);
-        return ResponseEntity.ok(new RestResponse("SUCCESS", "Tìm thấy user", Map.of("user",userDTO)));
-
-    }
+//    @GetMapping("user/{email}")
+//    public ResponseEntity<Object> fetchUserByEmail(@PathVariable String email){
+//        User user = userService.findByEmail(email).orElseThrow();
+//        String type = userService.getUserType(user.getId());
+//        UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress(),user.getBirthday(),type);
+//        return ResponseEntity.ok(new RestResponse("SUCCESS", "Tìm thấy user", Map.of("user",userDTO)));
+//
+//    }
 }
