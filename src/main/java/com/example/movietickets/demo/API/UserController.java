@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(value = "/api/user", produces = "application/json; charset=UTF-8")
 public class UserController {
     @Autowired
     private UserRepository userRepository;

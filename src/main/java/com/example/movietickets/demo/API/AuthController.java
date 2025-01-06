@@ -114,9 +114,17 @@ public class AuthController {
         String provider = (String) payload.get("provider");
         String dateOfBirthStr = (String) payload.get("dateOfBirth");
         LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr.substring(0, 10));
-        System.out.println("Được chưa");
-        System.out.println(email + username + fullname + provider + dateOfBirth.toString());
+
+        // In thông tin người dùng và ngày sinh
+        System.out.println("Email: " + email);
+        System.out.println("Username: " + username);
+        System.out.println("Fullname: " + fullname);
+        System.out.println("Provider: " + provider);
+        System.out.println("Date of Birth: " + dateOfBirth.toString());
+
+        // Lưu thông tin vào cơ sở dữ liệu
         userService.saveOauthUser(email, username, fullname, provider, dateOfBirth);
+
         return ResponseEntity.ok("User saved successfully");
     }
 
@@ -129,4 +137,16 @@ public class AuthController {
 //        return ResponseEntity.ok(new RestResponse("SUCCESS", "Tìm thấy user", Map.of("user",userDTO)));
 //
 //    }
+
+    @GetMapping("user")
+    public ResponseEntity<Object> fetchUserByEmail(@RequestParam Map<String, String> params){
+        if (params.containsKey("email")){
+            String email = params.get("email");
+            User user = userService.findByEmail(email).orElseThrow();
+            String type = userService.getUserType(user.getId());
+            UserDTO userDTO = new UserDTO(user.getId(),user.getUsername(), user.getEmail(), user.getFullname(), user.getPhone(), user.getAddress(),user.getBirthday(),type);
+            return ResponseEntity.ok(new RestResponse("SUCCESS", "Tìm thấy user", Map.of("user",userDTO)));
+        }
+        return ResponseEntity.badRequest().body("Invalid parameters");
+    }
 }

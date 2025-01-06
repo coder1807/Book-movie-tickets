@@ -309,16 +309,17 @@ public class PaymentController {
 
     // ...?...&json=true
     @GetMapping("/handlePayment")
-    public RedirectView handlePayment(@RequestParam Map<String, String> requestParams, HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+    public RedirectView handlePayment(@RequestParam Map<String, String> requestParams, HttpServletRequest request, RedirectAttributes redirectAttributes,HttpSession session) throws Exception {
         String homeURL = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String transaction_id = requestParams.get("transaction_id"); // mã giao dịch momoId
 //        ...
 
         User currentUser = userService.getCurrentUser();
         Booking savedBooking;
-        HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
         String comboId = (String) session.getAttribute("comboId");
         Long scheduleId = (Long) session.getAttribute("scheduleId");
+        System.out.println("123"+scheduleId);
         if (scheduleId == null) {
             System.out.println("handlePayment: Thông tin giao dịch không hợp lệ.");
             redirectAttributes.addFlashAttribute("error", "Thông tin giao dịch không hợp lệ.");

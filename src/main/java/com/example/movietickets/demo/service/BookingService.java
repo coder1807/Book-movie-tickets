@@ -3,6 +3,8 @@ package com.example.movietickets.demo.service;
 import com.example.movietickets.demo.DTO.BookingDTO;
 import com.example.movietickets.demo.model.*;
 import com.example.movietickets.demo.repository.*;
+import com.example.movietickets.demo.viewmodel.BookingVM;
+import com.example.movietickets.demo.viewmodel.FilmVM;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Book;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -237,6 +240,11 @@ public class BookingService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Object getBookingByUserId(Long userId) {
+        List<Booking> list = bookingRepository.findByUser(userId);
+        return list.stream().map(BookingVM::from).toList();
     }
 }
 

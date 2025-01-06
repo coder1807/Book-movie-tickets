@@ -3,6 +3,7 @@ package com.example.movietickets.demo.API;
 import com.example.movietickets.demo.DTO.BookingDTO;
 import com.example.movietickets.demo.DTO.CommentDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
+import com.example.movietickets.demo.DTO.UserDTO;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.model.User;
@@ -290,6 +291,15 @@ public class APIController {
     public ResponseEntity<Object> getFavoriteFilms(@PathVariable Long userId) {
         Object favoriteIds = userService.getFavoriteFilmIds(userId);
         return ResponseEntity.ok(favoriteIds);
+    }
+    @GetMapping("/booking")
+    public ResponseEntity<Object> getBookingByUserId(@RequestParam Map<String, String> params){
+        if (params.containsKey("userId")){
+            Long userId = Long.parseLong(params.get("userId"));
+            Object o = bookingService.getBookingByUserId(userId);
+            return ResponseEntity.ok(o);
+        }
+        return ResponseEntity.badRequest().body("Invalid parameters");
     }
 }
 
