@@ -2,10 +2,16 @@ package com.example.movietickets.demo.API;
 
 import com.example.movietickets.demo.DTO.LoginDTO;
 import com.example.movietickets.demo.DTO.RegisterDTO;
+import com.example.movietickets.demo.DTO.ResetPasswordDTO;
 import com.example.movietickets.demo.DTO.UserDTO;
 import com.example.movietickets.demo.config.GoogleConfig;
 import com.example.movietickets.demo.exception.UserAlreadyExistException;
+import com.example.movietickets.demo.mailing.DefaultEmailService;
+import com.example.movietickets.demo.mailing.EmailService;
+import com.example.movietickets.demo.model.SecureToken;
 import com.example.movietickets.demo.model.User;
+import com.example.movietickets.demo.repository.SecureTokenRepository;
+import com.example.movietickets.demo.repository.UserRepository;
 import com.example.movietickets.demo.service.UserService;
 //import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 //import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -27,13 +33,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -45,7 +56,13 @@ public class AuthController {
     @Autowired
     private UserService userService;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private GoogleConfig googleConfig;
+    @Autowired
+    private SecureTokenRepository secureTokenRepository;
+    @Autowired
+    private DefaultEmailService emailService;
 
 
     @PostMapping("/login")
@@ -149,4 +166,53 @@ public class AuthController {
         }
         return ResponseEntity.badRequest().body("Invalid parameters");
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        Optional<User> user = userService.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email không tồn tại!");
+        }
+
+        String token = UUID.randomUUID().toString();
+        SecureToken resetToken = new SecureToken(token,LocalDateTime.now().plusMinutes(5), user.get());
+        secureTokenRepository.save(resetToken);
+
+        // Gửi email khôi phục
+        emailService.sendResetPasswordEmail(user.get().getEmail(), token);
+
+        return ResponseEntity.ok("Đã gửi email khôi phục mật khẩu!");
+    }
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<?> validateResetPasswordToken(@RequestParam("token") String token) {
+        SecureToken secureToken = secureTokenRepository.findByToken(token);
+        if (secureToken == null || secureToken.isExpired()) {
+            return ResponseEntity.badRequest().body("Token không hợp lệ hoặc đã hết hạn.");
+        }
+
+        // Cập nhật URL để sử dụng intent filter hiện tại
+        String resetPasswordUrl = "movieapp://com.example.movie_app/reset-password?token=" + token;
+
+        return ResponseEntity.ok(resetPasswordUrl);
+    }
+
+
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO request) {
+        SecureToken token = secureTokenRepository.findByToken(request.getToken());
+        if (token == null || token.isExpired()) {
+            return ResponseEntity.badRequest().body("Token không hợp lệ hoặc đã hết hạn!");
+        }
+        User user = token.getUser();
+        user.setPassword(new BCryptPasswordEncoder().encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // Xoá hoặc đánh dấu token là đã sử dụng
+        token.setExpiredAt(LocalDateTime.now());
+        secureTokenRepository.save(token);
+        return ResponseEntity.ok("Đặt lại mật khẩu thành công!");
+    }
+
 }

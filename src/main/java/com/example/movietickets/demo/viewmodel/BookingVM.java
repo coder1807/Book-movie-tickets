@@ -1,12 +1,13 @@
 package com.example.movietickets.demo.viewmodel;
 
 import com.example.movietickets.demo.model.Booking;
+import com.example.movietickets.demo.model.ComboFood;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public record BookingVM(Long id, String filmName, String poster, String cinemaName, String roomName, LocalDateTime startTime, Date createAt, Long price, String seatName, String payment) {
+public record BookingVM(Long id, String filmName, String poster, String cinemaName, String roomName, LocalDateTime startTime, Date createAt, Long price, String seatName, String payment, ComboFood comboFood) {
     public  static BookingVM from(Booking c){
         return new BookingVM(
                 c.getId(),
@@ -18,7 +19,8 @@ public record BookingVM(Long id, String filmName, String poster, String cinemaNa
                 c.getCreateAt(),
                 c.getPrice(),
                 c.getSeatName(),
-                c.getPayment()
+                c.getPayment(),
+                c.getComboFood()
         );
     }
 }

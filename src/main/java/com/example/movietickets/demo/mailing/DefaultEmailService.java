@@ -75,4 +75,37 @@ public class DefaultEmailService implements EmailService {
         LocalDateTime localDateTime = dateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return localDateTime.format(formatter);
     }
+
+    public void sendResetPasswordEmail(String toEmail, String token) {
+        String subject = "Khôi phục mật khẩu";
+        String resetUrl = "movieapp://com.example.movie_app/reset-password?token=" + token;
+
+        // Nội dung email
+                String content = """
+            <html>
+                <body>
+                    <p>Xin chào,</p>
+                    <p>Bạn đã yêu cầu đặt lại mật khẩu. Nhấn vào liên kết dưới đây để đặt lại mật khẩu của bạn:</p>
+                    <p>
+                        <a href="%s">%s</a>
+                    </p>
+                    <p><strong>Lưu ý:</strong> Để tiếp tục, vui lòng mở liên kết trên thiết bị có ứng dụng của chúng tôi.</p>
+                    <p>Sau khi truy cập liên kết, bạn sẽ được hướng dẫn để nhập mật khẩu mới.</p>
+                    <p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>
+                    <p>Trân trọng,<br>Đội ngũ hỗ trợ Ba Anh Em</p>
+                </body>
+            </html>
+            """.formatted(resetUrl, resetUrl);
+
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(content, true); // Set to true to indicate HTML content
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Lỗi khi gửi email: " + e.getMessage());
+        }
+    }
 }
