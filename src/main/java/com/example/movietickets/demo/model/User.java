@@ -84,6 +84,13 @@ public class User extends Auditable<String> implements UserDetails { // Implemen
     Set<SecureToken> token;
 
     // Getters and setters for all fields
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorite_films",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id")
+    )
+    private List<Film> favoriteFilms = new ArrayList<>(); // khởi tạo list rỗng
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
