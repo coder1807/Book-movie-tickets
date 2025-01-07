@@ -38,6 +38,15 @@ public class CommentService {
         return comments.stream().map(CommentVM::from).toList();
     }
 
+    public Object deleteCommentAPI(Long commentId) {
+        if (commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
+            return "Comment deleted successfully";
+        } else {
+            throw new RuntimeException("Comment not found with ID: " + commentId);
+        }
+    }
+
 
     public List<Comment> getAllCommentsByBlogId(Long BlogId) {
         return commentRepository.findAllByBlogId(BlogId);

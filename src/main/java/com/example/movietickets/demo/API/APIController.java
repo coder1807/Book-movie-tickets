@@ -250,6 +250,12 @@ public class APIController {
         return ResponseEntity.ok(o);
     }
 
+    @PostMapping("/comments/delete/{id}")
+    public ResponseEntity<Object> deleteComment(@RequestBody Long commentId) {
+        Object o = commentService.deleteCommentAPI(commentId);
+        return ResponseEntity.ok(o);
+    }
+
     @GetMapping("/comments/{blogId}")
     public ResponseEntity<Object> getCommentsByBlog(@PathVariable Long blogId){
         Object o = commentService.getCommentByBlogIdApi(blogId);
