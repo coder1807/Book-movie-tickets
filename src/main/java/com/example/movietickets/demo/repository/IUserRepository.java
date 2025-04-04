@@ -24,6 +24,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
+    Optional<User> findByUsernameAndPassword(String username, String password);
+
     @Query("SELECT ROUND(SUM(b.price) / 1000) FROM Booking b WHERE b.user.id = :user_id AND YEAR(b.createAt) = YEAR(CURRENT_DATE)")
     Long getPointUser(@Param("user_id") long user_id);
 

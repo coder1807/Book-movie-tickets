@@ -19,6 +19,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Controller xử lý các chức năng liên quan đến ghế ngồi trong rạp chiếu phim
+ * Bao gồm: hiển thị danh sách ghế, chọn ghế, kiểm tra trạng thái ghế
+ */
 @RequestMapping("/seats")
 @AllArgsConstructor
 @Controller("userSeatController")
@@ -47,6 +51,12 @@ public class SeatController {
     @Autowired
     private CardStudentRepository cardStudentRepository;
 
+    /**
+     * Lấy danh sách ghế theo phòng chiếu
+     * @param roomId ID của phòng chiếu (có thể null)
+     * @param model Model để truyền dữ liệu đến view
+     * @return View hiển thị danh sách ghế
+     */
     @GetMapping
     public String getSeatsByRoomId(@RequestParam(value = "roomId", required = false) Long roomId, Model model) {
         List<Seat> seats;
@@ -61,6 +71,13 @@ public class SeatController {
         return "/seat/seat-list";
     }
 
+    /**
+     * Lấy danh sách ghế theo lịch chiếu và xử lý đặt vé
+     * @param scheduleId ID của lịch chiếu
+     * @param model Model để truyền dữ liệu đến view
+     * @param is_student Loại vé (true: vé học sinh, false: vé người lớn)
+     * @return View chọn ghế hoặc chuyển hướng nếu có lỗi
+     */
     @GetMapping("/schedules/{scheduleId}")
     public String getSeatsBySchedule(@PathVariable Long scheduleId, Model model,
                                      @RequestParam(required = false) Boolean is_student) {
@@ -113,8 +130,6 @@ public class SeatController {
             model.addAttribute("roomName", roomName);
             if (is_student != null && cardStudentRepository.isVerified(currentUser.getId()) == null) { // Kiểm tra nếu là sinh viên nhưng chưa xác thực thì trả về lỗi
                 return "redirect:/error/404";
-            } else {
-                is_student = is_student != null;
             }
             model.addAttribute("is_student", is_student);
             return "/seat/seat-choose"; // chuyển đến trang chọn ghế
