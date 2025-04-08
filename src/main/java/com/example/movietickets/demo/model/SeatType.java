@@ -29,4 +29,8 @@ public class SeatType {
     public SeatType(String type) {
         this.type = type;
     }
+
+    public SeatType() {
+        this.type = type;
+    }
 }
