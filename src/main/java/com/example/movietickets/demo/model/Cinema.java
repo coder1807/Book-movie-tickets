@@ -34,4 +34,13 @@ public class Cinema {
     public String toString() {
         return "Cinema{id=" + id + ", name='" + name + "'}";
     }
+
+    public Cinema(){}
+
+    // Constructor có tham số
+    public Cinema(String name, String address) {
+        this.name = name;
+        this.address = address;
+        this.rooms = new ArrayList<>();
+    }
 }

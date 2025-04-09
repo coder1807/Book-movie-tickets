@@ -11,4 +11,6 @@ import java.util.Optional;
 @Service
 public interface ScheduleService {
     List<Schedule> getSchedulesByFilmId(Long filmId);
+
+    Optional<Schedule> getScheduleById(Long id);
 }

@@ -42,6 +42,12 @@ public class Seat {
     public Seat(Long id) {
         this.id = id;
     }
+    // 🔹 Constructor với id và SeatType
+    public Seat(Long id, SeatType seatType) {
+        this.id = id;
+        this.seattype = seatType;
+    }
+
 
     @Override
     public String toString() {

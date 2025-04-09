@@ -2,6 +2,8 @@ package com.example.movietickets.demo.repository;
 
 import com.example.movietickets.demo.model.ComboFood;
 import com.example.movietickets.demo.model.Film;
+import com.example.movietickets.demo.model.Category;
+import com.example.movietickets.demo.model.Country;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -11,7 +13,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FilmRepository extends PagingAndSortingRepository<Film, Long>, JpaRepository<Film, Long> {
@@ -37,4 +41,9 @@ public interface FilmRepository extends PagingAndSortingRepository<Film, Long>, 
 
     @Query("SELECT r FROM Schedule s JOIN s.film r WHERE s.id = :scheduleId")
     Film findFilmByScheduleId(Long scheduleId);
+
+    Optional<Film> findByName(String name);
+    List<Film> findByCategory(Category category);
+    List<Film> findByCountry(Country country);
+    List<Film> findByOpeningdayBetween(LocalDate startDate, LocalDate endDate);
 }

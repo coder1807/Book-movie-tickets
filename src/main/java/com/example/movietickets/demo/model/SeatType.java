@@ -24,4 +24,13 @@ public class SeatType {
     @OneToMany(mappedBy = "seattype", cascade = CascadeType.ALL, orphanRemoval = true)
     //cascade=all cho phép khi Update tat cả bảng con tham chiếu den SeatType,orphanRemoval=true cho phep khi xoa seatType thi tat ca bang con cx bi xoa theo
     private List<Seat> seats;
+
+    // Constructor có tham số
+    public SeatType(String type) {
+        this.type = type;
+    }
+
+    public SeatType() {
+        this.type = type;
+    }
 }
