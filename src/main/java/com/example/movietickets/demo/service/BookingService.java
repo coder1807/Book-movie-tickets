@@ -130,6 +130,7 @@ public class BookingService {
 
         return bookingRepository.save(booking);
     }
+
     public String addBookingDetailAPI(BookingDTO request){
         List<String> seatSymbols = new ArrayList<>();
         for (String seat : request.getSeatSymbols()) {
@@ -163,6 +164,7 @@ public class BookingService {
         User user = userService.getUserById(request.getUserID())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));;
         booking.setUser(user);
+
         bookingService.saveBooking(booking, seats, schedule);
         return "Booking Successful";
     }

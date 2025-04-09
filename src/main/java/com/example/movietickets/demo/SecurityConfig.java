@@ -71,7 +71,7 @@ public class SecurityConfig {
                                 "/popcorn", "/movie/details", "/movie/seat-plan",
                                 "/feedback", "/blog", "/blog/blog-details", "/about",
                                 "/blog/blog-details/{id}/comment",
-                                "/register/verify")
+                                "/register/verify", "/films/search/**", "/seats/schedules/{scheduleId}")
                         .permitAll() // Cho phép truy cập không cần xác thực.
                         .requestMatchers("/admin", "admin/movie/edit/**", "/admin/movie/add",
                                 "/admin/films", "/admin/films/edit", "/admin/films/add",
