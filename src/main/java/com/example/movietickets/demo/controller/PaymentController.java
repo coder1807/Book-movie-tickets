@@ -202,7 +202,13 @@ public class PaymentController {
 
 
     @GetMapping("create_momo")
-    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId,@RequestParam(value = "isMobile", defaultValue = "false") boolean isMobile, HttpSession session) throws Exception {
+    public ResponseEntity<?> createPaymentMoMo(@RequestParam("amount") Long amount, @RequestParam("scheduleId") Long scheduleId, @RequestParam("comboId") String comboId,@RequestParam(value = "isMobile", defaultValue = "false") boolean isMobile, HttpServletRequest request,HttpSession session) throws Exception {
+        // Kiểm tra User-Agent
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent != null && userAgent.toLowerCase().contains("mobile")) {
+            isMobile = true;
+        }
+
         String amountStr = String.valueOf(amount);
         String orderId = MoMoConfig.PARTNER_CODE + new Date().getTime();
         session.setAttribute("orderId", orderId); // doi sang get params
@@ -214,7 +220,12 @@ public class PaymentController {
         // get current hostname from proxy spring boot (tùy biến localhost và ngrok hostname)
         String homeURL = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
 
-        String rawSignature = String.format("accessKey=%s&amount=%s&extraData=%s&ipnUrl=%s&orderId=%s&orderInfo=%s&partnerCode=%s&redirectUrl=%s&requestId=%s&requestType=%s", MoMoConfig.ACCESS_KEY, amount, MoMoConfig.EXTRA_DATA, homeURL + MoMoConfig.IPN_URL, orderId, MoMoConfig.ORDER_INFO, MoMoConfig.PARTNER_CODE, homeURL + MoMoConfig.REDIRECT_URL + "?transaction_id=" + orderId, orderId, MoMoConfig.REQUEST_TYPE);
+        String rawSignature = String.format("accessKey=%s&amount=%s&extraData=%s&ipnUrl=%s&orderId=%s&orderInfo=%s&partnerCode=%s&redirectUrl=%s&requestId=%s&requestType=%s",
+                MoMoConfig.ACCESS_KEY, amount, MoMoConfig.EXTRA_DATA, homeURL + MoMoConfig.IPN_URL, orderId,
+                MoMoConfig.ORDER_INFO, MoMoConfig.PARTNER_CODE, isMobile
+                        ? "movieapp://com.example.movie_app/"
+                        : homeURL + MoMoConfig.REDIRECT_URL + "?transaction_id=" + orderId,
+                orderId, MoMoConfig.REQUEST_TYPE);
 
         String signature = MoMoConfig.hmacSHA256(rawSignature, MoMoConfig.SECRET_KEY);
 
@@ -224,7 +235,9 @@ public class PaymentController {
         requestBody.addProperty("amount", amountStr);
         requestBody.addProperty("orderId", orderId);
         requestBody.addProperty("orderInfo", MoMoConfig.ORDER_INFO);
-        requestBody.addProperty("redirectUrl", homeURL + MoMoConfig.REDIRECT_URL + "?transaction_id=" + orderId);
+        requestBody.addProperty("redirectUrl", isMobile
+                ? "movieapp://com.example.movie_app/"
+                : homeURL + MoMoConfig.REDIRECT_URL + "?transaction_id=" + orderId); // kiểm tra nếu là request từ mobile thì sử dụng app link làm redirectUrl khi thanh toán thành công
         requestBody.addProperty("ipnUrl", homeURL + MoMoConfig.IPN_URL);
         requestBody.addProperty("lang", MoMoConfig.LANG);
         requestBody.addProperty("requestType", MoMoConfig.REQUEST_TYPE);
@@ -279,46 +292,19 @@ public class PaymentController {
         return new RedirectView("/purchase/history");
     }
 
-    // callback IPN Url for momo QR code
-    @PostMapping("/handlePayment")
-    public String queryTransaction(HttpSession session) throws Exception {
-        String orderId = (String) session.getAttribute("orderId"); // Lấy orderId từ getMapping /api/payment/handlePayment
-
-        String rawSignature = String.format("accessKey=%s&orderId=%s&partnerCode=%s&requestId=%s", MoMoConfig.ACCESS_KEY, orderId, MoMoConfig.PARTNER_CODE, orderId);
-
-        String signature = MoMoConfig.hmacSHA256(rawSignature, MoMoConfig.SECRET_KEY);
-
-        // URL endpoint của MoMo
-        String url = "https://test-payment.momo.vn/v2/gateway/api/query";
-
-        // Tạo body request
-        String requestBody = String.format("{\n" + "  \"partnerCode\": \"%s\",\n" + "  \"requestId\": \"%s\",\n" + "  \"orderId\": \"%s\",\n" + "  \"lang\": \"%s\",\n" + "  \"signature\": \"%s\"\n" + "}", MoMoConfig.PARTNER_CODE, orderId, orderId, MoMoConfig.LANG, signature);
-
-        // Thiết lập headers (có thể không cần thiết tùy vào yêu cầu)
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // Tạo HttpEntity với body và headers
-        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
-
-        // Gửi POST request
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-        return response.getBody();
-    }
-
     // ...?...&json=true
     @GetMapping("/handlePayment")
-    public RedirectView handlePayment(@RequestParam Map<String, String> requestParams, HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+    public RedirectView handlePayment(@RequestParam Map<String, String> requestParams, HttpServletRequest request, RedirectAttributes redirectAttributes,HttpSession session) throws Exception {
         String homeURL = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String transaction_id = requestParams.get("transaction_id"); // mã giao dịch momoId
 //        ...
 
         User currentUser = userService.getCurrentUser();
         Booking savedBooking;
-        HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
         String comboId = (String) session.getAttribute("comboId");
         Long scheduleId = (Long) session.getAttribute("scheduleId");
+        System.out.println("123"+scheduleId);
         if (scheduleId == null) {
             System.out.println("handlePayment: Thông tin giao dịch không hợp lệ.");
             redirectAttributes.addFlashAttribute("error", "Thông tin giao dịch không hợp lệ.");
@@ -341,16 +327,14 @@ public class PaymentController {
                 savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "MOMO");
                 try {
                     emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
-
-                    // Kiểm tra User-Agent để xác định có phải mobile không
                     String userAgent = request.getHeader("User-Agent");
-                    if (userAgent != null && (userAgent.contains("Mobile") || userAgent.contains("Android") || userAgent.contains("iPhone"))) {
-                        // Nếu là mobile, trả về app link
+                    if (userAgent != null && userAgent.toLowerCase().contains("mobile")) {
                         return new RedirectView("movieapp://com.example.movie_app/");
-                    } else {
-                        // Nếu không phải mobile, trả về trang lịch sử
+                    }
+                    else {
                         return new RedirectView(homeURL + "/purchase/history");
                     }
+
                 } catch (MessagingException e) {
                     throw new RuntimeException(e);
                 }
@@ -358,16 +342,14 @@ public class PaymentController {
                 savedBooking = bookingService.saveBooking_Detail(comboId, scheduleId, "MOMO");
                 try {
                     emailService.sendSimpleMessage(currentUser.getEmail(), currentUser, savedBooking);
-
-                    // Kiểm tra User-Agent để xác định có phải mobile không
                     String userAgent = request.getHeader("User-Agent");
-                    if (userAgent != null && (userAgent.contains("Mobile") || userAgent.contains("Android") || userAgent.contains("iPhone"))) {
-                        // Nếu là mobile, trả về app link
+                    if (userAgent != null && userAgent.toLowerCase().contains("mobile")) {
                         return new RedirectView("movieapp://com.example.movie_app/");
-                    } else {
-                        // Nếu không phải mobile, trả về trang lịch sử
+                    }
+                    else {
                         return new RedirectView(homeURL + "/purchase/history");
                     }
+
                 } catch (MessagingException e) {
                     throw new RuntimeException(e);
                 }

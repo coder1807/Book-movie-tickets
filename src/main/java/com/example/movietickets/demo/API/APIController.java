@@ -1,7 +1,9 @@
 package com.example.movietickets.demo.API;
 
 import com.example.movietickets.demo.DTO.BookingDTO;
+import com.example.movietickets.demo.DTO.CommentDTO;
 import com.example.movietickets.demo.DTO.RatingDTO;
+import com.example.movietickets.demo.DTO.UserDTO;
 import com.example.movietickets.demo.model.Film;
 import com.example.movietickets.demo.model.Schedule;
 import com.example.movietickets.demo.model.User;
@@ -10,10 +12,10 @@ import com.example.movietickets.demo.viewmodel.RatingVM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ public class APIController {
     private CinemaService cinemaService;
     @Autowired
     private RatingService ratingService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -234,6 +238,24 @@ public class APIController {
         Object o = blogService.getAllBlogsAPI();
         return ResponseEntity.ok(o);
     }
+
+    @GetMapping("/blogs/{id}")
+    public ResponseEntity<Object> getBlogById(@PathVariable Long id) {
+        Object o = blogService.getBlogByIdApi(id);
+        return ResponseEntity.ok(o);
+    }
+
+    @PostMapping("/comments")
+    public ResponseEntity<Object> addComment(@RequestBody CommentDTO request) {
+        Object o = commentService.addCommentAPI(request);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/comments/{blogId}")
+    public ResponseEntity<Object> getCommentsByBlog(@PathVariable Long blogId){
+        Object o = commentService.getCommentByBlogIdApi(blogId);
+        return ResponseEntity.ok(o);
+    }
     //API Blog End
 
     //API For Room -start
@@ -248,8 +270,39 @@ public class APIController {
         Object o = userService.getUserByIdAPI(id);
         return ResponseEntity.ok(o);
     }
+
+    @PostMapping("/user/{id}/favorites/{filmId}")
+    public ResponseEntity<Object> addFavoriteFilm(
+            @PathVariable Long id,
+            @PathVariable Long filmId) {
+        Object o = userService.addFavoriteFilm(id, filmId);
+        return ResponseEntity.ok(o);
+    }
+
+    @DeleteMapping("/user/{userId}/favorites/{filmId}")
+    public ResponseEntity<Object> removeFavoriteFilm(
+            @PathVariable Long userId,
+            @PathVariable Long filmId) {
+        Object o = userService.removeFavoriteFilm(userId, filmId);
+        return ResponseEntity.ok(o);
+    }
+
+    @GetMapping("/user/{userId}/favorites")
+    public ResponseEntity<Object> getFavoriteFilms(@PathVariable Long userId) {
+        Object favoriteIds = userService.getFavoriteFilmIds(userId);
+        return ResponseEntity.ok(favoriteIds);
+    }
+    @GetMapping("/booking")
+    public ResponseEntity<Object> getBookingByUserId(@RequestParam Map<String, String> params){
+        if (params.containsKey("userId")){
+            Long userId = Long.parseLong(params.get("userId"));
+            Object o = bookingService.getBookingByUserId(userId);
+            return ResponseEntity.ok(o);
+        }
+        return ResponseEntity.badRequest().body("Invalid parameters");
+    }
 }
-// API Schedule End
+
 
 
 

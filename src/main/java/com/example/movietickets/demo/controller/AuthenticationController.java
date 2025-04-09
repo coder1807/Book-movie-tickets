@@ -5,6 +5,7 @@ import com.example.movietickets.demo.exception.UserAlreadyExistException;
 import com.example.movietickets.demo.model.User;
 import com.example.movietickets.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.validation.Valid;
@@ -14,8 +15,11 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.StringUtils;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -33,6 +37,7 @@ public class AuthenticationController {
         return "/authentication/sign-in";
     }
 
+
     @GetMapping("/register")
     public String register(@NotNull Model model) {
         model.addAttribute("user", new User()); // Thêm một đối tượng User mới vào model
@@ -44,16 +49,47 @@ public class AuthenticationController {
                            @NotNull BindingResult bindingResult, // Kết quả của quá trình validate
                            Model model) {
 
+        // Kiểm tra trường fullname
+        if (user.getFullname() == null || user.getFullname().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trường Họ và Tên không được để trống!");
+        }
+
+        // Kiểm tra trường username
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tên tài khoản không được để trống!");
+        }
         if (userService.existsByUsername(user.getUsername())) {
-            bindingResult.rejectValue("username", "error.user", "Tên tài khoản đã tồn tại");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tên tài khoản đã tồn tại!");
         }
 
+        // Kiểm tra trường email
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email không được để trống!");
+        }
         if (userService.existsByEmail(user.getEmail())) {
-            bindingResult.rejectValue("email", "error.user", "Email đã tồn tại");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email đã tồn tại!");
         }
 
+        // Kiểm tra trường birthday
+        if (user.getBirthday() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ngày sinh không được để trống!");
+        }
+
+        // Kiểm tra trường password
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mật khẩu không được để trống!");
+        }
+
+        // Kiểm tra trường phone
+        if (user.getPhone() == null || user.getPhone().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Số điện thoại không được để trống!");
+        }
+        // Kiểm tra định dạng số điện thoại (ví dụ: phải là số và có độ dài từ 10-11 ký tự)
+        if (!user.getPhone().matches("\\d{10,11}")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Số điện thoại không hợp lệ hoặc không đủ độ dài!");
+        }
         if (userService.existsByPhone(user.getPhone())) {
-            bindingResult.rejectValue("phone", "error.user", "Số điện thoại đã đăng ký");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Số điện thoại đã tồn tại!");
         }
 
         if (bindingResult.hasErrors()) { // Kiểm tra nếu có lỗi validate

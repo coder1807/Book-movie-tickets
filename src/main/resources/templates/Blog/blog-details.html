@@ -177,7 +177,7 @@
                             <ul class="comment-area" th:unless="${blog.comments.empty}">
                                 <li th:each="comment : ${blog.comments}">
                                     <div class="blog-thumb-info">
-                                        <span th:text="${comment.getFormattedDate()}"></span>
+<!--                                        <span th:text="${comment.getFormattedDate()}"></span>-->
                                         <h6 class="title">
                                             <a href="#0" th:text="${comment.user.fullname}"></a>
                                         </h6>
