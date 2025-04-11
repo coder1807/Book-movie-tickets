@@ -48,6 +48,7 @@ public class SeatByRoomIdTest {
 
         // Assert
         assertEquals("/seat/seat-list", viewName);
+
         verify(seatService, times(1)).getSeatsByRoomIdDistinct(roomId);
         verify(seatService, never()).getAllSeats();
         verify(model).addAttribute("seats", expectedSeats);
